@@ -48,8 +48,8 @@ Every task has a stable `BLT-NNN` identifier and a `Trace` field. Trace referenc
 - [x] **BLT-021** Define source and test package boundaries before implementing rules. {Trace: PLAN:P1; PLAN:P3}
 - [x] **BLT-022** Assign one clear responsibility to each planned Python module. {Trace: PLAN:P1; PLAN:Project Engineering Constraints}
 - [x] **BLT-023** Define dependency direction so game rules do not import strategy code. {Trace: PRD:Deterministic Enforcement; PLAN:P3}
-- [ ] **BLT-024** Define dependency direction so game rules do not import LLM providers or prompts. {Trace: PRD:Deterministic Enforcement; PLAN:Non-Goals}
-- [ ] **BLT-025** Define dependency direction so Stage 1 does not import MCP or networking code. {Trace: PRD:Non-Goals; PLAN:Non-Goals}
+- [x] **BLT-024** Define dependency direction so game rules do not import LLM providers or prompts. {Trace: PRD:Deterministic Enforcement; PLAN:Non-Goals}
+- [x] **BLT-025** Define dependency direction so Stage 1 does not import MCP or networking code. {Trace: PRD:Non-Goals; PLAN:Non-Goals}
 - [ ] **BLT-026** Define pure deterministic boundaries for validation and state transitions. {Trace: PRD:Deterministic Enforcement; PLAN:P3}
 - [ ] **BLT-027** Define explicit domain-result boundaries for accepted and rejected actions. {Trace: PLAN:P3; PLAN:Unit-Testing Strategy}
 - [ ] **BLT-028** Define immutable or copy-safe state handling so rejected actions cannot mutate prior state. {Trace: PLAN:P3; PLAN:Gate}
@@ -58,36 +58,36 @@ Every task has a stable `BLT-NNN` identifier and a `Trace` field. Trace referenc
 
 ## 4. Local Shared Configuration
 
-- [ ] **BLT-031** Identify the Base Logic keys required from local `config/game.json`. {Trace: PRD:Shared Base-Logic Configuration; PLAN:P2}
-- [ ] **BLT-032** Define a local configuration loader with no remote-peer communication. {Trace: PRD:AC14-AC15; PLAN:P2}
-- [ ] **BLT-033** Define explicit failure behavior for missing `config/game.json`. {Trace: PRD:AC14; PLAN:P2}
-- [ ] **BLT-034** Define explicit failure behavior for malformed JSON. {Trace: PRD:AC14; PLAN:P2}
-- [ ] **BLT-035** Validate the configured board size type and square-board shape. {Trace: PRD:Board and Coordinate System; PDF:F}
-- [ ] **BLT-036** Reject a configured board dimension below the Annex F minimum of 7x7. {Trace: PRD:Annex F Parameter Authority; PDF:F}
-- [ ] **BLT-037** Validate the fixed agent count is exactly two. {Trace: PRD:Board and Coordinate System; PDF:F}
-- [ ] **BLT-038** Validate coordinate-origin and starting-index values using the approved shared schema. {Trace: PRD:Board and Coordinate System; PLAN:P2}
-- [ ] **BLT-039** Validate thief and cop starting-position coordinate shapes and value types. {Trace: PRD:AC14; PDF:C3}
-- [ ] **BLT-040** Validate both starting positions fall inside the configured board. {Trace: PRD:Board and Coordinate System; PLAN:P2}
-- [ ] **BLT-041** Validate the fixed movement set is exactly four orthogonal directions plus stay. {Trace: PRD:Movement; PDF:F}
-- [ ] **BLT-042** Reject a barrier quota below the Annex F minimum of 14. {Trace: PRD:Barriers; PDF:F}
-- [ ] **BLT-043** Reject a move ceiling or survival threshold below the Annex F minimum of 35. {Trace: PRD:Capture and End Conditions; PDF:F}
-- [ ] **BLT-044** Validate all fixed capture, survival, and technical-loss score values. {Trace: PRD:Scoring; PDF:F}
+- [x] **BLT-031** Identify the Base Logic keys required from local `config/game.json`. {Trace: PRD:Shared Base-Logic Configuration; PLAN:P2}
+- [x] **BLT-032** Define a local configuration loader with no remote-peer communication. {Trace: PRD:AC14-AC15; PLAN:P2}
+- [x] **BLT-033** Define explicit failure behavior for missing `config/game.json`. {Trace: PRD:AC14; PLAN:P2}
+- [x] **BLT-034** Define explicit failure behavior for malformed JSON. {Trace: PRD:AC14; PLAN:P2}
+- [x] **BLT-035** Validate the configured board size type and square-board shape. {Trace: PRD:Board and Coordinate System; PDF:F}
+- [x] **BLT-036** Reject a configured board dimension below the Annex F minimum of 7x7. {Trace: PRD:Annex F Parameter Authority; PDF:F}
+- [x] **BLT-037** Validate the fixed agent count is exactly two. {Trace: PRD:Board and Coordinate System; PDF:F}
+- [x] **BLT-038** Validate coordinate-origin and starting-index values using the approved shared schema. {Trace: PRD:Board and Coordinate System; PLAN:P2}
+- [x] **BLT-039** Validate thief and cop starting-position coordinate shapes and value types. {Trace: PRD:AC14; PDF:C3}
+- [x] **BLT-040** Validate both starting positions fall inside the configured board. {Trace: PRD:Board and Coordinate System; PLAN:P2}
+- [x] **BLT-041** Validate the fixed movement set is exactly four orthogonal directions plus stay. {Trace: PRD:Movement; PDF:F}
+- [x] **BLT-042** Reject a barrier quota below the Annex F minimum of 14. {Trace: PRD:Barriers; PDF:F}
+- [x] **BLT-043** Reject a move ceiling or survival threshold below the Annex F minimum of 35. {Trace: PRD:Capture and End Conditions; PDF:F}
+- [x] **BLT-044** Validate all fixed capture, survival, and technical-loss score values. {Trace: PRD:Scoring; PDF:F}
 - [ ] **BLT-045** Prove deterministic rule construction consumes validated configuration values rather than duplicated configurable constants. {Trace: PRD:AC12,AC14; PLAN:P2; PLAN:Gate}
 
 ## 5. Board, Coordinates, and State Model
 
-- [ ] **BLT-046** Represent a coordinate as an explicit row-and-column value. {Trace: PRD:Board and Coordinate System; PDF:C3}
-- [ ] **BLT-047** Represent the finite square board using the validated configured dimension. {Trace: PRD:Board and Coordinate System; PLAN:P3}
-- [ ] **BLT-048** Represent the fixed cop and thief roles without adding agents. {Trace: PRD:Board and Coordinate System; PDF:F}
-- [ ] **BLT-049** Represent configured coordinate origin and starting index without assuming defaults. {Trace: PRD:Board and Coordinate System; PLAN:P3}
-- [ ] **BLT-050** Represent configured starting positions for both roles. {Trace: PRD:Board and Coordinate System; PDF:C3}
-- [ ] **BLT-051** Represent current positions separately from starting positions. {Trace: PLAN:P3; PRD:Purpose}
-- [ ] **BLT-052** Represent permanent barrier coordinates without duplicates. {Trace: PRD:Barriers; PLAN:P3}
-- [ ] **BLT-053** Represent used barrier quota and enforce its state invariant. {Trace: PRD:AC6; PLAN:P3}
-- [ ] **BLT-054** Represent the valid-step count independently from raw action attempts. {Trace: PRD:Capture and End Conditions; PLAN:P3}
-- [ ] **BLT-055** Represent active and terminal episode status explicitly. {Trace: PRD:Capture and End Conditions; PLAN:P3}
-- [ ] **BLT-056** Represent capture, survival, and technical-loss outcome types. {Trace: PRD:Capture and End Conditions; PLAN:P3}
-- [ ] **BLT-057** Define and test initial-state invariants before any action is accepted. {Trace: PRD:AC12; PLAN:P3}
+- [x] **BLT-046** Represent a coordinate as an explicit row-and-column value. {Trace: PRD:Board and Coordinate System; PDF:C3}
+- [x] **BLT-047** Represent the finite square board using the validated configured dimension. {Trace: PRD:Board and Coordinate System; PLAN:P3}
+- [x] **BLT-048** Represent the fixed cop and thief roles without adding agents. {Trace: PRD:Board and Coordinate System; PDF:F}
+- [x] **BLT-049** Represent configured coordinate origin and starting index without assuming defaults. {Trace: PRD:Board and Coordinate System; PLAN:P3}
+- [x] **BLT-050** Represent configured starting positions for both roles. {Trace: PRD:Board and Coordinate System; PDF:C3}
+- [x] **BLT-051** Represent current positions separately from starting positions. {Trace: PLAN:P3; PRD:Purpose}
+- [x] **BLT-052** Represent permanent barrier coordinates without duplicates. {Trace: PRD:Barriers; PLAN:P3}
+- [x] **BLT-053** Represent used barrier quota and enforce its state invariant. {Trace: PRD:AC6; PLAN:P3}
+- [x] **BLT-054** Represent the valid-step count independently from raw action attempts. {Trace: PRD:Capture and End Conditions; PLAN:P3}
+- [x] **BLT-055** Represent active and terminal episode status explicitly. {Trace: PRD:Capture and End Conditions; PLAN:P3}
+- [x] **BLT-056** Represent capture, survival, and technical-loss outcome types. {Trace: PRD:Capture and End Conditions; PLAN:P3}
+- [x] **BLT-057** Define and test initial-state invariants before any action is accepted. {Trace: PRD:AC12; PLAN:P3}
 
 ## 6. Movement Rules
 
@@ -165,8 +165,8 @@ Every task has a stable `BLT-NNN` identifier and a `Trace` field. Trace referenc
 
 ## 11. Positive Unit Tests
 
-- [ ] **BLT-117** Create configuration fixtures for default Annex F Base Logic values. {Trace: PLAN:P8; PDF:F}
-- [ ] **BLT-118** Test a valid board and configured starting state. {Trace: PRD:Board and Coordinate System; PLAN:P8}
+- [x] **BLT-117** Create configuration fixtures for default Annex F Base Logic values. {Trace: PLAN:P8; PDF:F}
+- [x] **BLT-118** Test a valid board and configured starting state. {Trace: PRD:Board and Coordinate System; PLAN:P8}
 - [ ] **BLT-119** Parameterize tests for all four valid orthogonal moves. {Trace: PRD:AC1; PLAN:P8}
 - [ ] **BLT-120** Test the valid stay action. {Trace: PRD:AC1; PLAN:P8}
 - [ ] **BLT-121** Test a valid cop barrier action replacing movement. {Trace: PRD:AC4; PLAN:P8}
@@ -174,15 +174,15 @@ Every task has a stable `BLT-NNN` identifier and a `Trace` field. Trace referenc
 - [ ] **BLT-123** Test coordinate-overlap capture and its terminal score pair. {Trace: PRD:AC7,AC11; PLAN:P8}
 - [ ] **BLT-124** Test survival and its terminal score pair at the approved threshold. {Trace: PRD:AC10-AC11; PLAN:P8}
 - [ ] **BLT-125** Test externally represented technical loss and its fixed score pair. {Trace: PRD:AC11; PLAN:P8}
-- [ ] **BLT-126** Test a permitted configuration above each Annex F minimum. {Trace: PRD:Annex F Parameter Authority; PLAN:P8}
+- [x] **BLT-126** Test a permitted configuration above each Annex F minimum. {Trace: PRD:Annex F Parameter Authority; PLAN:P8}
 
 ## 12. Negative and Invariant Tests
 
-- [ ] **BLT-127** Test malformed local JSON is rejected before state creation. {Trace: PRD:AC14; PLAN:P8}
-- [ ] **BLT-128** Test every missing required Base Logic key is rejected explicitly. {Trace: PRD:AC14; PLAN:P8}
-- [ ] **BLT-129** Test incorrect configuration value types are rejected explicitly. {Trace: PRD:AC14; PLAN:P8}
-- [ ] **BLT-130** Test every Annex F fixed-value deviation is rejected. {Trace: PRD:Annex F Parameter Authority; PDF:F}
-- [ ] **BLT-131** Test every below-minimum Stage 1 value is rejected. {Trace: PRD:Annex F Parameter Authority; PDF:F}
+- [x] **BLT-127** Test malformed local JSON is rejected before state creation. {Trace: PRD:AC14; PLAN:P8}
+- [x] **BLT-128** Test every missing required Base Logic key is rejected explicitly. {Trace: PRD:AC14; PLAN:P8}
+- [x] **BLT-129** Test incorrect configuration value types are rejected explicitly. {Trace: PRD:AC14; PLAN:P8}
+- [x] **BLT-130** Test every Annex F fixed-value deviation is rejected. {Trace: PRD:Annex F Parameter Authority; PDF:F}
+- [x] **BLT-131** Test every below-minimum Stage 1 value is rejected. {Trace: PRD:Annex F Parameter Authority; PDF:F}
 - [ ] **BLT-132** Test diagonal movement rejection and complete no-mutation behavior. {Trace: PRD:AC2; PLAN:P8}
 - [ ] **BLT-133** Test barrier-cell movement rejection and complete no-mutation behavior. {Trace: PRD:AC3; PLAN:P8}
 - [ ] **BLT-134** Test excess barrier placement rejection and complete no-mutation behavior. {Trace: PRD:AC6; PLAN:P8}
