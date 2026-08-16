@@ -21,40 +21,40 @@ Every task has a stable `BLT-NNN` identifier and a `Trace` field. Trace referenc
 
 - [x] **BLT-001** Confirm PRD-01 is approved for planning through merged PR #3. {Trace: PRD:Status; PLAN:Approved Inputs}
 - [x] **BLT-002** Confirm the Stage 1 PLAN is approved for TODO decomposition through merged PR #4. {Trace: PLAN:Status; PLAN:P9}
-- [ ] **BLT-003** Review TODO-01 against every PRD mandatory-requirements subsection. {Trace: PRD:Mandatory Requirements; PLAN:Gate}
-- [ ] **BLT-004** Review TODO-01 against all fifteen PRD acceptance criteria. {Trace: PRD:AC1-AC15; PLAN:Gate}
-- [ ] **BLT-005** Review TODO-01 against Chapter 3 board-physics and scoring rules. {Trace: PDF:C3; PLAN:Authority Hierarchy}
-- [ ] **BLT-006** Review TODO-01 against the recommended Chapter 10 Stage 1 boundary. {Trace: PDF:C10; PLAN:Recommended Stage Order}
-- [ ] **BLT-007** Cross-check mandatory, prohibited, and recommended classifications against Appendix E. {Trace: PDF:E; PLAN:Authority Hierarchy}
-- [ ] **BLT-008** Cross-check every Stage 1 numeric value and classification against Annex F. {Trace: PRD:Annex F Parameter Authority; PDF:F}
-- [ ] **BLT-009** Record Codex as the interface used for this TODO preparation and record actual commands truthfully. {Trace: PLAN:Project Engineering Constraints}
-- [ ] **BLT-010** Obtain review approval of this TODO before any Stage 1 implementation begins. {Trace: PLAN:Development Lifecycle; PLAN:Gate}
+- [x] **BLT-003** Review TODO-01 against every PRD mandatory-requirements subsection. {Trace: PRD:Mandatory Requirements; PLAN:Gate}
+- [x] **BLT-004** Review TODO-01 against all fifteen PRD acceptance criteria. {Trace: PRD:AC1-AC15; PLAN:Gate}
+- [x] **BLT-005** Review TODO-01 against Chapter 3 board-physics and scoring rules. {Trace: PDF:C3; PLAN:Authority Hierarchy}
+- [x] **BLT-006** Review TODO-01 against the recommended Chapter 10 Stage 1 boundary. {Trace: PDF:C10; PLAN:Recommended Stage Order}
+- [x] **BLT-007** Cross-check mandatory, prohibited, and recommended classifications against Appendix E. {Trace: PDF:E; PLAN:Authority Hierarchy}
+- [x] **BLT-008** Cross-check every Stage 1 numeric value and classification against Annex F. {Trace: PRD:Annex F Parameter Authority; PDF:F}
+- [x] **BLT-009** Record Codex as the interface used for this TODO preparation and record actual commands truthfully. {Trace: PLAN:Project Engineering Constraints}
+- [x] **BLT-010** Obtain review approval of this TODO before any Stage 1 implementation begins. {Trace: PLAN:Development Lifecycle; PLAN:Gate}
 
 ## 2. Environment and `uv` Foundation
 
-- [ ] **BLT-011** Confirm the supported Python version before creating project metadata. {Trace: PLAN:P1; PLAN:uv Environment and Dependency Workflow}
-- [ ] **BLT-012** Confirm `uv` is installed and record its version. {Trace: PLAN:P1; PLAN:uv Environment and Dependency Workflow}
-- [ ] **BLT-013** Create or validate Python project metadata through `uv`. {Trace: PLAN:P1; PLAN:uv Environment and Dependency Workflow}
-- [ ] **BLT-014** Define the minimal Stage 1 runtime dependency set and document each dependency's purpose. {Trace: PLAN:P1; PLAN:uv Environment and Dependency Workflow}
-- [ ] **BLT-015** Define the Stage 1 development dependency group containing `pytest` and approved quality tools. {Trace: PLAN:P1; PLAN:Unit-Testing Strategy}
-- [ ] **BLT-016** Generate the `uv` lockfile after dependency approval. {Trace: PLAN:P1; PLAN:uv Environment and Dependency Workflow}
-- [ ] **BLT-017** Verify a clean environment can synchronize from the lockfile. {Trace: PLAN:P1; PLAN:Planned Implementation Verification Commands and Evidence}
-- [ ] **BLT-018** Verify `.venv`, caches, and local tool outputs are ignored. {Trace: PLAN:P1; PLAN:Project Engineering Constraints}
-- [ ] **BLT-019** Verify secrets, tokens, private keys, and private configuration cannot enter the intended commit. {Trace: PLAN:P1; PLAN:Gate}
-- [ ] **BLT-020** Record all environment setup commands, versions, exit codes, and results. {Trace: PLAN:P1; PLAN:Planned Implementation Verification Commands and Evidence}
+- [x] **BLT-011** Confirm the supported Python version before creating project metadata. {Trace: PLAN:P1; PLAN:uv Environment and Dependency Workflow}
+- [x] **BLT-012** Confirm `uv` is installed and record its version. {Trace: PLAN:P1; PLAN:uv Environment and Dependency Workflow}
+- [x] **BLT-013** Create or validate Python project metadata through `uv`. {Trace: PLAN:P1; PLAN:uv Environment and Dependency Workflow}
+- [x] **BLT-014** Define the minimal Stage 1 runtime dependency set and document each dependency's purpose. {Trace: PLAN:P1; PLAN:uv Environment and Dependency Workflow}
+- [x] **BLT-015** Define the Stage 1 development dependency group containing `pytest` and approved quality tools. {Trace: PLAN:P1; PLAN:Unit-Testing Strategy}
+- [x] **BLT-016** Generate the `uv` lockfile after dependency approval. {Trace: PLAN:P1; PLAN:uv Environment and Dependency Workflow}
+- [x] **BLT-017** Verify a clean environment can synchronize from the lockfile. {Trace: PLAN:P1; PLAN:Planned Implementation Verification Commands and Evidence}
+- [x] **BLT-018** Verify `.venv`, caches, and local tool outputs are ignored. {Trace: PLAN:P1; PLAN:Project Engineering Constraints}
+- [x] **BLT-019** Verify secrets, tokens, private keys, and private configuration cannot enter the intended commit. {Trace: PLAN:P1; PLAN:Gate}
+- [x] **BLT-020** Record all environment setup commands, versions, exit codes, and results. {Trace: PLAN:P1; PLAN:Planned Implementation Verification Commands and Evidence}
 
 ## 3. Deterministic Architecture and Boundaries
 
-- [ ] **BLT-021** Define source and test package boundaries before implementing rules. {Trace: PLAN:P1; PLAN:P3}
-- [ ] **BLT-022** Assign one clear responsibility to each planned Python module. {Trace: PLAN:P1; PLAN:Project Engineering Constraints}
-- [ ] **BLT-023** Define dependency direction so game rules do not import strategy code. {Trace: PRD:Deterministic Enforcement; PLAN:P3}
+- [x] **BLT-021** Define source and test package boundaries before implementing rules. {Trace: PLAN:P1; PLAN:P3}
+- [x] **BLT-022** Assign one clear responsibility to each planned Python module. {Trace: PLAN:P1; PLAN:Project Engineering Constraints}
+- [x] **BLT-023** Define dependency direction so game rules do not import strategy code. {Trace: PRD:Deterministic Enforcement; PLAN:P3}
 - [ ] **BLT-024** Define dependency direction so game rules do not import LLM providers or prompts. {Trace: PRD:Deterministic Enforcement; PLAN:Non-Goals}
 - [ ] **BLT-025** Define dependency direction so Stage 1 does not import MCP or networking code. {Trace: PRD:Non-Goals; PLAN:Non-Goals}
 - [ ] **BLT-026** Define pure deterministic boundaries for validation and state transitions. {Trace: PRD:Deterministic Enforcement; PLAN:P3}
 - [ ] **BLT-027** Define explicit domain-result boundaries for accepted and rejected actions. {Trace: PLAN:P3; PLAN:Unit-Testing Strategy}
 - [ ] **BLT-028** Define immutable or copy-safe state handling so rejected actions cannot mutate prior state. {Trace: PLAN:P3; PLAN:Gate}
 - [ ] **BLT-029** Define terminal-state handling so completed episodes cannot be altered. {Trace: PRD:Capture and End Conditions; PLAN:Unit-Testing Strategy}
-- [ ] **BLT-030** Review the planned module split and confirm every Python file can remain at or below 150 lines. {Trace: PLAN:P1; PLAN:Gate}
+- [x] **BLT-030** Review the planned module split and confirm every Python file can remain at or below 150 lines. {Trace: PLAN:P1; PLAN:Gate}
 
 ## 4. Local Shared Configuration
 
@@ -212,9 +212,9 @@ Every task has a stable `BLT-NNN` identifier and a `Trace` field. Trace referenc
 
 ## 15. Quality and Planned Verification
 
-- [ ] **BLT-152** Implement an automated check that fails when any Python file exceeds 150 lines. {Trace: PLAN:P1; PLAN:Gate}
-- [ ] **BLT-153** Include source files, tests, scripts, and future Python support files in the 150-line scan. {Trace: PLAN:Project Engineering Constraints; PLAN:Gate}
-- [ ] **BLT-154** Test the line-count checker with compliant and over-limit fixture cases. {Trace: PLAN:P8; PLAN:Gate}
+- [x] **BLT-152** Implement an automated check that fails when any Python file exceeds 150 lines. {Trace: PLAN:P1; PLAN:Gate}
+- [x] **BLT-153** Include source files, tests, scripts, and future Python support files in the 150-line scan. {Trace: PLAN:Project Engineering Constraints; PLAN:Gate}
+- [x] **BLT-154** Test the line-count checker with compliant and over-limit fixture cases. {Trace: PLAN:P8; PLAN:Gate}
 - [ ] **BLT-155** Split any Python file before it exceeds 150 lines while preserving single responsibility. {Trace: PLAN:Project Engineering Constraints; PLAN:Gate}
 - [ ] **BLT-156** Run planned `uv sync --frozen` and record its exit code during implementation verification. {Trace: PLAN:Planned Implementation Verification Commands and Evidence; PLAN:Gate}
 - [ ] **BLT-157** Run planned `uv run pytest -q` and record test counts and failures. {Trace: PLAN:Planned Implementation Verification Commands and Evidence; PLAN:Gate}
