@@ -19,6 +19,11 @@
 - Tests import `salareen_thief` from the installed project.
 - The standalone line checker is exercised through subprocess calls and `scripts`
   is not an importable package.
+- The permanent dependency gate permits later-stage packages to exist, but rejects
+  any absolute or relative import from `base_logic` to those packages.
+- The AST scanner rejects the external roots `fastmcp`, `mcp`, `openai`,
+  `anthropic`, `requests`, and `cryptography`, plus internal strategy, LLM,
+  networking, and cryptography package prefixes.
 - The line checker scans `src`, `tests`, and `scripts`, with a 150-line maximum.
 - Existing `.gitignore` rules already cover `.venv`, caches, environments, and secret-bearing local files, so it was not changed.
 
@@ -46,14 +51,19 @@ subprocess.
 The over-limit test creates a temporary 151-line Python file through pytest's
 `tmp_path` fixture. No intentionally oversized fixture is stored in the repository.
 
+The PR #6 review correction removed the future-breaking assertion that later-stage
+packages must not exist. Temporary Python fixtures now prove that the scanner
+detects absolute and relative forbidden internal imports as well as each forbidden
+external dependency.
+
 ## Final Verification
 
 | Command | Exit | Result |
 |---|---:|---|
 | `uv lock` | 0 | Resolved 7 packages in 370 ms |
-| `uv sync --frozen` | 0 | Built and installed `salareen-thief==0.1.0` |
+| `uv sync --frozen` | 0 | Checked 7 packages in 3 ms |
 | `uv run python -c "import salareen_thief; import salareen_thief.base_logic"` | 0 | Both installed-package imports succeeded |
-| `uv run pytest -q` | 0 | 6 passed in 0.75s |
+| `uv run pytest -q` | 0 | 13 passed in 1.08s |
 | `uv run python scripts/check_python_line_lengths.py` | 0 | Checked 5 Python files; maximum 150 lines |
 | `git diff --check` | 0 | No whitespace errors |
 | `git status -sb` | 0 | Expected Batch 1 files only; nothing staged |
