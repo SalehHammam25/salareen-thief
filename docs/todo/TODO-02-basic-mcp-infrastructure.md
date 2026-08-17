@@ -86,8 +86,8 @@ Checked tasks have evidence in `../verification/stage-2-mcp-infrastructure.md`. 
 - [x] **MCP-058** Record exact commands, versions, exits and failures in Stage 2 evidence. {Trace: PRD-02; PLAN:Stage 2; PDF:applicable authority}
 - [x] **MCP-059** Audit completed checkboxes against concrete evidence. {Trace: PRD-02; PLAN:Stage 2; PDF:Ch10.4}
 - [x] **MCP-060** Inspect the complete staged diff, names, statistics and whitespace. {Trace: PLAN:Cross-Stage Verification}
-- [x] **MCP-061** Commit only the reviewed Stage 2 files on the dedicated branch. Evidence: `2d6ab3d`. {Trace: PLAN:Git workflow}
-- [x] **MCP-062** Push the Stage 2 branch without merging it. Evidence: `origin/feat/stage-2-mcp-infrastructure`. {Trace: PLAN:Git workflow}
+- [x] **MCP-061** Commit only reviewed Stage 2 files on the dedicated branch. Evidence: `2d6ab3d`, `12aa611`. {Trace: PLAN:Git workflow}
+- [x] **MCP-062** Push both Stage 2 implementation commits without merging. Evidence: `origin/feat/stage-2-mcp-infrastructure` at `12aa611`. {Trace: PLAN:Git workflow}
 - [ ] **MCP-063** Open a focused Stage 2 Pull Request against main. {Trace: PLAN:Git workflow}
 - [x] **MCP-064** Obtain independent review when available; otherwise record Codex adversarial review, no human reviewer, and Areen's owner approval. {Trace: PLAN:Review Policy; PLAN:Stage 2 gate}
 - [ ] **MCP-065** Record binary PASS only after merge and synchronization; otherwise record FAIL. {Trace: PDF:Ch10.4; PLAN:Stage 2 gate}

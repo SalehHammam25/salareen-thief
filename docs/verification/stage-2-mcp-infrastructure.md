@@ -94,6 +94,14 @@ Focused idempotency/FastMCP verification passed 20 tests before the final
 fresh-gateway repeatability test was added. That test is included in the
 245-test complete result.
 
+## Pre-PR delivery evidence
+
+- Initial Stage 2 implementation commit: `2d6ab3d`.
+- Production contract/idempotency commit: `12aa611`.
+- Both commits were pushed to `origin/feat/stage-2-mcp-infrastructure`.
+- The working tree was clean and synchronized after the implementation push.
+- No Pull Request, merge, or final PASS is claimed.
+
 The localhost integration launches two separate peer processes on distinct
 ports. Each process serves and calls; both are terminated and reaped afterward.
 
