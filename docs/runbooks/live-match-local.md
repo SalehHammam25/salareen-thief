@@ -11,7 +11,8 @@ uv run python -m salareen_thief.live_match.runner --host 127.0.0.1 --port 8801 `
   --session-id local-session --scenario capture
 ```
 
-`--scenario` also accepts `barrier_capture` and `survival`. Private strategy and
+`--scenario` also accepts `barrier_capture`, `trapped`, `capture_priority`, and
+`survival`. Private strategy and
 provider files remain local; automated verification always uses the template
 provider. End the match through `shutdown_match_v1`; an operator may stop the
 process only after the local journal and JSONL log have flushed.
@@ -30,3 +31,21 @@ credentials in an endpoint, journal, command line or log.
 Start the cop independently on port 8802, then run
 `uv run python tests/support/live_match_process_probe.py`. Stop both peer
 processes after the probe. This runbook does not start ngrok.
+
+## Complete local pre-ngrok gate
+
+From the sibling `salareen-cop` repository, run exactly:
+
+```powershell
+uv run python tests/support/live_match_gate.py --repeat 2
+```
+
+The harness starts both production runners with separate journals and JSONL
+logs, requires event-plus-port readiness, performs controlled interruption and
+restart cases, and terminates/kills/reaps peers in `finally`. Every run has a
+fresh runtime directory and canonical evidence comparison.
+
+Tomorrow with Saleh: privately exchange stable HTTPS endpoints; start one peer
+on each computer; verify symmetric MCP calls; complete and reconcile one remote
+match; retain redacted logs; then run the authorized ngrok checks. Do not begin
+Stage 6 or merge until that remote evidence exists.

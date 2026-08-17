@@ -30,8 +30,11 @@ def _event(session: LiveMatchSession, kind: str, correlation: str,
 
 async def capture(url: str, session: LiveMatchSession) -> None:
     state = session.gameplay.state
+    causes = {"coordinate_overlap": "cooccupancy", "barrier_on_thief": "barrier",
+              "trapped_thief": "trapped"}
+    cause = state.outcome.capture_cause.value if state.outcome else "coordinate_overlap"
     values = {"turn_index": session.turn_index, "claimant_role": "cop",
-              "capture_kind": "cooccupancy", "cop_x": state.positions.cop.row,
+              "capture_kind": causes[cause], "cop_x": state.positions.cop.row,
               "cop_y": state.positions.cop.col, "thief_x": state.positions.thief.row,
               "thief_y": state.positions.thief.col}
     remote = {**_base(session, "cop", "capture-cop"), **values}

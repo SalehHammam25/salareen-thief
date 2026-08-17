@@ -22,7 +22,8 @@ def main() -> None:
     parser.add_argument("--session-id", default="local-session")
     parser.add_argument("--config", default="config/game.json")
     parser.add_argument("--opponent")
-    parser.add_argument("--scenario", choices=("capture", "barrier_capture", "survival"),
+    parser.add_argument("--scenario", choices=("capture", "barrier_capture", "trapped",
+                        "capture_priority", "survival"),
                         default="capture")
     args = parser.parse_args()
     if args.opponent:
@@ -39,6 +40,10 @@ def main() -> None:
     session.events = events
     session.action_delay = float(os.environ.get("SALAREEN_ACTION_DELAY", "0"))
     session.crash_after_send = int(os.environ.get("SALAREEN_CRASH_AFTER_SEND", "-1"))
+    session.max_retries = int(os.environ.get("SALAREEN_MAX_RETRIES", "3"))
+    session.retry_backoff = float(os.environ.get("SALAREEN_RETRY_BACKOFF", "5"))
+    session.watchdog_timeout = float(os.environ.get("SALAREEN_WATCHDOG_TIMEOUT", "60"))
+    session.recovery_mismatch = os.environ.get("SALAREEN_RECOVERY_MISMATCH", "")
     events.emit("configured", turn=session.turn_index, phase=session.phase)
     pending = journal.get_state(args.game_id, args.session_id, "pending_action")
     if args.opponent and (saved or pending) and session.phase == "game_initialized":

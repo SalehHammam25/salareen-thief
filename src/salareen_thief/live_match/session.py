@@ -1,4 +1,3 @@
-"""Validated, exactly-once live-match message session."""
 import json
 from typing import Any
 
@@ -9,11 +8,9 @@ from .outbound import prepare
 STATUSES = {
     "initialize_game_v1": "initialized", "submit_action_v1": "applied",
     "acknowledge_action_v1": "acknowledged", "publish_scent_v1": "observed",
-    "send_language_hint_v1": "hint_accepted",
-    "submit_capture_claim_v1": "capture_confirmed",
-    "reconcile_terminal_v1": "terminal_agreed",
+    "send_language_hint_v1": "hint_accepted", "submit_capture_claim_v1": "capture_confirmed",
+    "reconcile_terminal_v1": "terminal_agreed", "shutdown_match_v1": "shutdown_ready",
     "reconcile_score_v1": "score_agreed", "resume_match_v1": "resume_allowed",
-    "shutdown_match_v1": "shutdown_ready",
 }
 class LiveMatchSession:
     def __init__(self, local_role: str, game_id: str, session_id: str,
@@ -38,6 +35,9 @@ class LiveMatchSession:
         assert isinstance(payload, dict)
         issue = self._validate_identity(tool, payload)
         if issue:
+            if tool == "resume_match_v1":
+                self.phase = "aborted"
+                self._save("phase", self.phase)
             return self._reject(correlation, *issue)
         key = (self.game_id, self.session_id, tool, correlation)
         request = protocol.canonical(payload)

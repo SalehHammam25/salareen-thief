@@ -11,6 +11,7 @@ from salareen_thief.base_logic.actions import (
     MoveAction,
     MoveChoice,
 )
+from salareen_thief.base_logic.capture import adjacent_destinations
 from salareen_thief.base_logic.config_loader import load_config
 from salareen_thief.base_logic.config_results import ConfigAccepted
 from salareen_thief.base_logic.rules import BaseLogicRules
@@ -48,10 +49,8 @@ class GameplayAdapter:
         self.scent = empty_field(self.state.board)
         self.stage4 = Stage4Boundary(source, self.state.board)
         self.gateway = StrategyGateway(self.rules, BlindShortestPath())
-
     def propose(self, target: Coordinate):
         return self.gateway.decide(self.state, target)
-
     def apply_payload(self, payload: dict[str, Any]) -> tuple[bool, str]:
         action = self._action(payload)
         result = self.rules.apply(self.state, action)
@@ -63,16 +62,15 @@ class GameplayAdapter:
             position = self.state.positions.for_role(action.role)
             self.scent = evolve(self.scent, self.state.board, position)
         return True, "applied"
-
     def validate_payload(self, payload: dict[str, Any]) -> tuple[str, str] | None:
         result = self.rules.apply(self.state, self._action(payload))
         if isinstance(result, ActionAccepted):
             return None
         detail = getattr(result, "error", getattr(result, "question", "rejected"))
         return "ACTION_REJECTED", str(detail)
-
     def capture(self, payload: dict[str, Any], *, apply: bool) -> tuple[str, str] | None:
         causes = {"cooccupancy": CaptureCause.COORDINATE_OVERLAP,
+                  "barrier": CaptureCause.BARRIER_ON_THIEF,
                   "trapped": CaptureCause.TRAPPED_THIEF}
         cause = causes.get(payload["capture_kind"])
         if payload["claimant_role"] != "cop" or cause is None:
@@ -141,7 +139,12 @@ class GameplayAdapter:
         role = Role(payload["sender_role"])
         if payload["action_kind"] == "barrier":
             target = Coordinate(payload["x"], payload["y"])
-            claim = (CaptureClaim(Role.COP, CaptureCause.BARRIER_ON_THIEF)
-                     if target == self.state.positions.thief else None)
+            destinations = adjacent_destinations(self.state)
+            cause = None
+            if target == self.state.positions.thief:
+                cause = CaptureCause.BARRIER_ON_THIEF
+            elif len(destinations) == 1 and target == destinations[0]:
+                cause = CaptureCause.TRAPPED_THIEF
+            claim = None if cause is None else CaptureClaim(Role.COP, cause)
             return BarrierAction(role, target, claim)
         return MoveAction(role, MoveChoice(payload["direction"]))

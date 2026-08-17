@@ -7,7 +7,9 @@ from typing import Any
 from fastmcp import Client
 
 from .reconciliation import capture, finish
+from .recovery import bounded_call
 from .session import LiveMatchSession
+from .test_strategy import choose
 
 
 def _event(session: LiveMatchSession, kind: str, correlation: str | None = None,
@@ -36,35 +38,24 @@ async def _connect(url: str, session: LiveMatchSession) -> None:
                **fields}
     if recovering:
         payload.pop("game_number")
-    for _ in range(30):
-        try:
-            response = await _call(url, tool, payload)
-            if response["accepted"]:
-                session.phase = "game_initialized"
-                session._save("phase", session.phase)
-                _event(session, "peer_connected")
-                _event(session, "resume_accepted" if recovering else "game_initialized")
-                return
-        except Exception:
-            await asyncio.sleep(0.2)
-    raise RuntimeError("peer initialization failed")
-def _intent(session: LiveMatchSession, scenario: str) -> dict[str, Any]:
-    direction = "STAY"
-    if scenario in {"capture", "barrier_capture"} and session.local_role == "cop":
-        cop = session.gameplay.state.positions.cop
-        thief = session.gameplay.state.positions.thief
-        if scenario == "barrier_capture" and cop.row == thief.row and cop.col + 1 == thief.col:
-            return {**_base(session, "cop", f"action-{session.turn_index}"),
-                    "turn_index": session.turn_index, "action_kind": "barrier",
-                    "direction": None, "x": thief.row, "y": thief.col}
-        direction = "S" if cop.row < thief.row else "E" if cop.col < thief.col else "STAY"
-    kind = "stay" if direction == "STAY" else "move"
-    return {**_base(session, session.local_role, f"action-{session.turn_index}"),
-            "turn_index": session.turn_index, "action_kind": kind,
-            "direction": direction, "x": None, "y": None}
+        field = session.recovery_mismatch
+        replacements = {"game_id": "mismatched-game", "session_id": "mismatched-session",
+                        "protocol_version": "mismatched-version",
+                        "turn_index": session.turn_index + 1,
+                        "phase": "mismatched-phase"}
+        if field:
+            payload[field] = replacements[field]
+    response = await bounded_call(session, payload["correlation_id"],
+        lambda: _call(url, tool, payload), pause=recovering)
+    if not response["accepted"]:
+        raise RuntimeError(f"peer initialization rejected: {response['code']}")
+    session.phase = "game_initialized"
+    session._save("phase", session.phase)
+    _event(session, "peer_connected")
+    _event(session, "resume_accepted" if recovering else "game_initialized")
 async def _local_turn(url: str, session: LiveMatchSession, scenario: str) -> None:
     _event(session, "strategy_snapshot_created")
-    intent = _intent(session, scenario)
+    intent = choose(session, scenario)
     _event(session, "strategy_proposed", intent["correlation_id"],
            {"action_kind": intent["action_kind"]})
     prepared = session.prepare_local(intent)
@@ -72,19 +63,8 @@ async def _local_turn(url: str, session: LiveMatchSession, scenario: str) -> Non
         raise RuntimeError(f"local proposal rejected: {prepared['code']}")
     _event(session, "local_validation", intent["correlation_id"])
     _event(session, "action_prepared", intent["correlation_id"])
-    result = None
-    for _ in range(300):
-        try:
-            result = await _call(url, "submit_action_v1", intent)
-            break
-        except Exception:
-            session.phase = "paused_recovering"
-            session._save("phase", session.phase)
-            _event(session, "paused", intent["correlation_id"])
-            _event(session, "reconnect_attempted", intent["correlation_id"])
-            await asyncio.sleep(0.2)
-    if result is None:
-        raise RuntimeError("peer recovery exhausted")
+    result = await bounded_call(session, intent["correlation_id"],
+        lambda: _call(url, "submit_action_v1", intent))
     if not result["accepted"]:
         raise RuntimeError(f"remote action rejected: {result['code']}")
     if getattr(session, "crash_after_send", -1) == session.turn_index:
@@ -140,7 +120,11 @@ async def run_autoplay(url: str, session: LiveMatchSession, scenario: str) -> No
         else:
             await asyncio.sleep(0.02)
     if session.local_role == "cop":
-        if scenario in {"capture", "barrier_capture"}:
+        if scenario == "survival":
+            while (session.gameplay.stage4.last_scent_turn != session.turn_index or
+                   session.gameplay.stage4.last_hint_turn != session.turn_index):
+                await asyncio.sleep(0.02)
+        if scenario in {"capture", "barrier_capture", "trapped", "capture_priority"}:
             await capture(url, session)
         outcome = "cop_capture" if scenario != "survival" else "thief_survival"
         await finish(url, session, outcome, session.gameplay.score())
