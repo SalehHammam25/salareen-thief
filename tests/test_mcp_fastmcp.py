@@ -21,7 +21,7 @@ def payload(correlation: str = "in-memory-1") -> dict[str, object]:
 
 def test_fastmcp_tool_returns_validated_acknowledgement() -> None:
     async def scenario() -> None:
-        server, gateway = build_server("thief")
+        server, gateway = build_server("thief", "game-1")
         async with Client(server) as client:
             result = await client.call_tool(TOOL_RECEIVE, {"payload": payload()})
         assert result.data["accepted"] is True
@@ -32,7 +32,7 @@ def test_fastmcp_tool_returns_validated_acknowledgement() -> None:
 
 def test_fastmcp_tool_rejects_malformed_payload() -> None:
     async def scenario() -> None:
-        server, gateway = build_server("thief")
+        server, gateway = build_server("thief", "game-1")
         before = gateway.state
         async with Client(server) as client:
             result = await client.call_tool(

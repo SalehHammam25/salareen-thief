@@ -1,8 +1,8 @@
 # TODO 02 - Basic MCP Infrastructure
 
-**Status:** Implementation verified; merge gate pending
+**Status:** Production implementation verified; PR/merge gate pending
 **Related PRD:** `../prd/PRD-02-basic-mcp-infrastructure.md`
-**Implementation:** Technical slice complete; blocked and delivery tasks remain
+**Implementation:** Complete except Pull Request and merge/synchronization gate
 **Task ID range:** MCP-001 through MCP-065
 
 Checked tasks have evidence in `../verification/stage-2-mcp-infrastructure.md`. Items that depend on a PRD blocked question remain non-executable until the decision is approved.
@@ -12,10 +12,10 @@ Checked tasks have evidence in `../verification/stage-2-mcp-infrastructure.md`. 
 ## Documentation and contracts
 
 - [x] **MCP-001** Reconfirm PRD-02 authority mapping against Chapters 2, 8, Appendix E 1-10 and Annex F 19. {Trace: PRD-02; PLAN:Stage 2; PDF:applicable authority}
-- [ ] **MCP-002** [BLOCKED: MCP-BQ-01..03] Resolve or retain every MCP blocker. {Trace: PRD-02; PLAN:Stage 2; PDF:Ch2/Ch8}
-- [ ] **MCP-003** [BLOCKED: MCP-BQ-01] Approve one cross-repository protocol version and compatibility policy. {Trace: PRD-02; PLAN:Stage 2; PDF:Ch2.3}
-- [ ] **MCP-004** Approve symmetric tool names and ownership with the cop repository. {Trace: PRD-02; PLAN:Stage 2; PDF:applicable authority}
-- [ ] **MCP-005** Define request, acknowledgement, rejection and technical-failure vocabulary. {Trace: PRD-02; PLAN:Stage 2; PDF:applicable authority}
+- [x] **MCP-002** Resolve MCP-BQ-01 and MCP-BQ-02 through ADR-003; retain MCP-BQ-03 without assigning blame. {Trace: PRD-02; PLAN:Stage 2; PDF:Ch2/Ch8; ADR-003}
+- [x] **MCP-003** Areen approved protocol `1.0-provisional` and fixture-based cross-repository compatibility in ADR-003. {Trace: PRD-02; PLAN:Stage 2; PDF:Ch2.3; ADR-003}
+- [x] **MCP-004** Areen approved symmetric `receive_geometry`/`relay_geometry` names and local peer ownership in ADR-003. {Trace: PRD-02; PLAN:Stage 2; PDF:applicable authority; ADR-003}
+- [x] **MCP-005** ADR-003 approves the request, acknowledgement, rejection and typed local-failure vocabulary. {Trace: PRD-02; PLAN:Stage 2; PDF:applicable authority; ADR-003}
 - [x] **MCP-006** Map every PRD-02 acceptance criterion to tests and evidence. {Trace: PRD-02; PLAN:Stage 2; PDF:applicable authority}
 - [x] **MCP-007** Record Stage 2 scope exclusions in implementation review checklist. {Trace: PRD-02; PLAN:Stage 2; PDF:applicable authority}
 - [x] **MCP-008** Create a shared contract-change review procedure for both repositories. {Trace: PRD-02; PLAN:Stage 2; PDF:applicable authority}
@@ -51,7 +51,7 @@ Checked tasks have evidence in `../verification/stage-2-mcp-infrastructure.md`. 
 ## FastMCP server/client
 
 - [x] **MCP-031** Create thief FastMCP server instance. {Trace: PRD-02; PLAN:Stage 2; PDF:applicable authority}
-- [ ] **MCP-032** Expose the approved geometric receive tool. {Trace: PRD-02; PLAN:Stage 2; PDF:applicable authority}
+- [x] **MCP-032** Expose the owner-approved geometric receive tool. {Trace: PRD-02; PLAN:Stage 2; PDF:applicable authority; ADR-003}
 - [x] **MCP-033** Create thief FastMCP client connector. {Trace: PRD-02; PLAN:Stage 2; PDF:applicable authority}
 - [x] **MCP-034** Call the cop fixture server over localhost. {Trace: PRD-02; PLAN:Stage 2; PDF:applicable authority}
 - [x] **MCP-035** Return acknowledgement only after schema validation. {Trace: PRD-02; PLAN:Stage 2; PDF:applicable authority}
@@ -70,7 +70,7 @@ Checked tasks have evidence in `../verification/stage-2-mcp-infrastructure.md`. 
 - [x] **MCP-045** Route outbound requests through orchestrator. {Trace: PRD-02; PLAN:Stage 2; PDF:applicable authority}
 - [x] **MCP-046** Prevent direct connector-to-strategy/base-logic mutation. {Trace: PRD-02; PLAN:Stage 2; PDF:applicable authority}
 - [x] **MCP-047** Represent pending request and deadline immutably. {Trace: PRD-02; PLAN:Stage 2; PDF:applicable authority}
-- [ ] **MCP-048** Handle duplicate correlation IDs per approved decision. {Trace: PRD-02; PLAN:Stage 2; PDF:applicable authority}
+- [x] **MCP-048** Handle duplicate correlation IDs with bounded session-scoped idempotency and mismatch rejection. {Trace: PRD-02; PLAN:Stage 2; PDF:applicable authority; ADR-003}
 - [x] **MCP-049** Test rejected/out-of-phase events preserve complete state. {Trace: PRD-02; PLAN:Stage 2; PDF:applicable authority}
 - [x] **MCP-050** Test completed episode rejects ordinary transport actions. {Trace: PRD-02; PLAN:Stage 2; PDF:applicable authority}
 
@@ -86,8 +86,8 @@ Checked tasks have evidence in `../verification/stage-2-mcp-infrastructure.md`. 
 - [x] **MCP-058** Record exact commands, versions, exits and failures in Stage 2 evidence. {Trace: PRD-02; PLAN:Stage 2; PDF:applicable authority}
 - [x] **MCP-059** Audit completed checkboxes against concrete evidence. {Trace: PRD-02; PLAN:Stage 2; PDF:Ch10.4}
 - [x] **MCP-060** Inspect the complete staged diff, names, statistics and whitespace. {Trace: PLAN:Cross-Stage Verification}
-- [ ] **MCP-061** Commit only the reviewed Stage 2 files on the dedicated branch. {Trace: PLAN:Git workflow}
-- [ ] **MCP-062** Push the Stage 2 branch without merging it. {Trace: PLAN:Git workflow}
+- [x] **MCP-061** Commit only the reviewed Stage 2 files on the dedicated branch. Evidence: `2d6ab3d`. {Trace: PLAN:Git workflow}
+- [x] **MCP-062** Push the Stage 2 branch without merging it. Evidence: `origin/feat/stage-2-mcp-infrastructure`. {Trace: PLAN:Git workflow}
 - [ ] **MCP-063** Open a focused Stage 2 Pull Request against main. {Trace: PLAN:Git workflow}
 - [x] **MCP-064** Obtain independent review when available; otherwise record Codex adversarial review, no human reviewer, and Areen's owner approval. {Trace: PLAN:Review Policy; PLAN:Stage 2 gate}
 - [ ] **MCP-065** Record binary PASS only after merge and synchronization; otherwise record FAIL. {Trace: PDF:Ch10.4; PLAN:Stage 2 gate}

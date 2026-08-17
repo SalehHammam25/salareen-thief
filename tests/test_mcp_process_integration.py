@@ -41,6 +41,8 @@ def start_peer(role: str, port: int, opponent: int) -> subprocess.Popen[bytes]:
             "salareen_thief.mcp_transport.peer",
             "--role",
             role,
+            "--session-id",
+            "game-process-test",
             "--port",
             str(port),
             "--opponent-url",

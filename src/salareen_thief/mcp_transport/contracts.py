@@ -1,4 +1,4 @@
-"""Provisional versioned geometric transport contracts."""
+"""Owner-approved Stage 2 geometric transport contract."""
 
 import re
 from dataclasses import dataclass

@@ -18,14 +18,14 @@ def payload(correlation: str = "message-1") -> dict[str, object]:
 
 
 def test_valid_receive_updates_only_transport_state() -> None:
-    gateway = PeerOrchestrator()
+    gateway = PeerOrchestrator("game-1")
     result = gateway.receive(payload())
     assert isinstance(result, TransportAccepted)
     assert gateway.state.last_received == result.message
 
 
 def test_rejected_contract_does_not_mutate() -> None:
-    gateway = PeerOrchestrator()
+    gateway = PeerOrchestrator("game-1")
     before = gateway.state
     result = gateway.receive(payload() | {"x": True})
     assert result.as_dict()["accepted"] is False
@@ -33,16 +33,16 @@ def test_rejected_contract_does_not_mutate() -> None:
 
 
 def test_outbound_payload_is_validated_by_gateway() -> None:
-    gateway = PeerOrchestrator()
+    gateway = PeerOrchestrator("game-1")
     accepted = gateway.prepare_outbound(payload())
     rejected = gateway.prepare_outbound(payload() | {"x": True})
     assert isinstance(accepted, TransportAccepted)
     assert rejected.as_dict()["accepted"] is False
-    assert gateway.state == PeerOrchestrator().state
+    assert gateway.state == PeerOrchestrator("game-1").state
 
 
 def test_only_listed_transitions_are_accepted() -> None:
-    gateway = PeerOrchestrator()
+    gateway = PeerOrchestrator("game-1")
     assert gateway.transition(PeerPhase.SENDING) is False
     assert gateway.state.phase.phase is PeerPhase.WAITING_FOR_OPPONENT
     assert gateway.transition(PeerPhase.COMPUTING_MOVE) is True
@@ -52,7 +52,7 @@ def test_only_listed_transitions_are_accepted() -> None:
 
 
 def test_out_of_phase_receive_preserves_state() -> None:
-    gateway = PeerOrchestrator()
+    gateway = PeerOrchestrator("game-1")
     gateway.transition(PeerPhase.COMPUTING_MOVE)
     before = gateway.state
     result = gateway.receive(payload())
@@ -61,7 +61,7 @@ def test_out_of_phase_receive_preserves_state() -> None:
 
 
 def test_terminal_phase_rejects_messages() -> None:
-    gateway = PeerOrchestrator()
+    gateway = PeerOrchestrator("game-1")
     gateway.transition(PeerPhase.COMPLETE)
     before = gateway.state
     result = gateway.receive(payload())

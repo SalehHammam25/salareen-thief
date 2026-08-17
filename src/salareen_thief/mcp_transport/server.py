@@ -11,11 +11,11 @@ from .results import TransportError, TransportRejected
 
 
 def build_server(
-    role: str, opponent_url: str | None = None
+    role: str, session_id: str, opponent_url: str | None = None
 ) -> tuple[FastMCP, PeerOrchestrator]:
     if role not in {"cop", "thief"}:
         raise ValueError("role must be cop or thief")
-    orchestrator = PeerOrchestrator()
+    orchestrator = PeerOrchestrator(session_id)
     server = FastMCP(f"salareen-{role}")
 
     @server.tool(name=TOOL_RECEIVE)

@@ -10,15 +10,22 @@ from .results import TransportAccepted, TransportError, TransportRejected
 
 @dataclass(frozen=True, slots=True)
 class OrchestratorState:
+    session_id: str
     phase: PhaseState = PhaseState()
     last_received: GeometryMessage | None = None
+    processed: tuple[GeometryMessage, ...] = ()
 
 
 class PeerOrchestrator:
     """Own transport state; never owns or mutates Base Logic state."""
 
-    def __init__(self) -> None:
-        self._state = OrchestratorState()
+    def __init__(self, session_id: str, max_tracked: int = 100) -> None:
+        if type(session_id) is not str or not session_id:
+            raise ValueError("session_id must be a nonempty string")
+        if type(max_tracked) is not int or max_tracked <= 0:
+            raise ValueError("max_tracked must be a positive integer")
+        self._state = OrchestratorState(session_id=session_id)
+        self._max_tracked = max_tracked
 
     @property
     def state(self) -> OrchestratorState:
@@ -33,9 +40,25 @@ class PeerOrchestrator:
         decoded = decode_geometry(payload)
         if isinstance(decoded, ContractRejected):
             return TransportRejected(decoded.code, decoded.detail)
+        previous = next(
+            (
+                item
+                for item in before.processed
+                if item.correlation_id == decoded.correlation_id
+            ),
+            None,
+        )
+        if previous is not None:
+            if previous == decoded:
+                return TransportAccepted(previous)
+            return TransportRejected(
+                TransportError.DUPLICATE_MISMATCH, decoded.correlation_id
+            )
+        processed = (before.processed + (decoded,))[-self._max_tracked :]
         self._state = replace(
             before,
             last_received=decoded,
+            processed=processed,
         )
         return TransportAccepted(decoded)
 
