@@ -1,9 +1,9 @@
 # Project Implementation Plan
 
-**Status:** Approved for TODO decomposition
+**Status:** Stage 1 approved; Stages 2-7 ready for review
 **Repository:** salareen-thief
-**Current stage:** Stage 1 - Base Logic
-**Implementation:** Not started
+**Current stage:** Documentation preparation for Stages 2-7
+**Implementation:** Stage 2 not started
 
 ## Development Lifecycle
 
@@ -334,16 +334,175 @@ Stage 1 is either **PASS** or **FAIL**. It passes only when all conditions below
 
 If any condition is false, the gate is **FAIL**, Stage 1 remains incomplete, and Stage 2 implementation must not begin.
 
-## Later Stages - High-Level Only
+## Stage 2 - Basic MCP Infrastructure
 
-- **Stage 2 - Basic MCP Infrastructure:** separate the peers and exchange geometric messages over localhost.
-- **Stage 3 - Blind Strategy:** introduce strategy behind deterministic rule interfaces, without scent or language uncertainty.
-- **Stage 4 - Language and Scent:** add natural-language interaction, scent dynamics, and the approved LLM boundary.
-- **Stage 5 - Cloud Exposure and Tunneling:** connect remote peers through approved public tunneling.
-- **Stage 6 - Security and Cryptography:** add Commit-Reveal, Nonce, signed configuration exchange, peer byte comparison, remote mismatch refusal, and audit mechanisms.
-- **Stage 7 - Reporting and Visualization Shell:** add reporting, Gmail/OAuth, GUI, and replay capabilities.
+**Authority:** Chapters 2, 8 and 10.3.2; Appendix E rules 1-10; Annex F
+Table 19. **Milestone:** two separate localhost processes exchange and decode a
+versioned geometric message through symmetric FastMCP server/client roles.
 
-Each later stage requires its own reviewed PRD, expanded PLAN content, detailed TODO, tests, and verification gate before implementation.
+Dependency order: (1) approve cross-repository tool/schema/error contracts;
+(2) add isolated process entry points and private endpoint configuration; (3)
+add deterministic codecs and validation; (4) add FastMCP server and client;
+(5) route both through the sole orchestrator gateway and legal phase machine;
+(6) add deadlines, bounded retries and watchdog boundaries; (7) run process,
+negative, repeatability and localhost integration tests. Public tunnels,
+strategy, language/scent, cryptographic trust and reporting are non-goals.
+
+Gate: both peers serve and call the agreed tool from separate processes; no
+shared state exists; malformed/out-of-phase messages do not mutate state; the
+same fixtures repeat identically; all quality and evidence commands pass.
+MCP-BQ-01 through MCP-BQ-03 block only their dependent contract tasks.
+
+## Stage 3 - Blind Strategy
+
+**Authority:** Chapter 6 and 10.3.3-10.4; Appendix E recommendation 25; Annex F
+Table 22. **Milestone:** the thief autonomously follows a shortest legal route
+to a known target without scent, language or manual intervention.
+
+Dependency order: (1) approve strategy choice, tie-breaking and plugin seam;
+(2) define immutable strategy inputs and typed proposals; (3) enumerate legal
+actions through Base Logic; (4) implement the chosen deterministic shortest
+route policy; (5) validate every proposal through Base Logic; (6) add private
+strategy selection; (7) run unreachable, malicious-plugin, performance and
+fresh-process repeatability tests. Q-learning is optional, not mandatory.
+
+Gate: all outputs are legal or typed failures; strategy cannot mutate state or
+bypass rules; shortest-route fixtures pass deterministically; Stage 4 imports
+are absent. STR-BQ-01 through STR-BQ-03 remain blocked until approved.
+
+## Stage 4 - Language and Scent
+
+**Authority:** Chapters 4, 6.4-6.5 and 10.3.4; Appendix E rules/recommendation
+25-27; Annex F Tables 14, 16, 18 and 21. **Milestone:** free-language hints are
+used for inference, the opponent scent map updates and decays each step, and an
+LLM can produce verbal text without controlling spatial legality.
+
+Dependency order: (1) resolve scent arithmetic/order/edge blockers and approve
+language policy; (2) implement fixed 0.9 center, 0.10 decay and 5x5 scent value
+model; (3) expose opponent scent only; (4) implement belief updates; (5) add
+free-language messages and direct-coordinate rejection; (6) add private
+provider abstraction, deterministic template fallback and every-N-step calls;
+(7) add token accounting/budget enforcement; (8) run numeric, prompt-injection,
+provider-failure and repeatability tests. Tunnels and cryptographic commitment
+remain later work.
+
+Gate: fixed scent values and approved ordering pass exact tests; no objective
+opponent location leaks; direct coordinates reject; LLM output cannot mutate
+state or select an unchecked move; actual tokens are accounted. LS-BQ-01
+through LS-BQ-06 block their dependent arithmetic/semantic work.
+
+## Stage 5 - Cloud Exposure and Tunneling
+
+**Authority:** Chapters 2.4 and 10.3.5; Appendix E rules 1-2 and 10; Annex F
+network timeout values. **Milestone:** a complete match runs between remote
+machines through public tunnel endpoints.
+
+Dependency order: (1) approve provider, URL exchange and failure attribution;
+(2) provision external account/token outside Git; (3) implement provider
+adapter and lifecycle; (4) validate/redact endpoints; (5) expose both peers and
+perform symmetric health checks; (6) add latency, disconnect, retry, watchdog
+and shutdown behavior; (7) run two-machine match and fault-injection tests.
+
+Gate: remote bidirectional MCP and a complete match pass; no localhost shortcut
+or secret leakage exists; failures never wait indefinitely. Reachability is not
+authentication. CLD-BQ-01 through CLD-BQ-05 and external account/firewall work
+remain explicit blockers.
+
+## Stage 6 - Security and Cryptography
+
+**Authority:** Chapter 5 and 10.3.6; Appendix B; Appendix E rules 11-24 and
+46-48; Annex F. **Milestone:** every move completes Commit, Acknowledge, Reveal
+and final Nonce audit; signed Step-0 and byte-identical shared configuration
+verify before play.
+
+Dependency order: (1) approve canonical bytes, signatures/key trust, complete
+commitment and Capture Claim schemas; (2) compare/sign/refuse shared config;
+(3) sign Step-0 with hardware/model/team/game-count/exact commit; (4) generate
+fresh secret Nonces and SHA-256 commitments; (5) enforce protocol phases; (6)
+verify all capture causes through the common claim path; (7) append complete
+logs and perform final mutual audit; (8) add tamper, forgery, replay, secrecy,
+fuzz and cross-repository vectors.
+
+Gate: one-byte config changes refuse before play; every commitment recomputes
+across repositories; any changed field/false claim produces the mandated loss;
+no secret enters Git/logs/errors. SEC-BQ-01 through SEC-BQ-06 block dependent
+security work and may not be filled by a convenient library default.
+
+## Stage 7 - Reporting and Visualization Shell
+
+**Authority:** Chapters 7, 9 and 10.3.7; Appendices A, C and E; Annex F Tables
+17-20. **Milestone:** both peers independently send agreeing signed JSON reports
+through Gmail, the GUI shows local truth, and replay verifies a complete log.
+
+Dependency order: (1) approve artifact schemas/identifiers/email idempotency and
+GUI choice; (2) build read-only local-truth GUI with heatmap/turn lock; (3) build
+deterministic Verified OK/TAMPERED replay; (4) implement fixed league counting,
+diversity, caps and tie aggregation; (5) generate declaration/config/log/result
+JSON; (6) provision OAuth externally with gmail.send only; (7) add quota,
+token-bucket, DOS and 429 controls; (8) send separate agreeing reports; (9)
+complete two-repository README/screenshots/tag/submission evidence.
+
+Gate: GUI never reveals global truth; any log mutation disqualifies; both JSON
+reports validate and agree; non-contradictory league values match Annex F;
+secrets are ignored; all repository/submission checks pass. REP-BQ-01 through
+REP-BQ-07 and external Google/course actions remain explicit blockers. The
+Annex F six-game series versus Appendix E rule 52 one-counted-game rule is not
+implemented until the terminology/relationship is formally approved.
+
+## Cross-Stage Verification and Delivery Rules
+
+For Stages 2-7, implementation verification is planned, not already passed:
+
+```text
+uv lock
+uv sync --frozen
+uv run ruff check .
+uv run pytest -q
+uv run python scripts/check_python_line_lengths.py
+git diff --check
+git status -sb
+git diff --name-only
+```
+
+Each stage must also run focused integration, negative, security and
+fresh-process repeatability tests appropriate to its external boundaries; scan
+for credentials, private TOML, generated environments and forbidden dependency
+leaks; and record exact versions, commands, exit codes, failures and corrections
+in `docs/verification/`. Before commit, inspect `git diff --cached --check`, the
+complete staged diff, names and statistics. Commit and push only the reviewed
+scope, open a focused PR, obtain review, merge, synchronize `main`, and record a
+binary PASS before implementing the next stage.
+
+Cross-repository contracts are jointly versioned: MCP envelopes/tools/errors
+(Stage 2), language/scent payloads (Stage 4), endpoint exchange (Stage 5),
+canonical cryptographic/config/claim/log formats (Stage 6), and report/artifact
+schemas (Stage 7). A change is not effective until both repositories approve
+it. External accounts, public URLs, OAuth consent, credentials, opponent
+scheduling, repository access and final submission actions must be labelled
+external and may never be simulated as completed evidence.
+
+## Mandatory-Rule Stage Ownership Audit
+
+| Authority | Owning stage | Reason / later consumer |
+|---|---:|---|
+| Appendix E 1-7 | 2 | process separation, gateway, state machine and reliability |
+| Appendix E 8-9 | 7 | enforced by live GUI; local-truth DTO begins in Stage 2 |
+| Appendix E 10 | 5 | public tunnel exposure |
+| Appendix E 11-12 | 6 | remote byte identity, signing and negotiated-value enforcement; local validation began in Stage 1 |
+| Appendix E 13-16 | 1 | movement/barrier physics, already owned by Base Logic |
+| Appendix E 17-24 | 6 | Commit-Reveal, Nonce, audit, Capture Claim and Step-0 |
+| Appendix E 25 | 3/4 | recommendation: algorithmic movement in Stage 3; LLM verbal boundary in Stage 4 |
+| Appendix E 26-27 | 4 | free language and no direct numeric-coordinate protocol |
+| Appendix E 28-30 | 7 | Gmail Gatekeeper and send-only authorization |
+| Appendix E 31-45 | 7 | league, reporting, secret hygiene and submission administration |
+| Appendix E 46-48 | 1/6 | deterministic capture/scoring in Stage 1; cryptographic claim verification in Stage 6 |
+| Appendix E 49-52 | 7 | repositories, required contents, report address and counted-game rule |
+| Appendix E 53-54 | 6/7 | signed exact commit/token capture in Stage 6; final report in Stage 7 |
+| Appendix E 55 | 7 | course grading statement; no implementation behavior |
+
+This is intentional shared ownership only where one stage creates a local
+deterministic fact and a later stage proves, displays or reports it. No later
+stage is allowed to redefine the underlying Stage 1 outcome.
 
 ## Approved Stage 1 Execution Decisions
 
