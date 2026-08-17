@@ -86,8 +86,8 @@ Checked tasks have evidence in `../verification/stage-3-blind-strategy.md`. Item
 - [x] **STR-058** Audit TODO completion against concrete tests and retained blockers. {Trace: PRD-03; PLAN:Stage 3; PDF:applicable authority}
 - [x] **STR-059** Inspect the complete staged diff, names, statistics and whitespace. {Trace: PLAN:Cross-Stage Verification}
 - [x] **STR-060** Confirm only reviewed documentation, strategy, and tests are staged; no secrets or generated files. {Trace: PLAN:Git workflow}
-- [ ] **STR-061** Commit only reviewed Stage 3 files. {Trace: PLAN:Git workflow}
-- [ ] **STR-062** Push the dedicated Stage 3 branch. {Trace: PLAN:Git workflow}
+- [x] **STR-061** Commit only reviewed Stage 3 files. Evidence: `e01f246`. {Trace: PLAN:Git workflow}
+- [x] **STR-062** Push the dedicated Stage 3 branch without creating a PR. Evidence: `origin/feat/stage-3-blind-strategy`. {Trace: PLAN:Git workflow}
 - [ ] **STR-063** Open a focused Stage 3 Pull Request. {Trace: PLAN:Git workflow}
 - [x] **STR-064** Record the ADR-002 owner-approved Codex adversarial review; independent human reviewer: None. {Trace: PLAN:Review Policy; PLAN:Stage 3 gate}
 - [ ] **STR-065** Record PASS only after merge and synchronization; otherwise FAIL. {Trace: PDF:Ch10.4; PLAN:Stage 3 gate}
