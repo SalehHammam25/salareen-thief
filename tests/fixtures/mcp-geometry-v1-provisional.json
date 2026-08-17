@@ -1,0 +1,8 @@
+{
+  "protocol_version": "1.0-provisional",
+  "correlation_id": "fixture-step-0",
+  "sender_role": "thief",
+  "x": 2,
+  "y": 4,
+  "step": 0
+}

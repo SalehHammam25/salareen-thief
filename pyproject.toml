@@ -3,7 +3,9 @@ name = "salareen-thief"
 version = "0.1.0"
 description = "Distributed Cops-and-Robbers thief peer"
 requires-python = ">=3.12,<3.13"
-dependencies = []
+dependencies = [
+    "fastmcp>=2.0,<3",
+]
 
 [build-system]
 requires = ["uv_build>=0.12.5,<0.13"]

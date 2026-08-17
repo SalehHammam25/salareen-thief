@@ -88,6 +88,6 @@ All tasks are unchecked. A task may be checked only when its evidence exists. It
 - [ ] **REP-060** Run all tests/checks and record final evidence before staging. {Trace: PLAN:Cross-Stage Verification}
 - [ ] **REP-061** Inspect staged diff and prove no OAuth secret/unrelated file is staged. {Trace: PLAN:Git workflow}
 - [ ] **REP-062** Commit and push only reviewed Stage 7 files. {Trace: PLAN:Git workflow}
-- [ ] **REP-063** Open a focused Stage 7 Pull Request and obtain independent review. {Trace: PLAN:Git workflow}
+- [ ] **REP-063** Open a focused Stage 7 Pull Request and obtain independent review when available or record the ADR-002 owner-approved Codex exception. {Trace: PLAN:Review Policy}
 - [ ] **REP-064** After merge, create/push the reviewed annotated submission tag. {Trace: PDF:Appendix C}
 - [ ] **REP-065** Record final binary project PASS only when every submission gate is true. {Trace: PDF:Ch10.4/Appendix C; PLAN:Stage 7 gate}

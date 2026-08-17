@@ -1,7 +1,7 @@
 # PRD 02 - Basic MCP Infrastructure
-**Status:** Ready for review
+**Status:** Production contract approved; delivery gate pending
 **Repository:** salareen-thief
-**Implementation:** Not started
+**Implementation:** Stage 2 implementation complete; PR/merge gate pending
 **Specification:** 3.0.0
 
 ## Purpose
@@ -11,7 +11,9 @@ Separate the peers into independent processes and prove that a geometric message
 - **Mandatory:** symmetric FastMCP server/client peers, separate processes/configuration, no shared state, orchestrator gateway, legal state machine, bounded waits, local truth (Chapters 2, 8; Appendix E 1-9).
 - **Recommended/example:** A2A/ACP, sample tool names/classes and sample FastMCP code.
 - **Annex F:** response timeout 30 seconds and watchdog 60 seconds are negotiable; requests/minute 30, concurrency 2, backoff 5 seconds, retries 3 and queue 100 are minimums.
-- **Engineering decisions:** versioned envelopes, exact tool/error names, correlation/idempotency and codec need cross-repository approval.
+- **Owner-approved engineering decisions:** ADR-003 approves the versioned
+  envelope, exact tool/error names, result vocabulary, canonical fixture, and
+  bounded session-scoped idempotency for this thief repository.
 
 ## Scope
 Independent thief server/client runtime; localhost MCP tools; transport schemas; acknowledgement and error boundaries; orchestrator-only subsystem entry; legal phase transitions; deadline/retry/watchdog boundaries; process-isolation and repeatability tests.
@@ -42,7 +44,16 @@ Public tunnels, strategy, scent/language, cryptography, signed config comparison
 - AC02-07: repeated/fresh-process fixtures decode identically.
 - AC02-08: no later-stage dependencies leak in; all quality gates pass.
 
-## Blocked Questions
-- **MCP-BQ-01:** production tool names, schemas, protocol versions and error vocabulary are unspecified.
-- **MCP-BQ-02:** exact idempotency/duplicate-message policy is unspecified.
-- **MCP-BQ-03:** attribution of remote technical loss versus local infrastructure failure is unspecified.
+## Decisions and Retained Blocker
+
+- **MCP-BQ-01 resolved by Areen:** ADR-003 approves the current contract as the
+  thief's production Stage 2 contract. Cop compatibility requires the same
+  committed fixture and version; this repository does not modify the cop.
+- **MCP-BQ-02 resolved by Areen:** ADR-003 defines bounded, process-local,
+  session-scoped idempotency and deterministic mismatch rejection.
+- **MCP-BQ-03 retained:** attribution of remote technical loss versus local
+  infrastructure failure remains unspecified. Stage 2 reports typed local
+  failures without assigning blame.
+
+The final Stage 2 gate remains FAIL until the Pull Request is created, merged,
+and synchronized.

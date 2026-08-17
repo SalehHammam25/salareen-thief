@@ -25,7 +25,9 @@ INTERNAL_FORBIDDEN = (
     "salareen_thief.cryptography",
     "salareen_thief.llm",
     "salareen_thief.networking",
+    "salareen_thief.reporting",
     "salareen_thief.strategy",
+    "salareen_thief.tunneling",
 )
 
 

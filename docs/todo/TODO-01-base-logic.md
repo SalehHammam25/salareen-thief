@@ -229,19 +229,18 @@ Q1-Q4 and STAY are approved in ADR-001 but remain unchecked until implemented.
 
 - [x] **BLT-162** Inspect `git diff --cached --check`, staged statistics, and the complete staged diff. {Trace: PLAN:Planned Implementation Verification Commands and Evidence; PLAN:P9}
 - [x] **BLT-163** Confirm no secrets, private configuration, caches, or unrelated user changes are staged. {Trace: PLAN:Git and Review Workflow; PLAN:Gate}
-- [ ] **BLT-164** Commit implementation in meaningful, reviewable units on a dedicated branch. {Trace: PLAN:Git and Review Workflow; PLAN:P9}
-- [ ] **BLT-165** Push the implementation branch and open a focused Pull Request against `main`. {Trace: PLAN:Git and Review Workflow; PLAN:P9}
-- [ ] **BLT-166** Include exact verification commands, exit codes, and summaries in the Pull Request. {Trace: PLAN:Planned Implementation Verification Commands and Evidence; PLAN:Gate}
-- [ ] **BLT-167** Obtain review confirming deterministic rules remain separate from strategy, LLM, MCP, and cryptography. {Trace: PRD:Non-Goals; PLAN:Gate}
+- [x] **BLT-164** Commit implementation in meaningful, reviewable units on a dedicated branch. Evidence: `d6ddf3f`. {Trace: PLAN:Git and Review Workflow; PLAN:P9}
+- [x] **BLT-165** Push the implementation branch and open a focused Pull Request against `main`. Evidence: PR #8. {Trace: PLAN:Git and Review Workflow; PLAN:P9}
+- [x] **BLT-166** Preserve exact verification commands, exit codes, and summaries in committed verification evidence; PR #8 had no body. {Trace: PLAN:Planned Implementation Verification Commands and Evidence; PLAN:Gate}
+- [x] **BLT-167** **OWNER-APPROVED EXCEPTION:** no independent human reviewer participated; Areen approved Codex-assisted adversarial review under ADR-002. {Trace: PRD:Non-Goals; PLAN:Review Policy; ADR-002}
 - [x] **BLT-168** Confirm every mandatory Stage 1 path is implemented and no behavior-changing blocker remains. {Trace: PLAN:Gate; PRD:Approved Rule Clarifications}
 - [x] **BLT-169** Record a binary Stage 1 PASS only when every PLAN gate condition is true; otherwise record FAIL. {Trace: PLAN:Gate; PDF:C10}
-- [ ] **BLT-170** Merge only after stable review and a PASS gate, then synchronize local `main` before Stage 2. {Trace: PLAN:Git and Review Workflow; PLAN:Gate}
+- [x] **BLT-170** PR #8 merged as `25dee6c` before review and local `main` was synchronized; the order deviation is disclosed and waived by Areen in ADR-002. {Trace: PLAN:Git and Review Workflow; PLAN:Review Policy; ADR-002}
 
 ## Stage Boundary
 
-Stage 1 now has merged foundation/configuration-state evidence and verified
-working-tree gameplay evidence. The binary Stage 1 gate remains FAIL while
-commit, Pull Request, independent review, and merge tasks are incomplete. MCP,
+Stage 1 now has merged implementation evidence and a truthful owner-approved
+review exception under ADR-002. The amended binary Stage 1 gate is PASS. MCP,
 networking, signed configuration exchange, cryptographic verification,
 strategy, LLM behavior, scent, GUI, presentation replay, Gmail, and reporting
 implementation remain outside this stage. Deterministic test replay is limited

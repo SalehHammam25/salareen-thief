@@ -32,6 +32,18 @@ Implementation must not begin until the corresponding PRD, PLAN, and TODO have b
 - Merge only after required tests and checks pass and the review finds no unresolved scope violation.
 - After a merge, synchronize local `main` with `git pull --ff-only origin main` before beginning dependent work.
 
+### Review Policy
+
+- Pull Requests, automated verification and truthful evidence are mandatory.
+- Independent human review is recommended when available but is not an
+  official specification requirement.
+- When no independent reviewer is available, perform and record a strict
+  Codex-assisted adversarial self-review, identify the AI interface truthfully,
+  state `Independent human reviewer: None`, and obtain Areen's explicit owner
+  approval before treating the review condition as satisfied.
+- Never describe an owner-approved exception as independent review. ADR-002
+  records the Stage 1 corrective exception and governs future stages.
+
 ## Authority Hierarchy
 
 When planning or implementing behavior, apply this order:

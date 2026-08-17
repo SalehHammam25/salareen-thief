@@ -89,5 +89,5 @@ All tasks are unchecked. A task may be checked only when its evidence exists. It
 - [ ] **STR-061** Commit only reviewed Stage 3 files. {Trace: PLAN:Git workflow}
 - [ ] **STR-062** Push the dedicated Stage 3 branch. {Trace: PLAN:Git workflow}
 - [ ] **STR-063** Open a focused Stage 3 Pull Request. {Trace: PLAN:Git workflow}
-- [ ] **STR-064** Obtain independent strategy/boundary review. {Trace: PLAN:Stage 3 gate}
+- [ ] **STR-064** Obtain independent review when available or record the ADR-002 owner-approved Codex review exception. {Trace: PLAN:Review Policy; PLAN:Stage 3 gate}
 - [ ] **STR-065** Record PASS only after merge and synchronization; otherwise FAIL. {Trace: PDF:Ch10.4; PLAN:Stage 3 gate}
