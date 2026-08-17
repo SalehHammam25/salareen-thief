@@ -536,3 +536,7 @@ stage is allowed to redefine the underlying Stage 1 outcome.
 - the planned automated line-length check and its repository location.
 
 Approval of this PLAN authorizes TODO preparation, not implementation.
+
+## Live-match composition recovery plan
+
+The Stage 1-5 components are not yet a playable system. ADR-008 and `docs/contracts/live-match-orchestration-v1.md` define the production composition. Implementation order is shared schemas/fixtures, expected-role and endpoint convergence, thief runner/adapters, cop runner compatibility, exactly-once/recovery wiring, deterministic localhost matches, then authorized remote proof. Every runner remains peer-local; no central coordinator is allowed. Stage 6 security primitives and Stage 7 reporting remain excluded.

@@ -40,3 +40,7 @@ Cryptographic trust, signatures, Commit-Reveal, Gmail, GUI, replay and league sc
 ## Approved Decisions and Remaining Blocker
 - **CLD-BQ-01 through CLD-BQ-04:** resolved by ADR-007 and Areen's ngrok contract.
 - **CLD-BQ-05:** symmetric calls and a complete match require a compatible cop endpoint on another machine.
+
+## Live runner and strict endpoint extension
+
+ADR-008 and the shared live-match contract own independent runner composition, exact-identity pause/resume, acknowledged-action protection, terminal reconciliation and controlled shutdown. Remote endpoints must use HTTPS, exact configured host/permitted port and `/mcp`, with no userinfo, query, fragment, localhost or private address. Expected-role checking is protocol validation only. The current query-permitting endpoint behavior must be corrected during implementation; the runner, adapters and full-match tests remain unimplemented.

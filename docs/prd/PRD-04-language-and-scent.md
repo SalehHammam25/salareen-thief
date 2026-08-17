@@ -49,3 +49,7 @@ LLM spatial legality, public tunnels, crypto commitments, Gmail, GUI and league 
 - **LS-BQ-04:** resolved by clipping without wrap, reflection or renormalization.
 - **LS-BQ-05:** resolved by the deterministic prohibited-number policy in ADR-006.
 - **LS-BQ-06:** resolved by the exact normalized prior and evidence model in ADR-006.
+
+## Live-match composition extension
+
+For an accepted movement/STAY turn, composition order is previous-field decay, new emission, maximum/clipping, scent observation, optional validated qualitative hint, scent-first then language belief update, and next-turn strategy input. Rejected actions and cop barrier actions do not emit movement scent. Versioned scent/hint message contracts and cross-peer ordering tests remain pending.

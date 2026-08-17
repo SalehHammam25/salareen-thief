@@ -57,3 +57,7 @@ Public tunnels, strategy, scent/language, cryptography, signed config comparison
 
 The final Stage 2 gate remains FAIL until the Pull Request is created, merged,
 and synchronized.
+
+## Live-match composition extension
+
+The exact six-field geometry envelope remains frozen. Separate versioned orchestration tools, response/rejection vocabulary, expected-opponent-role validation, idempotency identity and validation order are defined by the shared live-match contract. Stage 2 owns their transport schemas and deterministic duplicate behavior; production implementation and tests remain pending.

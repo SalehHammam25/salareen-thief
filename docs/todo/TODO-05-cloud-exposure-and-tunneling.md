@@ -91,3 +91,15 @@ All tasks are unchecked. A task may be checked only when its evidence exists. It
 - [ ] **CLD-063** Open a focused Stage 5 Pull Request. {Trace: PLAN:Git workflow}
 - [x] **CLD-064** Record ADR-002 owner-approved Codex adversarial review; independent human reviewer: None. {Trace: PLAN:Review Policy; PLAN:Stage 5 gate}
 - [ ] **CLD-065** Record PASS only after merge and synchronization; otherwise FAIL. {Trace: PDF:Ch10.4; PLAN:Stage 5 gate}
+
+## Live-match composition backlog
+
+- [ ] **LM-CLD-001** Implement the independent `salareen_thief` production game runner; do not create a central runner.
+- [ ] **LM-CLD-002** Compose configuration, Base Logic, thief strategy, MCP, scent/language/belief, recovery and local structured logs.
+- [ ] **LM-CLD-003** Enforce the strict no-query remote endpoint rule and add shared endpoint fixtures.
+- [ ] **LM-CLD-004** Wire pause/resume around the live turn loop using exact recovery identity.
+- [ ] **LM-CLD-005** Prevent acknowledged actions from being applied twice after retry or reconnect and add the missing explicit regression test.
+- [ ] **LM-CLD-006** Implement Capture Claim, survival, terminal and Annex F score reconciliation without Stage 6 proof.
+- [ ] **LM-CLD-007** Add all eight byte-stable cross-repository fixtures specified by the contract.
+- [ ] **LM-CLD-008** Run deterministic two-process complete localhost matches with logs and orphan-free shutdown.
+- [ ] **LM-CLD-009** Align Python/FastMCP/MCP/pytest/Ruff manifest constraints in a later implementation branch.
