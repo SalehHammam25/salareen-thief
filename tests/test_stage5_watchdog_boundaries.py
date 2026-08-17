@@ -46,9 +46,11 @@ def test_cloud_package_has_no_base_strategy_language_or_crypto_imports() -> None
     assert violations == []
 
 
-def test_no_real_provider_adapter_or_credential_literal_exists() -> None:
+def test_provider_contains_no_embedded_credential_or_real_domain() -> None:
     files = tuple(Path("src/salareen_thief/cloud_tunneling").glob("*.py"))
     source = "\n".join(path.read_text(encoding="utf-8") for path in files)
-    assert "ngrok" not in source.casefold()
-    assert "localtonet" not in source.casefold()
-    assert "auth_token" not in source.casefold()
+    lowered = source.casefold()
+    assert "--authtoken" not in lowered
+    assert "ngrok.yml" not in lowered
+    assert ".ngrok-free.app" not in lowered
+    assert ".ngrok.app" not in lowered

@@ -4,21 +4,23 @@
 
 **Specification:** 3.0.0
 
-**Safe local technical gate:** PASS
+**Local and single-endpoint public technical gate:** PASS
 
-**Final Stage 5 gate:** FAIL - authorized public tunnel and two-machine evidence
-is unavailable
+**Final Stage 5 gate:** FAIL - bidirectional two-machine and complete-match
+evidence remains unavailable
 
 ## Authority and scope
 
 Chapters 2.4, 8.4 and 10.3.5, Appendix E rules 1-2/10, and Annex F Table 19
-were read completely. ADR-007 records the safe local boundary and retains all
-provider, URL-exchange, reconnect, attribution, credential, firewall, and
-two-machine actions as explicit blockers.
+were read completely. ADR-007 records Areen's approved ngrok stable-domain,
+manual exchange, reconnect, and attribution contracts. A compatible cop
+endpoint on a second machine remains the sole external acceptance blocker.
 
-No provider was selected or invoked. No account was created, no public tunnel
-was opened, no firewall was changed, and no external deployment or paid action
-occurred.
+ngrok 3.39.9-msix-stable was already installed and authenticated by Areen. The
+authorized public check used test-only port 8802, which is the concrete thief
+port in the merged MCP private-configuration fixture. Production still requires
+an explicit private `my_port`; no production port was guessed. No account,
+firewall, paid plan, or external deployment was changed.
 
 ## Implemented evidence
 
@@ -39,6 +41,17 @@ occurred.
   scent, belief, or cryptography.
 - The operator runbook identifies the exact external prerequisites and redacted
   evidence required for the final gate.
+- `NgrokProvider` validates a private stable domain, checks ngrok version and
+  authenticated-agent readiness, waits for the local MCP endpoint, starts ngrok
+  with safe arguments and no token, accepts only the exact configured URL from
+  the local agent API, probes public health, detects exit, and shuts down
+  idempotently with terminate/kill fallback.
+- Bounded recovery pauses gameplay, reuses the same provider/domain, consults
+  the watchdog, and resumes only when game/session/protocol/turn/phase match.
+- The public MCP tool call passed; two tunnel restarts returned the identical
+  redacted endpoint. Disconnect, watchdog expiry, exact-identity resume, and
+  shutdown passed. Post-test process counts were zero for ngrok and the test
+  peer. Neither the auth token nor `ngrok.yml` was read or printed.
 
 ## Failures and corrections
 
@@ -51,6 +64,12 @@ occurred.
   escape. Secret fields are now repr-hidden, network values come from shared
   configuration, minimums reject deviations, and lifecycle exceptions return
   redacted typed failures. Two regression tests were added.
+- The final review found an obsolete test permanently forbidding provider
+  adapters after provider approval; it now enforces the durable no-embedded-
+  credential/domain boundary. It also found reconnect policy pieces lacked an
+  executable coordinator; bounded watchdog/identity recovery and four focused
+  tests were added. Direct config construction and missing-command error paths
+  were hardened. Ruff import formatting and test-file line count were fixed.
 
 ## Final commands and results
 
@@ -60,13 +79,15 @@ occurred.
 - `uv sync --frozen` - exit 0; 86 packages checked.
 - Package import - exit 0.
 - `uv run ruff check .` - exit 0; all checks passed.
-- `uv run pytest -q` - exit 0; 398 passed, one third-party Authlib warning.
-- Focused Stage 5 suite - exit 0; 24 passed.
-- Boundary/repeatability suite - exit 0; 14 passed.
-- Line checker - exit 0; 117 Python files, all at or below 150 lines.
+- `uv run pytest -q` - exit 0; 421 passed, one third-party Authlib warning.
+- Focused Stage 5 suite - exit 0; 47 passed.
+- Boundary/isolation suite - exit 0; 14 passed.
+- Line checker - exit 0; 130 Python files, all at or below 150 lines.
 - `git diff --check` - exit 0.
 - Credential scan - no matches (expected `rg` exit 1).
-- Stage 1-4 isolation scan - no matches (expected `rg` exit 1).
+- Stage 1-4 dependency scan - no matches (expected `rg` exit 1).
+- Authorized public test - exit 0; stable domain redacted, restart same, public
+  MCP passed, disconnect/watchdog/reconnect/shutdown passed; orphan counts zero.
 
 Independent human reviewer: None
 
@@ -76,13 +97,10 @@ Review method: Codex-assisted adversarial review and automated verification
 
 ## External actions required
 
-Areen and the cop team must select and authorize a provider/account/plan,
-approve the URL exchange and reconnect/outage policies, privately provision the
-provider client/token and firewall on two machines, implement/approve the
-provider-specific adapter, and run the redacted bidirectional/public match,
-restart, disconnect, latency, watchdog, and shutdown acceptance procedure in the
-runbook. Until that happens, CLD-003/005-007, 021, 023, 025, 029, 036, 040,
-044, 046-049, and 065 remain blocked or incomplete.
+A compatible cop endpoint must run on another machine using the same Stage 2
+contract. Operators must then record redacted thief-to-cop, cop-to-thief,
+complete-match, and remote-restart evidence using the runbook. CLD-025, 046-049,
+063, and 065 remain incomplete. No salareen-cop file was modified.
 
 ## Delivery evidence
 

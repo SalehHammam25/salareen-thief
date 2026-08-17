@@ -1,8 +1,8 @@
 # TODO 05 - Cloud Exposure and Tunneling
 
-**Status:** Safe local subset verified; external tunnel acceptance blocked
+**Status:** ngrok adapter verified; two-machine acceptance blocked
 **Related PRD:** `../prd/PRD-05-cloud-exposure-and-tunneling.md`
-**Implementation:** Local lifecycle complete; external provider/machines pending
+**Implementation:** Local and single-endpoint public proof complete
 **Task ID range:** CLD-001 through CLD-065
 
 All tasks are unchecked. A task may be checked only when its evidence exists. Items that depend on a PRD blocked question remain non-executable until the decision is approved.
@@ -13,11 +13,11 @@ All tasks are unchecked. A task may be checked only when its evidence exists. It
 
 - [x] **CLD-001** Reconfirm mapping against Chapters 2.4/8.4/10.3.5, Appendix E 1-2/10, and Annex F 19. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
 - [x] **CLD-002** Retain every external cloud blocker without assumptions. Evidence: ADR-007. {Trace: PRD-05; PLAN:Stage 5; PDF:Ch2.4}
-- [ ] **CLD-003** [BLOCKED: CLD-BQ-01] Approve tunnel provider without assuming ngrok. {Trace: PRD-05; PLAN:Stage 5; PDF:Ch2.4}
+- [x] **CLD-003** Approve ngrok stable-domain provider contract. Evidence: Areen approval; ADR-007. {Trace: PRD-05; PLAN:Stage 5; PDF:Ch2.4}
 - [x] **CLD-004** Document required external account and operator permissions. Evidence: Stage 5 runbook. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
-- [ ] **CLD-005** [BLOCKED: CLD-BQ-02] Approve public URL exchange mechanism. {Trace: PRD-05; PLAN:Stage 5; PDF:Ch2.4}
-- [ ] **CLD-006** [BLOCKED: CLD-BQ-03] Approve reconnect/resume versus technical-loss policy. {Trace: PRD-05; PLAN:Stage 5; PDF:Ch8.4}
-- [ ] **CLD-007** [BLOCKED: CLD-BQ-04] Approve provider-outage attribution policy. {Trace: PRD-05; PLAN:Stage 5; PDF:Ch8.4}
+- [x] **CLD-005** Approve manual private URL exchange for Stage 5. Evidence: Areen approval; ADR-007. {Trace: PRD-05; PLAN:Stage 5; PDF:Ch2.4}
+- [x] **CLD-006** Approve identity-safe reconnect/resume policy. Evidence: Areen approval; ADR-007. {Trace: PRD-05; PLAN:Stage 5; PDF:Ch8.4}
+- [x] **CLD-007** Approve conservative failure-attribution policy. Evidence: Areen approval; ADR-007. {Trace: PRD-05; PLAN:Stage 5; PDF:Ch8.4}
 - [x] **CLD-008** Map local and external acceptance criteria to tests/runbook evidence. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
 - [x] **CLD-009** Document Stage 6 authentication exclusion. Evidence: ADR-007/runbook. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
 - [x] **CLD-010** Retain binary gate: local PASS cannot replace remote-machine proof. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
@@ -37,15 +37,15 @@ All tasks are unchecked. A task may be checked only when its evidence exists. It
 
 ## Remote lifecycle
 
-- [ ] **CLD-021** [BLOCKED: CLD-BQ-01/05] Implement selected provider start adapter. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
+- [x] **CLD-021** Implement production ngrok stable-domain adapter. Evidence: focused tests and authorized public check. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
 - [x] **CLD-022** Capture and validate provider-assigned public URL safely through `TunnelReady`. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
-- [ ] **CLD-023** [BLOCKED: CLD-BQ-01/05] Expose thief FastMCP endpoint through a real public tunnel. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
+- [x] **CLD-023** Expose the test thief FastMCP endpoint through an authorized real public tunnel. Evidence: redacted Stage 5 verification. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
 - [x] **CLD-024** Inject and validate a remote cop endpoint for the existing MCP client. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
 - [ ] **CLD-025** [BLOCKED: CLD-BQ-05] Verify symmetric server/client reachability on two machines. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
 - [x] **CLD-026** Add provider readiness and health checks before match start. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
 - [x] **CLD-027** Close tunnels during controlled shutdown. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
 - [x] **CLD-028** Prevent orphan tunnel process through idempotent stop/context management. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
-- [ ] **CLD-029** [BLOCKED: CLD-BQ-01/05] Record actual provider version and nonsecret settings. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
+- [x] **CLD-029** Record ngrok 3.39.9 and nonsecret test settings. Evidence: Stage 5 verification. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
 - [x] **CLD-030** Write credential-safe operator startup/shutdown runbook. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
 
 ## Failure handling
@@ -55,18 +55,18 @@ All tasks are unchecked. A task may be checked only when its evidence exists. It
 - [x] **CLD-033** Bound connection retries and backoff. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
 - [x] **CLD-034** Classify DNS resolution failure. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
 - [x] **CLD-035** Classify TLS/certificate failure. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
-- [ ] **CLD-036** [BLOCKED: CLD-BQ-02/03] Handle expired/rotated tunnel URL in a live exchange. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
+- [x] **CLD-036** Reject any assigned URL other than the configured stable endpoint and retain it across restart. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
 - [x] **CLD-037** Classify mid-request disconnect without leaking details. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
 - [x] **CLD-038** Bound high latency with timeout and retry exhaustion. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
 - [x] **CLD-039** Surface provider process crash through health result. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
-- [ ] **CLD-040** [BLOCKED: CLD-BQ-03] Handle reconnect only per approved policy. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
+- [x] **CLD-040** Pause, bound reconnect, and resume only on exact identity match. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
 
 ## Security tests
 
 - [x] **CLD-041** Test fake remote failures and latency never hang. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
 - [x] **CLD-042** Test stable known and unknown attribution categories where possible. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
 - [x] **CLD-043** Test retry exhaustion produces one deterministic result. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
-- [ ] **CLD-044** [BLOCKED: CLD-BQ-03] Test shutdown persistence after reconnect policy approval. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
+- [x] **CLD-044** Test restart persistence, identity-safe resume, and idempotent shutdown. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
 - [x] **CLD-045** Test endpoint diagnostics contain no userinfo/query secrets. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
 - [ ] **CLD-046** [BLOCKED: CLD-BQ-05] Run two-machine thief-to-cop call. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
 - [ ] **CLD-047** [BLOCKED: CLD-BQ-05] Run two-machine cop-to-thief call. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
