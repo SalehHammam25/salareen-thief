@@ -1,8 +1,8 @@
 # TODO 04 - Language and Scent
 
-**Status:** Unblocked subset implemented; six specification blockers retained
+**Status:** Implementation verified; PR/merge gate pending
 **Related PRD:** `../prd/PRD-04-language-and-scent.md`
-**Implementation:** In progress; blocked scent evolution and belief work excluded
+**Implementation:** Complete before Pull Request
 **Task ID range:** LST-001 through LST-065
 
 A task is checked only when its evidence exists. Blocked items remain non-executable until an approved decision resolves the cited PRD question.
@@ -12,13 +12,13 @@ A task is checked only when its evidence exists. Blocked items remain non-execut
 ## Authority and blocked design
 
 - [x] **LST-001** Reconfirm PRD-04 mapping against Chapters 4, 6, Appendix E 25-27 and Annex F 14/16/18/21. {Trace: PRD-04; PLAN:Stage 4; PDF:applicable authority}
-- [x] **LST-002** Retain and document all six language/scent blockers without assumptions. Evidence: ADR-005. {Trace: PRD-04; PLAN:Stage 4; PDF:Ch4/Ch6}
-- [ ] **LST-003** [BLOCKED: LS-BQ-01] Approve spatial falloff formula. {Trace: PRD-04; PLAN:Stage 4; PDF:Ch4.3}
-- [ ] **LST-004** [BLOCKED: LS-BQ-02] Approve overlap aggregation rule. {Trace: PRD-04; PLAN:Stage 4; PDF:Ch4.3}
-- [ ] **LST-005** [BLOCKED: LS-BQ-03] Approve emission/decay/movement ordering. {Trace: PRD-04; PLAN:Stage 4; PDF:Ch4.3}
-- [ ] **LST-006** [BLOCKED: LS-BQ-04] Approve edge clipping behavior. {Trace: PRD-04; PLAN:Stage 4; PDF:Ch4.3}
-- [ ] **LST-007** [BLOCKED: LS-BQ-05] Approve numeric-language policy. {Trace: PRD-04; PLAN:Stage 4; PDF:E26-27}
-- [ ] **LST-008** [BLOCKED: LS-BQ-06] Approve belief prior and hint reliability model. {Trace: PRD-04; PLAN:Stage 4; PDF:Ch6.4}
+- [x] **LST-002** Resolve all six former language/scent blockers through explicit owner approval. Evidence: ADR-006. {Trace: PRD-04; PLAN:Stage 4; PDF:Ch4/Ch6}
+- [x] **LST-003** Approve exact-decimal Chebyshev spatial falloff. Evidence: ADR-006. {Trace: PRD-04; PLAN:Stage 4; PDF:Ch4.3}
+- [x] **LST-004** Approve cell-wise maximum overlap aggregation. Evidence: ADR-006. {Trace: PRD-04; PLAN:Stage 4; PDF:Ch4.3}
+- [x] **LST-005** Approve transition, decay, emission, maximum, clipping, publication order. Evidence: ADR-006. {Trace: PRD-04; PLAN:Stage 4; PDF:Ch4.3}
+- [x] **LST-006** Approve clipping without wrap, reflection, or renormalization. Evidence: ADR-006. {Trace: PRD-04; PLAN:Stage 4; PDF:Ch4.3}
+- [x] **LST-007** Approve deterministic numeric-language policy. Evidence: ADR-006. {Trace: PRD-04; PLAN:Stage 4; PDF:E26-27}
+- [x] **LST-008** Approve exact belief prior, likelihood, and reliability model. Evidence: ADR-006. {Trace: PRD-04; PLAN:Stage 4; PDF:Ch6.4}
 - [x] **LST-009** Record all private provider modes from Annex F Table 21 in ADR-005 and typed configuration. {Trace: PRD-04; PLAN:Stage 4; PDF:Annex F 21}
 - [x] **LST-010** Map every currently executable acceptance criterion to Stage 4 tests and evidence. {Trace: PRD-04; PLAN:Stage 4; PDF:applicable authority}
 
@@ -30,33 +30,33 @@ A task is checked only when its evidence exists. Blocked items remain non-execut
 - [x] **LST-014** Load fixed decay rate 0.10. {Trace: PRD-04; PLAN:Stage 4; PDF:applicable authority}
 - [x] **LST-015** Load fixed 5x5 field size. {Trace: PRD-04; PLAN:Stage 4; PDF:applicable authority}
 - [x] **LST-016** Reject fixed-value deviations and bool-as-number. {Trace: PRD-04; PLAN:Stage 4; PDF:applicable authority}
-- [ ] **LST-017** [BLOCKED: LS-BQ-01..04] Emit scent for movement. {Trace: PRD-04; PLAN:Stage 4; PDF:applicable authority}
-- [ ] **LST-018** [BLOCKED: LS-BQ-01..04] Emit scent for STAY. {Trace: PRD-04; PLAN:Stage 4; PDF:applicable authority}
-- [ ] **LST-019** [BLOCKED: LS-BQ-01] Apply approved spatial falloff. {Trace: PRD-04; PLAN:Stage 4; PDF:applicable authority}
-- [ ] **LST-020** [BLOCKED: LS-BQ-02..03] Apply permanent per-turn decay deterministically. {Trace: PRD-04; PLAN:Stage 4; PDF:applicable authority}
+- [x] **LST-017** Emit scent for accepted movement. {Trace: PRD-04; PLAN:Stage 4; PDF:applicable authority; ADR-006}
+- [x] **LST-018** Emit scent for accepted STAY. {Trace: PRD-04; PLAN:Stage 4; PDF:applicable authority; ADR-006}
+- [x] **LST-019** Apply exact-decimal Chebyshev spatial falloff. {Trace: PRD-04; PLAN:Stage 4; ADR-006}
+- [x] **LST-020** Apply permanent per-turn decay deterministically. {Trace: PRD-04; PLAN:Stage 4; PDF:Ch4.3; ADR-006}
 
 ## Belief and language
 
-- [ ] **LST-021** [BLOCKED: LS-BQ-04] Clip scent window at board boundaries per approved decision. {Trace: PRD-04; PLAN:Stage 4; PDF:applicable authority}
-- [ ] **LST-022** [BLOCKED: LS-BQ-02] Aggregate overlapping trails per approved decision. {Trace: PRD-04; PLAN:Stage 4; PDF:applicable authority}
+- [x] **LST-021** Clip scent at board boundaries without renormalization. {Trace: PRD-04; PLAN:Stage 4; ADR-006}
+- [x] **LST-022** Aggregate overlaps by order-independent maximum. {Trace: PRD-04; PLAN:Stage 4; ADR-006}
 - [x] **LST-023** Prevent negative/non-finite scent values. {Trace: PRD-04; PLAN:Stage 4; PDF:applicable authority}
 - [x] **LST-024** Expose only opponent scent through the immutable peer observation contract. {Trace: PRD-04; PLAN:Stage 4; PDF:applicable authority}
-- [ ] **LST-025** [BLOCKED: LS-BQ-01/04] Test center, neighbor, corner and boundary emissions. {Trace: PRD-04; PLAN:Stage 4; PDF:applicable authority}
-- [ ] **LST-026** [BLOCKED: LS-BQ-02/03] Test multi-turn decay with exact values. {Trace: PRD-04; PLAN:Stage 4; PDF:applicable authority}
-- [ ] **LST-027** [BLOCKED: LS-BQ-02] Test overlapping trail arithmetic. {Trace: PRD-04; PLAN:Stage 4; PDF:applicable authority}
-- [ ] **LST-028** [BLOCKED: LS-BQ-01..04] Test repeated/fresh-process scent equality. {Trace: PRD-04; PLAN:Stage 4; PDF:applicable authority}
-- [ ] **LST-029** [BLOCKED: LS-BQ-06] Define normalized thief belief map. {Trace: PRD-04; PLAN:Stage 4; PDF:applicable authority}
-- [ ] **LST-030** [BLOCKED: LS-BQ-06] Initialize approved prior without objective cop position. {Trace: PRD-04; PLAN:Stage 4; PDF:applicable authority}
+- [x] **LST-025** Test center, rings, edge, corner and clipped emissions. {Trace: PRD-04; PLAN:Stage 4; ADR-006}
+- [x] **LST-026** Test exact decay and turn ordering. {Trace: PRD-04; PLAN:Stage 4; PDF:Ch4.3; ADR-006}
+- [x] **LST-027** Test maximum overlap arithmetic and order independence. {Trace: PRD-04; PLAN:Stage 4; ADR-006}
+- [x] **LST-028** Test repeated and fresh-process scent equality. {Trace: PRD-04; PLAN:Stage 4; ADR-006}
+- [x] **LST-029** Define immutable normalized thief belief map. {Trace: PRD-04; PLAN:Stage 4; PDF:Ch6.4; ADR-006}
+- [x] **LST-030** Initialize uniform prior without objective cop position. {Trace: PRD-04; PLAN:Stage 4; ADR-006}
 
 ## Provider boundary
 
-- [ ] **LST-031** [BLOCKED: LS-BQ-06] Update belief from cop scent. {Trace: PRD-04; PLAN:Stage 4; PDF:applicable authority}
-- [ ] **LST-032** [BLOCKED: LS-BQ-05/06] Update belief from accepted hint. {Trace: PRD-04; PLAN:Stage 4; PDF:applicable authority}
-- [ ] **LST-033** [BLOCKED: LS-BQ-06] Normalize after every update. {Trace: PRD-04; PLAN:Stage 4; PDF:applicable authority}
-- [ ] **LST-034** [BLOCKED: LS-BQ-06] Handle zero-likelihood evidence explicitly. {Trace: PRD-04; PLAN:Stage 4; PDF:applicable authority}
-- [ ] **LST-035** [BLOCKED: LS-BQ-06] Prevent objective position leakage in strategy/GUI DTOs. {Trace: PRD-04; PLAN:Stage 4; PDF:applicable authority}
-- [ ] **LST-036** [BLOCKED: LS-BQ-06] Test belief conservation and bounds. {Trace: PRD-04; PLAN:Stage 4; PDF:applicable authority}
-- [ ] **LST-037** [BLOCKED: LS-BQ-06] Test adversarial/outlier evidence. {Trace: PRD-04; PLAN:Stage 4; PDF:applicable authority}
+- [x] **LST-031** Update belief from opponent scent with monotonic exact weights. {Trace: PRD-04; PLAN:Stage 4; ADR-006}
+- [x] **LST-032** Validate hints before supported qualitative belief updates. {Trace: PRD-04; PLAN:Stage 4; ADR-006}
+- [x] **LST-033** Normalize deterministically after every evidence update. {Trace: PRD-04; PLAN:Stage 4; ADR-006}
+- [x] **LST-034** Preserve previous belief with typed fallback on zero/invalid weight. {Trace: PRD-04; PLAN:Stage 4; ADR-006}
+- [x] **LST-035** Prevent objective position leakage in belief and strategy DTOs. {Trace: PRD-04; PLAN:Stage 4; PDF:Ch6.4}
+- [x] **LST-036** Test belief conservation, bounds, and impossible cells. {Trace: PRD-04; PLAN:Stage 4; ADR-006}
+- [x] **LST-037** Test neutral unknown, conflicting, and invalid evidence. {Trace: PRD-04; PLAN:Stage 4; ADR-006}
 - [x] **LST-038** Define versioned free-language hint message. {Trace: PRD-04; PLAN:Stage 4; PDF:applicable authority}
 - [x] **LST-039** Reject unmistakable direct numeric-coordinate protocol forms while retaining LS-BQ-05. {Trace: PRD-04; PLAN:Stage 4; PDF:applicable authority}
 - [x] **LST-040** Enforce negotiated hint word limit. {Trace: PRD-04; PLAN:Stage 4; PDF:applicable authority}
@@ -67,7 +67,7 @@ A task is checked only when its evidence exists. Blocked items remain non-execut
 - [x] **LST-042** Define self-declared/unverified truth/lie classification without crypto proof. {Trace: PRD-04; PLAN:Stage 4; PDF:applicable authority}
 - [x] **LST-043** Parse hints as untrusted text. {Trace: PRD-04; PLAN:Stage 4; PDF:applicable authority}
 - [x] **LST-044** Test Unicode, empty, oversized and malformed hints. {Trace: PRD-04; PLAN:Stage 4; PDF:applicable authority}
-- [ ] **LST-045** [BLOCKED: LS-BQ-05] Test comprehensive coordinate-smuggling examples after policy approval. {Trace: PRD-04; PLAN:Stage 4; PDF:applicable authority}
+- [x] **LST-045** Test Unicode digits, numeric tokens, coordinate words/forms, chess coordinates, and qualitative acceptance. {Trace: PRD-04; PLAN:Stage 4; ADR-006}
 - [x] **LST-046** Define provider-independent verbal interface. {Trace: PRD-04; PLAN:Stage 4; PDF:applicable authority}
 - [x] **LST-047** Implement deterministic template fallback. {Trace: PRD-04; PLAN:Stage 4; PDF:applicable authority}
 - [x] **LST-048** Keep provider/model choices in private config. {Trace: PRD-04; PLAN:Stage 4; PDF:applicable authority}

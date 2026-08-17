@@ -15,8 +15,10 @@ class FakeProvider:
     def __init__(self, reply: ProviderReply | None = None, error: Exception | None = None):
         self.reply = reply or ProviderReply("near the river", 2, 3)
         self.error = error
+        self.last_request: VerbalRequest | None = None
 
     async def generate(self, request: VerbalRequest) -> ProviderReply:
+        self.last_request = request
         if self.error:
             raise self.error
         return self.reply
@@ -114,6 +116,16 @@ def test_prompt_injection_remains_text_and_cannot_apply_a_move() -> None:
     assert result.hint and result.hint.text == malicious.text
     assert not hasattr(result, "action")
     assert not hasattr(result, "state")
+
+
+def test_provider_prompt_prohibits_and_redacts_direct_coordinates() -> None:
+    provider = FakeProvider()
+    service = VerbalService(provider, 1, 1)
+    coordinate_request = VerbalRequest("game-1", 2, "New York", "target ٣,٤")
+    asyncio.run(service.generate(coordinate_request, TokenLedger(10), 15))
+    assert provider.last_request is not None
+    assert "Never provide direct coordinates" in provider.last_request.instruction
+    assert provider.last_request.context == "[direct-coordinate content removed]"
 
 
 def test_repeated_inputs_are_deterministic() -> None:

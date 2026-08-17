@@ -30,3 +30,19 @@ def test_template_output_is_identical_in_fresh_processes() -> None:
         "response": 0,
         "text": "I kept moving near New York.",
     }
+
+
+def run_scent_probe() -> str:
+    script = (
+        "from salareen_thief.base_logic.state_types import Board,Coordinate;"
+        "from salareen_thief.scent.field import emit,decay;"
+        "f=decay(emit(Board(7,0,'top-left'),Coordinate(3,3)));"
+        "print('|'.join(str(v) for row in f.values for v in row))"
+    )
+    return subprocess.run(
+        [sys.executable, "-c", script], check=True, capture_output=True, text=True
+    ).stdout
+
+
+def test_exact_scent_is_identical_in_fresh_processes() -> None:
+    assert run_scent_probe() == run_scent_probe()

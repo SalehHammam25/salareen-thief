@@ -2,6 +2,7 @@
 
 import json
 from dataclasses import FrozenInstanceError
+from decimal import Decimal
 from pathlib import Path
 
 import pytest
@@ -28,8 +29,8 @@ def valid_config() -> dict[str, object]:
 
 def test_committed_shared_config_loads_stage4_subset() -> None:
     config = load_language_scent_config(Path("config/game.json"))
-    assert config.center_intensity == 0.9
-    assert config.decay_rate == 0.10
+    assert config.center_intensity == Decimal("0.9")
+    assert config.decay_rate == Decimal("0.10")
     assert config.field_size == 5
     assert (config.map_area, config.hint_max_words) == ("New York", 15)
     assert config.token_budget_per_series == 200000
@@ -68,20 +69,20 @@ def test_missing_malformed_and_duplicate_config(tmp_path: Path) -> None:
 
 
 def test_scent_values_are_frozen_and_validated() -> None:
-    grid = ScentGrid(((0.0, 0.9), (0.2, 0.3)))
+    grid = ScentGrid(0, ((Decimal("0.0"), Decimal("0.9")),) * 2)
     observation = OpponentScent(2, grid)
-    assert observation.grid.values[0][1] == 0.9
+    assert observation.grid.values[0][1] == Decimal("0.9")
     with pytest.raises(FrozenInstanceError):
         observation.turn = 3  # type: ignore[misc]
     for invalid in (
-        ((-0.1,),),
-        ((0.91,),),
-        ((float("nan"),),),
+        ((Decimal("-0.1"),),),
+        ((Decimal("0.91"),),),
+        ((Decimal("NaN"),),),
         ((True,),),
         ((),),
     ):
         with pytest.raises(ValueError):
-            ScentGrid(invalid)
+            ScentGrid(0, invalid)
 
 
 def test_stage4_parser_ignores_unowned_later_sections() -> None:

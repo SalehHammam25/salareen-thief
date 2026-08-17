@@ -4,18 +4,16 @@
 
 **Specification:** 3.0.0
 
-**Unblocked technical subset:** PASS
+**Technical verification:** PASS
 
-**Final Stage 4 gate:** FAIL - six approved specification blockers and delivery
-events remain
+**Final Stage 4 gate:** FAIL pending Pull Request, merge, and synchronization
 
 ## Authority and scope
 
 Chapter 4, Chapter 6.4-6.5, Chapter 10.3.4, Appendix E 25-27, and Annex F
-Tables 14, 16, 18 and 21 were read completely. ADR-005 records the boundary
-between fixed/negotiable values, optional provider modes, and the six unresolved
-engineering decisions. No scent evolution or Bayesian belief behavior was
-invented.
+Tables 14, 16, 18 and 21 were read completely. ADR-005 records the original
+unblocked boundary. ADR-006 records Areen's six owner-approved engineering
+decisions after confirming they do not replace an explicit Annex F fixed value.
 
 ## Implemented evidence
 
@@ -32,9 +30,18 @@ invented.
   Cadence, timeout, cancellation, actual usage, exhausted-budget behavior,
   visible fallback reasons, and prompt-injection isolation have focused tests.
 - Fresh-process and repeated-input tests produce identical template results.
+- Exact-decimal Chebyshev emissions use `0.9`, `0.6`, and `0.3`; old scent
+  decays by exactly `0.90`, then new emission combines by cell-wise maximum.
+- Center, edge and corner clipping retain in-board strength without wrapping,
+  reflection, transfer, or renormalization. Rejections preserve scent identity.
+- Exact normalized belief starts uniformly over publicly possible cells, applies
+  monotonic scent likelihood before qualitative language, and uses private
+  reliability `0.5` through `1.0` with default `0.75`.
+- Invalid/zero-weight evidence preserves the previous belief with a typed
+  visible result. No belief or provider type contains an objective position,
+  action, or mutable Base Logic state.
 
-AC04-04 through AC04-08 pass for the executable subset. AC04-01 through
-AC04-03 remain blocked where they require scent arithmetic or belief updates.
+AC04-01 through AC04-08 all have passing automated evidence.
 
 ## Failures and corrections
 
@@ -49,6 +56,12 @@ AC04-03 remain blocked where they require scent arithmetic or belief updates.
 - Review added the PDF intensity upper bound, explicit caller-cancellation
   propagation, fresh-process repeatability, missing game identity, and an
   additional unmistakable coordinate form.
+- Finalization first produced 77 focused passes. Ruff then identified one test
+  import-order issue, and review found a rounding-sensitive equality assertion;
+  both were corrected without weakening behavior.
+- Adversarial review added square scent-grid validation, exact integer origins,
+  typed invalid-evidence fallback, even-board center regions, validated
+  hint-before-belief processing, and prompt coordinate redaction.
 
 ## Final commands and results
 
@@ -58,10 +71,10 @@ AC04-03 remain blocked where they require scent arithmetic or belief updates.
 - `uv sync --frozen` - exit 0; 86 packages checked.
 - Stage 1-4 package imports - exit 0.
 - `uv run ruff check .` - exit 0; all checks passed.
-- `uv run pytest -q` - exit 0; 339 passed, one third-party Authlib warning.
-- Focused Stage 4 suite - exit 0; 43 passed.
+- `uv run pytest -q` - exit 0; 374 passed, one third-party Authlib warning.
+- Focused Stage 4 suite - exit 0; 78 passed.
 - Earlier-stage isolation suite - exit 0; 12 passed.
-- Line checker - exit 0; 91 Python files, all at or below 150 lines.
+- Line checker - exit 0; 103 Python files, all at or below 150 lines.
 - `git diff --check` - exit 0.
 - Focused credential scan - no matches (expected `rg` exit 1).
 - Earlier-stage import scan - no Stage 4 imports (expected `rg` exit 1).
@@ -72,12 +85,10 @@ Owner approval: Areen
 
 Review method: Codex-assisted adversarial review and automated verification
 
-## Deferred work
+## Remaining delivery work
 
-LS-BQ-01 through LS-BQ-04 block scent emission, decay, overlap, boundaries, and
-their repeatability fixtures. LS-BQ-06 blocks belief construction and updates.
-LS-BQ-05 blocks a claim of comprehensive numeric-language smuggling coverage.
-The Pull Request, merge, synchronization, and final PASS gate have not occurred.
+LS-BQ-01 through LS-BQ-06 are resolved by ADR-006 and verified. Only LST-063
+(Pull Request) and LST-065 (post-merge synchronization and final gate) remain.
 
 ## Delivery evidence
 
@@ -86,5 +97,5 @@ The Pull Request, merge, synchronization, and final PASS gate have not occurred.
 - Initial push: successful; upstream set to
   `origin/feat/stage-4-language-scent`.
 - Pull Request: deliberately not created.
-- Final Stage 4 gate remains FAIL because the retained blockers and merge gate
+- Final Stage 4 gate remains FAIL solely because the Pull Request and merge gate
   are incomplete.

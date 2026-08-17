@@ -7,12 +7,24 @@ from enum import StrEnum
 from .models import FreeLanguageHint
 
 HINT_VERSION = "language-hint-v1"
-DIRECT_COORDINATE = re.compile(
-    r"(?<!\w)(?:\(\s*-?\d+\s*,\s*-?\d+\s*\)|"
-    r"\[\s*-?\d+\s*,\s*-?\d+\s*\]|-?\d+\s*,\s*-?\d+|"
-    r"[xy]\s*=\s*-?\d+\s*[,; ]+\s*[xy]\s*=\s*-?\d+)(?!\w)",
+NUMBER_WORD = (
+    r"zero|one|two|three|four|five|six|seven|eight|nine|ten|eleven|"
+    r"twelve|thirteen|fourteen|fifteen|sixteen|seventeen|eighteen|"
+    r"nineteen|twenty|thirty|forty|fifty|sixty|seventy|eighty|ninety"
+)
+WORD_COORDINATE = re.compile(
+    rf"\b(?:row|column|col|cell|position|coordinate|x|y)\b\s*"
+    rf"(?:is\s+|at\s+|=\s*|:\s*)?(?:{NUMBER_WORD})\b|"
+    rf"(?:[\[(]\s*)?(?:{NUMBER_WORD})\s*[,;]\s*(?:{NUMBER_WORD})(?:\s*[\])])?",
     re.IGNORECASE,
 )
+
+
+def has_forbidden_numeric(text: str) -> bool:
+    """Reject digits and English number words used as coordinate values."""
+    return any(character.isdecimal() for character in text) or bool(
+        WORD_COORDINATE.search(text)
+    )
 
 
 class HintError(StrEnum):
@@ -47,6 +59,6 @@ def validate_hint(hint: FreeLanguageHint, max_words: int) -> HintAccepted | Hint
         return HintRejected(HintError.EMPTY)
     if len(text.split()) > max_words:
         return HintRejected(HintError.WORD_LIMIT)
-    if DIRECT_COORDINATE.search(text):
+    if has_forbidden_numeric(text):
         return HintRejected(HintError.DIRECT_COORDINATE)
     return HintAccepted(FreeLanguageHint(hint.version, hint.game_id, text, hint.claim))

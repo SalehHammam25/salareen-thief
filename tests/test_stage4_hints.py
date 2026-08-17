@@ -36,14 +36,26 @@ def test_version_and_word_limit_are_enforced() -> None:
 
 
 @pytest.mark.parametrize(
-    "text", ["I am at (3, 4)", "position 3,4", "cell [-2, 7]", "x=3 y=4"]
+    "text",
+    [
+        "I am at (3, 4)",
+        "position 3,4",
+        "cell [-2, 7]",
+        "x=3 y=4",
+        "row three column four",
+        "(three, four)",
+        "three, four",
+        "square E4",
+        "position ٣,٤",
+        "position -2.5",
+    ],
 )
 def test_direct_numeric_coordinate_protocol_is_rejected(text: str) -> None:
     assert validate_hint(hint(text), 15) == HintRejected(HintError.DIRECT_COORDINATE)
 
 
-def test_non_coordinate_numbers_remain_blocked_policy_not_overrejected() -> None:
-    result = validate_hint(hint("I waited for three turns near 5th Avenue"), 15)
+def test_qualitative_language_remains_accepted() -> None:
+    result = validate_hint(hint("north west near the center"), 15)
     assert isinstance(result, HintAccepted)
 
 

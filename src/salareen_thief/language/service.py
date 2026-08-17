@@ -1,11 +1,11 @@
 """Bounded verbal generation that cannot execute spatial actions."""
 
 import asyncio
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from enum import StrEnum
 
 from .accounting import TokenLedger
-from .hints import HINT_VERSION, HintAccepted, validate_hint
+from .hints import HINT_VERSION, HintAccepted, has_forbidden_numeric, validate_hint
 from .models import FreeLanguageHint, VerbalRequest
 from .providers import TemplateProvider, VerbalProvider
 
@@ -44,8 +44,13 @@ class VerbalService:
                 request, ledger, max_words, FallbackReason.BUDGET
             )
         try:
+            safe_request = request
+            if has_forbidden_numeric(request.context):
+                safe_request = replace(
+                    request, context="[direct-coordinate content removed]"
+                )
             reply = await asyncio.wait_for(
-                self._provider.generate(request), timeout=self._timeout
+                self._provider.generate(safe_request), timeout=self._timeout
             )
             updated = ledger.record(reply)
             if updated.consumed > updated.budget:

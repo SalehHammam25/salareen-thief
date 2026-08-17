@@ -1,6 +1,6 @@
 # ADR-005: Stage 4 Unblocked Boundaries
 
-**Status:** Accepted for the unblocked Stage 4 subset
+**Status:** Superseded in part by ADR-006
 
 **Authority:** Specification 3.0.0 Chapters 4, 6.4-6.5 and 10.3.4,
 Appendix E 25-27, Annex F Tables 14, 16, 18 and 21
@@ -27,17 +27,17 @@ Annex F Table 21 documents `template`, `ollama`, `claude_api`, and
 `claude_cli`. This implementation validates those private mode names but does
 not require external credentials or contact those services in tests.
 
-## Retained blockers
+## Former blockers
 
 LS-BQ-01 through LS-BQ-04 prevent emission, decay, overlap, and board-edge
 arithmetic. LS-BQ-06 prevents construction and updating of a Bayesian belief
 map. LS-BQ-05 prevents claiming a comprehensive number-smuggling grammar.
-Those tasks remain unchecked and no placeholder behavior represents them as
-resolved.
+ADR-006 records Areen's later approval of all six decisions. Until that ADR was
+implemented, these tasks correctly remained unchecked and no placeholder
+behavior represented them as resolved.
 
 ## Consequences
 
-The unblocked configuration, contracts, provider boundary, accounting, and
-fallback behavior can be reviewed now. The complete Stage 4 acceptance gate
-cannot pass until the six blockers are resolved and the missing scent/belief
-behavior is implemented and verified.
+The original unblocked configuration, contracts, provider boundary, accounting,
+and fallback behavior remain valid. ADR-006 and its implementation complete the
+formerly deferred scent, belief, and numeric-language responsibilities.

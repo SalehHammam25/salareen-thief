@@ -1,6 +1,7 @@
 """Stage 4 shared-configuration validation."""
 
 from dataclasses import dataclass
+from decimal import Decimal
 from pathlib import Path
 from typing import Any
 
@@ -9,8 +10,8 @@ from salareen_thief.base_logic.config_decode import DuplicateKeyError, decode_js
 
 @dataclass(frozen=True, slots=True)
 class LanguageScentConfig:
-    center_intensity: float
-    decay_rate: float
+    center_intensity: Decimal
+    decay_rate: Decimal
     field_size: int
     map_area: str
     hint_max_words: int
@@ -35,12 +36,13 @@ def _required(section: dict[str, Any], key: str, parent: str) -> Any:
     return section[key]
 
 
-def _fixed_number(value: Any, expected: float, path: str) -> float:
+def _fixed_number(value: Any, expected: str, path: str) -> Decimal:
     if isinstance(value, bool) or not isinstance(value, (int, float)):
         raise Stage4ConfigError("incorrect_type", path)
-    if value != expected:
+    converted = Decimal(str(value))
+    if converted != Decimal(expected):
         raise Stage4ConfigError("fixed_value_deviation", path)
-    return float(value)
+    return converted
 
 
 def _positive_int(value: Any, path: str) -> int:
@@ -64,18 +66,18 @@ def parse_language_scent_config(root: Any) -> LanguageScentConfig:
     return LanguageScentConfig(
         _fixed_number(
             _required(pheromones, "pheromone_center_intensity", "pheromones"),
-            0.9,
+            "0.9",
             "pheromones.pheromone_center_intensity",
         ),
         _fixed_number(
             _required(pheromones, "pheromone_decay", "pheromones"),
-            0.10,
+            "0.10",
             "pheromones.pheromone_decay",
         ),
         int(
             _fixed_number(
                 _required(pheromones, "pheromone_grid_size", "pheromones"),
-                5,
+                "5",
                 "pheromones.pheromone_grid_size",
             )
         ),

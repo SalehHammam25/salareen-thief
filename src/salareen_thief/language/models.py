@@ -31,6 +31,9 @@ class VerbalRequest:
     turn: int
     map_area: str
     context: str
+    instruction: str = (
+        "Use qualitative natural language only. Never provide direct coordinates."
+    )
 
 
 @dataclass(frozen=True, slots=True)

@@ -1,5 +1,6 @@
 """Private provider configuration boundary tests."""
 
+from decimal import Decimal
 from pathlib import Path
 
 import pytest
@@ -12,6 +13,7 @@ def test_missing_private_config_uses_zero_token_template(tmp_path: Path) -> None
     config = load_private_language_config(tmp_path / "game.toml")
     assert config.provider is ProviderMode.TEMPLATE
     assert (config.every_n_steps, config.timeout_seconds) == (1, 10.0)
+    assert config.reliability == Decimal("0.75")
 
 
 @pytest.mark.parametrize("mode", list(ProviderMode))
@@ -46,3 +48,19 @@ def test_shared_json_provider_value_has_no_effect(tmp_path: Path) -> None:
     shared.write_text('{"trash_talk":{"provider":"claude_api"}}', encoding="utf-8")
     private = load_private_language_config(tmp_path / "game.toml")
     assert private.provider is ProviderMode.TEMPLATE
+
+
+@pytest.mark.parametrize("value", (0.5, 0.75, 1.0))
+def test_private_reliability_accepts_approved_range(value: float, tmp_path: Path) -> None:
+    path = tmp_path / "game.toml"
+    path.write_text(f"[trash_talk]\nreliability = {value}\n", encoding="utf-8")
+    assert load_private_language_config(path).reliability == Decimal(str(value))
+
+
+@pytest.mark.parametrize("value", (0.49, 1.01, True))
+def test_private_reliability_rejects_out_of_range_and_bool(value, tmp_path: Path) -> None:
+    literal = str(value).lower()
+    path = tmp_path / "game.toml"
+    path.write_text(f"[trash_talk]\nreliability = {literal}\n", encoding="utf-8")
+    with pytest.raises(ValueError):
+        load_private_language_config(path)

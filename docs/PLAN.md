@@ -394,8 +394,8 @@ requires Pull Request, merge, and synchronized-main evidence.
 used for inference, the opponent scent map updates and decays each step, and an
 LLM can produce verbal text without controlling spatial legality.
 
-Dependency order: (1) resolve scent arithmetic/order/edge blockers and approve
-language policy; (2) implement fixed 0.9 center, 0.10 decay and 5x5 scent value
+Dependency order: (1) apply the six owner-approved ADR-006 scent, language, and
+belief decisions; (2) implement fixed 0.9 center, 0.10 decay and 5x5 scent value
 model; (3) expose opponent scent only; (4) implement belief updates; (5) add
 free-language messages and direct-coordinate rejection; (6) add private
 provider abstraction, deterministic template fallback and every-N-step calls;
@@ -405,8 +405,9 @@ remain later work.
 
 Gate: fixed scent values and approved ordering pass exact tests; no objective
 opponent location leaks; direct coordinates reject; LLM output cannot mutate
-state or select an unchecked move; actual tokens are accounted. LS-BQ-01
-through LS-BQ-06 block their dependent arithmetic/semantic work.
+state or select an unchecked move; actual tokens are accounted. ADR-006 resolves
+LS-BQ-01 through LS-BQ-06; the gate now depends on implementation evidence,
+Pull Request review, merge, and synchronization.
 
 ## Stage 5 - Cloud Exposure and Tunneling
 
