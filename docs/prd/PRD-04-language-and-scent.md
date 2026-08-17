@@ -1,7 +1,7 @@
 # PRD 04 - Language and Scent
-**Status:** Ready for review
+**Status:** Approved decisions implemented; PR review pending
 **Repository:** salareen-thief
-**Implementation:** Not started
+**Implementation:** Complete before Pull Request
 **Specification:** 3.0.0
 
 ## Purpose
@@ -12,7 +12,7 @@ Replace direct coordinates with free-language hints, add dynamic opponent scent 
 - **Fixed Annex F:** center 0.9, decay 0.10 per turn, scent window 5x5.
 - **Negotiable:** map area, hint limit (default 15), series token budget (~200000).
 - **Options/examples:** Bayesian belief, provider choice and template/Ollama/Claude modes.
-- **Engineering decisions:** spatial falloff, overlap aggregation, update order, clipping, hint grammar and belief likelihood require approval.
+- **Owner-approved engineering decisions:** ADR-006 defines spatial falloff, overlap aggregation, update order, clipping, numeric-language policy and belief likelihoods.
 
 ## Scope
 Opponent scent emission/decay; thief belief map; free-language hint transport and coordinate rejection; bounded generation/parsing; private provider abstraction; every-N-step calls; token accounting; deterministic fallback.
@@ -42,10 +42,10 @@ LLM spatial legality, public tunnels, crypto commitments, Gmail, GUI and league 
 - AC04-07: token budgets and adversarial hints are tested.
 - AC04-08: all dependency and quality gates pass.
 
-## Blocked Questions
-- **LS-BQ-01:** non-center spatial scent falloff is not fully defined.
-- **LS-BQ-02:** overlapping historical emission aggregation is unspecified.
-- **LS-BQ-03:** decay/emission/movement ordering is unspecified.
-- **LS-BQ-04:** edge clipping versus other behavior is unspecified.
-- **LS-BQ-05:** allowable natural-language numbers short of direct coordinates need agreement.
-- **LS-BQ-06:** belief prior/reliability/likelihood are strategy decisions.
+## Resolved Engineering Questions
+- **LS-BQ-01:** resolved by exact-decimal Chebyshev rings in ADR-006.
+- **LS-BQ-02:** resolved by order-independent cell-wise maximum aggregation.
+- **LS-BQ-03:** resolved as transition, old-field decay, new emission, maximum, clipping, publication.
+- **LS-BQ-04:** resolved by clipping without wrap, reflection or renormalization.
+- **LS-BQ-05:** resolved by the deterministic prohibited-number policy in ADR-006.
+- **LS-BQ-06:** resolved by the exact normalized prior and evidence model in ADR-006.
