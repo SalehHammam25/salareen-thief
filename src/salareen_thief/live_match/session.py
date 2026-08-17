@@ -1,5 +1,4 @@
 """Validated, exactly-once live-match message session."""
-
 import json
 from typing import Any
 
@@ -78,7 +77,11 @@ class LiveMatchSession:
                 return "INVALID_ROLE", "starting_role"
             return None
         if tool == "resume_match_v1":
-            if payload["turn_index"] != self.turn_index or payload["phase"] != self.phase:
+            received = self.journal.get_state(self.game_id, self.session_id,
+                                              "last_received_turn")
+            pending_ack = received is not None and payload["turn_index"] == int(received)
+            exact = payload["turn_index"] == self.turn_index
+            if (not exact and not pending_ack) or payload["phase"] != self.phase:
                 self._save("phase", "aborted")
                 self.phase = "aborted"
                 return "IDENTITY_MISMATCH", "recovery_identity"
@@ -99,7 +102,6 @@ class LiveMatchSession:
             if scores.get(payload["outcome"]) != (payload["cop_score"], payload["thief_score"]):
                 return "SCORE_MISMATCH", "scores"
         return None
-
     def _mutate(self, tool: str, payload: dict[str, Any]) -> None:
         if tool == "initialize_game_v1":
             self.phase = "game_initialized"
@@ -113,6 +115,7 @@ class LiveMatchSession:
             self._save("applied", str(self.applied_actions))
             self.turn_index += 1
             self._save("turn", str(self.turn_index))
+            self._save("last_received_turn", str(payload["turn_index"]))
         elif tool == "acknowledge_action_v1" and payload["result"] != "rejected":
             pending = self.journal.get_state(self.game_id, self.session_id,
                                              "pending_action")
@@ -141,7 +144,6 @@ class LiveMatchSession:
     @staticmethod
     def _boundary(tool: str) -> str:
         return "received" if tool != "acknowledge_action_v1" else "acknowledged"
-
     @staticmethod
     def _reject(correlation: Any, code: str, detail: str) -> dict[str, Any]:
         return {"accepted": False, "correlation_id": correlation,

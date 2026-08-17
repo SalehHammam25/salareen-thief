@@ -30,10 +30,13 @@ from salareen_thief.strategy.blind import BlindShortestPath
 from salareen_thief.strategy.gateway import StrategyGateway
 from salareen_thief.strategy.results import ValidatedDecision
 
+from .stage4 import Stage4Boundary
+
 
 class GameplayAdapter:
     def __init__(self, config_path: str | Path, saved: str | None = None) -> None:
-        loaded = load_config(config_path)
+        source = Path(config_path)
+        loaded = load_config(source)
         if not isinstance(loaded, ConfigAccepted):
             raise ValueError("invalid shared configuration")
         self.config = loaded.value
@@ -43,6 +46,7 @@ class GameplayAdapter:
             raise ValueError("invalid game state")
         self.state = created.value
         self.scent = empty_field(self.state.board)
+        self.stage4 = Stage4Boundary(source, self.state.board)
         self.gateway = StrategyGateway(self.rules, BlindShortestPath())
 
     def propose(self, target: Coordinate):

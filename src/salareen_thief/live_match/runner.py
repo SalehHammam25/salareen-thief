@@ -22,7 +22,7 @@ def main() -> None:
     parser.add_argument("--session-id", default="local-session")
     parser.add_argument("--config", default="config/game.json")
     parser.add_argument("--opponent")
-    parser.add_argument("--scenario", choices=("capture", "survival"),
+    parser.add_argument("--scenario", choices=("capture", "barrier_capture", "survival"),
                         default="capture")
     args = parser.parse_args()
     if args.opponent:
@@ -36,7 +36,12 @@ def main() -> None:
     gameplay = GameplayAdapter(args.config, saved)
     session = LiveMatchSession("thief", args.game_id, args.session_id, 1,
                                journal, gameplay)
-    if args.opponent and saved and session.phase == "game_initialized":
+    session.events = events
+    session.action_delay = float(os.environ.get("SALAREEN_ACTION_DELAY", "0"))
+    session.crash_after_send = int(os.environ.get("SALAREEN_CRASH_AFTER_SEND", "-1"))
+    events.emit("configured", turn=session.turn_index, phase=session.phase)
+    pending = journal.get_state(args.game_id, args.session_id, "pending_action")
+    if args.opponent and (saved or pending) and session.phase == "game_initialized":
         session.phase = "paused_recovering"
         session._save("phase", session.phase)
     server = build_live_server(session, events)

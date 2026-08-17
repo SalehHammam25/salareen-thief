@@ -28,3 +28,21 @@ class EventLog:
         with self.path.open("a", encoding="utf-8", newline="\n") as stream:
             stream.write(json.dumps(event, sort_keys=True, separators=(",", ":")) + "\n")
         self.index += 1
+
+
+def reconstruct(path: str | Path) -> dict[str, Any]:
+    events = [json.loads(line) for line in Path(path).read_text(
+        encoding="utf-8").splitlines()]
+    if [event["event_index"] for event in events] != list(range(len(events))):
+        raise ValueError("non-contiguous event sequence")
+    actions = {event["correlation_id"] for event in events
+               if event["event_type"] == "action_applied"}
+    acknowledgements = {event["correlation_id"] for event in events
+                        if event["event_type"] == "ack_received"}
+    terminal = next((event["data"].get("outcome") for event in reversed(events)
+                     if event["event_type"] == "terminal_agreed"), None)
+    score = next((event["data"] for event in reversed(events)
+                  if event["event_type"] == "score_agreed"), None)
+    return {"actions": len(actions), "acknowledgements": len(acknowledgements),
+            "terminal": terminal, "score": score,
+            "shutdown": bool(events and events[-1]["event_type"] == "shutdown")}
