@@ -6,7 +6,7 @@
 
 **Technical verification:** PASS
 
-**Stage gate:** FAIL pending Pull Request, merge, and synchronization
+**Stage gate:** PASS
 
 ## Authority and governance
 
@@ -109,5 +109,10 @@ ports. Each process serves and calls; both are terminated and reaped afterward.
 
 - MCP-BQ-03: remote technical-loss attribution versus local infrastructure
   failure. Typed local failures do not assign blame.
-- Pull Request, merge, synchronization, and final binary Stage 2 PASS are not
-  claimed before those events occur.
+
+## Final closeout
+
+- PR #10 merged as `751a931`.
+- `2d6ab3d`, `12aa611`, and `fb5e41d` are ancestors of `origin/main`.
+- Local `main` was fast-forwarded to `751a931` and was clean and synchronized.
+- MCP-063 and MCP-065 are complete. The final Stage 2 gate is PASS.

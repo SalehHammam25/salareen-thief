@@ -1,7 +1,7 @@
 # PRD 03 - Blind Strategy
-**Status:** Ready for review
+**Status:** Implementation verified; PR/merge gate pending
 **Repository:** salareen-thief
-**Implementation:** Not started
+**Implementation:** Complete; delivery gate pending
 **Specification:** 3.0.0
 
 ## Purpose
@@ -37,7 +37,17 @@ Scent, hints, belief from hidden observations, LLM calls, tunnels, cryptography,
 - AC03-06: malicious strategies cannot mutate state/bypass legality.
 - AC03-07: Stage 4 dependencies are absent and all quality gates pass.
 
-## Blocked Questions
-- **STR-BQ-01:** the PDF does not select one equal-status strategy path.
-- **STR-BQ-02:** plugin import grammar/fallback is illustrative rather than fully normative.
-- **STR-BQ-03:** equal-shortest-path tie-breaking is unspecified.
+## Owner-approved Engineering Decisions
+
+ADR-004 resolves STR-BQ-01 through STR-BQ-03:
+
+- the built-in `BlindShortestPath` breadth-first policy is the default;
+- equal shortest paths use shared fixed order `N, S, E, W`, excluding STAY;
+- trusted private TOML uses canonical `module.path:ClassName` references;
+- plugins use a no-argument constructor and restricted snapshot/proposal seam;
+- every plugin failure produces a visible typed reason and deterministic
+  Base-Logic-validated fallback;
+- search is bounded by N squared visited cells without inventing a board maximum.
+
+The final Stage 3 gate remains pending only for Pull Request, merge, and
+synchronization evidence.

@@ -371,7 +371,11 @@ MCP-BQ-01 through MCP-BQ-03 block only their dependent contract tasks.
 Table 22. **Milestone:** the thief autonomously follows a shortest legal route
 to a known target without scent, language or manual intervention.
 
-Dependency order: (1) approve strategy choice, tie-breaking and plugin seam;
+ADR-004 approves the built-in breadth-first policy, `N, S, E, W` tie order,
+private `module.path:ClassName` plugins, no-argument construction, typed visible
+fallback, and an N-squared search bound without a board maximum.
+
+Dependency order: (1) apply the approved strategy choice, tie-breaking and plugin seam;
 (2) define immutable strategy inputs and typed proposals; (3) enumerate legal
 actions through Base Logic; (4) implement the chosen deterministic shortest
 route policy; (5) validate every proposal through Base Logic; (6) add private
@@ -380,7 +384,8 @@ fresh-process repeatability tests. Q-learning is optional, not mandatory.
 
 Gate: all outputs are legal or typed failures; strategy cannot mutate state or
 bypass rules; shortest-route fixtures pass deterministically; Stage 4 imports
-are absent. STR-BQ-01 through STR-BQ-03 remain blocked until approved.
+are absent. ADR-004 resolves STR-BQ-01 through STR-BQ-03; the final gate still
+requires Pull Request, merge, and synchronized-main evidence.
 
 ## Stage 4 - Language and Scent
 
