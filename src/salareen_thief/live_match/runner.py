@@ -1,8 +1,14 @@
 """Independent thief live-match server process entry point."""
 
 import argparse
+import asyncio
 import os
+from contextlib import suppress
 
+from .autoplay import run_autoplay
+from .endpoints import validate_endpoint
+from .event_log import EventLog
+from .gameplay import GameplayAdapter
 from .journal import Journal
 from .server import build_live_server
 from .session import LiveMatchSession
@@ -14,14 +20,46 @@ def main() -> None:
     parser.add_argument("--port", default=8801, type=int)
     parser.add_argument("--game-id", default="local-game")
     parser.add_argument("--session-id", default="local-session")
+    parser.add_argument("--config", default="config/game.json")
+    parser.add_argument("--opponent")
+    parser.add_argument("--scenario", choices=("capture", "survival"),
+                        default="capture")
     args = parser.parse_args()
+    if args.opponent:
+        validate_endpoint(args.opponent, mode="local", host="127.0.0.1",
+                          permitted_port=8802)
     path = os.environ.get("SALAREEN_THIEF_JOURNAL", ".runtime/thief-match.sqlite3")
+    log_path = os.environ.get("SALAREEN_THIEF_EVENT_LOG", ".runtime/thief-match.jsonl")
     journal = Journal(path)
-    session = LiveMatchSession("thief", args.game_id, args.session_id, 1, journal)
-    try:
-        build_live_server(session).run(transport="http", host=args.host, port=args.port)
-    finally:
-        journal.close()
+    events = EventLog(log_path, "thief", args.game_id, args.session_id)
+    saved = journal.get_state(args.game_id, args.session_id, "game_state")
+    gameplay = GameplayAdapter(args.config, saved)
+    session = LiveMatchSession("thief", args.game_id, args.session_id, 1,
+                               journal, gameplay)
+    if args.opponent and saved and session.phase == "game_initialized":
+        session.phase = "paused_recovering"
+        session._save("phase", session.phase)
+    server = build_live_server(session, events)
+    events.emit("server_ready", turn=session.turn_index, phase=session.phase)
+    if args.opponent is None:
+        try:
+            server.run(transport="http", host=args.host, port=args.port)
+        finally:
+            journal.close()
+        return
+
+    async def play() -> None:
+        task = asyncio.create_task(server.run_async(
+            transport="http", host=args.host, port=args.port, show_banner=False))
+        try:
+            await run_autoplay(args.opponent, session, args.scenario)
+        finally:
+            task.cancel()
+            with suppress(asyncio.CancelledError):
+                await task
+            journal.close()
+
+    asyncio.run(play())
 
 
 if __name__ == "__main__":
