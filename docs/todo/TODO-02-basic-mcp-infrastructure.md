@@ -1,8 +1,8 @@
 # TODO 02 - Basic MCP Infrastructure
 
-**Status:** Production implementation verified; PR/merge gate pending
+**Status:** Stage 2 complete - PASS
 **Related PRD:** `../prd/PRD-02-basic-mcp-infrastructure.md`
-**Implementation:** Complete except Pull Request and merge/synchronization gate
+**Implementation:** Complete and merged
 **Task ID range:** MCP-001 through MCP-065
 
 Checked tasks have evidence in `../verification/stage-2-mcp-infrastructure.md`. Items that depend on a PRD blocked question remain non-executable until the decision is approved.
@@ -88,6 +88,6 @@ Checked tasks have evidence in `../verification/stage-2-mcp-infrastructure.md`. 
 - [x] **MCP-060** Inspect the complete staged diff, names, statistics and whitespace. {Trace: PLAN:Cross-Stage Verification}
 - [x] **MCP-061** Commit only reviewed Stage 2 files on the dedicated branch. Evidence: `2d6ab3d`, `12aa611`. {Trace: PLAN:Git workflow}
 - [x] **MCP-062** Push both Stage 2 implementation commits without merging. Evidence: `origin/feat/stage-2-mcp-infrastructure` at `12aa611`. {Trace: PLAN:Git workflow}
-- [ ] **MCP-063** Open a focused Stage 2 Pull Request against main. {Trace: PLAN:Git workflow}
+- [x] **MCP-063** Open focused Stage 2 PR #10 against `main`; merged as `751a931`. {Trace: PLAN:Git workflow}
 - [x] **MCP-064** Obtain independent review when available; otherwise record Codex adversarial review, no human reviewer, and Areen's owner approval. {Trace: PLAN:Review Policy; PLAN:Stage 2 gate}
-- [ ] **MCP-065** Record binary PASS only after merge and synchronization; otherwise record FAIL. {Trace: PDF:Ch10.4; PLAN:Stage 2 gate}
+- [x] **MCP-065** Record PASS after PR #10 merge, fast-forward synchronization, clean status, and ancestor verification for all Stage 2 commits. {Trace: PDF:Ch10.4; PLAN:Stage 2 gate}

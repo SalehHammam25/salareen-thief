@@ -1,7 +1,7 @@
 # PRD 03 - Blind Strategy
-**Status:** Ready for review
+**Status:** Unblocked implementation verified; owner decisions pending
 **Repository:** salareen-thief
-**Implementation:** Not started
+**Implementation:** Injected-policy engine complete; default/plugin gate blocked
 **Specification:** 3.0.0
 
 ## Purpose
@@ -41,3 +41,8 @@ Scent, hints, belief from hidden observations, LLM calls, tunnels, cryptography,
 - **STR-BQ-01:** the PDF does not select one equal-status strategy path.
 - **STR-BQ-02:** plugin import grammar/fallback is illustrative rather than fully normative.
 - **STR-BQ-03:** equal-shortest-path tie-breaking is unspecified.
+
+The implementation does not resolve these questions. It provides a complete
+shortest-path engine behind an injected tie policy, but exposes no default
+strategy or dynamic plugin loader. The Stage 3 gate remains FAIL until Areen
+approves STR-BQ-01 through STR-BQ-03 and the dependent acceptance paths pass.
