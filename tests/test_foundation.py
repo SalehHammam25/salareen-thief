@@ -7,6 +7,7 @@ from importlib.util import resolve_name
 from pathlib import Path
 
 import pytest
+
 import salareen_thief
 import salareen_thief.base_logic
 

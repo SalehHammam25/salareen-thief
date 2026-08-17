@@ -52,9 +52,16 @@ class OutcomeKind(StrEnum):
     TECHNICAL_LOSS = "technical_loss"
 
 
+class CaptureCause(StrEnum):
+    COORDINATE_OVERLAP = "coordinate_overlap"
+    BARRIER_ON_THIEF = "barrier_on_thief"
+    TRAPPED_THIEF = "trapped_thief"
+
+
 @dataclass(frozen=True, slots=True)
 class Outcome:
     kind: OutcomeKind
+    capture_cause: CaptureCause | None = None
 
 
 @dataclass(frozen=True, slots=True)

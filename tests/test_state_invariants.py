@@ -5,9 +5,9 @@ from salareen_thief.base_logic.config_validation import validate_config
 from salareen_thief.base_logic.state_factory import build_state, initial_state
 from salareen_thief.base_logic.state_results import (
     StateAccepted,
-    StateErrorCategory as Error,
     StateRejected,
 )
+from salareen_thief.base_logic.state_results import StateErrorCategory as Error
 from salareen_thief.base_logic.state_types import (
     Coordinate,
     EpisodeStatus,
@@ -51,6 +51,11 @@ def test_barriers_must_be_unique(default_data) -> None:
 def test_barriers_must_be_in_bounds(default_data) -> None:
     result = build(default_data, barriers=(Coordinate(7, 0),))
     assert errors(result) == (Error.BARRIER_OUT_OF_BOUNDS,)
+
+
+def test_active_thief_cannot_occupy_barrier(default_data) -> None:
+    result = build(default_data, barriers=(Coordinate(3, 3),))
+    assert errors(result) == (Error.INVALID_BARRIER_OCCUPANCY,)
 
 
 def test_barrier_usage_must_be_nonnegative(default_data) -> None:
@@ -106,6 +111,15 @@ def test_status_requires_the_explicit_enum(default_data) -> None:
 def test_outcome_kind_requires_the_explicit_enum(default_data) -> None:
     result = build(default_data, outcome=Outcome("capture"))
     assert errors(result) == (Error.INCORRECT_TYPE,)
+
+
+def test_capture_outcome_requires_capture_cause(default_data) -> None:
+    result = build(
+        default_data,
+        status=EpisodeStatus.TERMINAL,
+        outcome=Outcome(OutcomeKind.CAPTURE),
+    )
+    assert errors(result) == (Error.STATUS_OUTCOME_MISMATCH,)
 
 
 def test_active_state_cannot_have_outcome(default_data) -> None:

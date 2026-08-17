@@ -36,6 +36,20 @@ def _constraints(
                     f"fixed value is {expected!r}",
                 )
             )
+    ceiling_path = ("movement_and_barriers", "max_moves")
+    survival_path = ("movement_and_barriers", "survival_threshold")
+    if (
+        ceiling_path in values
+        and survival_path in values
+        and values[ceiling_path] != values[survival_path]
+    ):
+        issues.append(
+            _issue(
+                Category.RELATIONSHIP_MISMATCH,
+                survival_path,
+                "survival threshold must equal move ceiling",
+            )
+        )
     grid = values.get(("board_and_agents", "grid_size"))
     start = values.get(("board_and_agents", "axis_start_index"))
     if type(grid) is int and type(start) is int and grid >= 7:

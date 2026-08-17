@@ -4,7 +4,14 @@ from collections.abc import Iterable
 
 from .state_results import StateErrorCategory as Category
 from .state_results import StateIssue
-from .state_types import Board, Coordinate, EpisodeStatus, Outcome, OutcomeKind
+from .state_types import (
+    Board,
+    CaptureCause,
+    Coordinate,
+    EpisodeStatus,
+    Outcome,
+    OutcomeKind,
+)
 
 
 def _issue(category: Category, field: str, message: str) -> StateIssue:
@@ -59,6 +66,19 @@ def validate_state(
         issues.append(
             _issue(Category.DUPLICATE_BARRIER, "barriers", "must be unique")
         )
+    thief_on_capture_barrier = (
+        outcome is not None
+        and outcome.kind is OutcomeKind.CAPTURE
+        and outcome.capture_cause is CaptureCause.BARRIER_ON_THIEF
+    )
+    if thief in barrier_set and not thief_on_capture_barrier:
+        issues.append(
+            _issue(
+                Category.INVALID_BARRIER_OCCUPANCY,
+                "barriers",
+                "only terminal barrier capture may occupy thief cell",
+            )
+        )
     if type(barrier_usage) is not int:
         issues.append(
             _issue(Category.INCORRECT_TYPE, "barrier_usage", "expected integer")
@@ -81,13 +101,23 @@ def validate_state(
         )
     valid_status = type(status) is EpisodeStatus
     valid_outcome = outcome is None or (
-        type(outcome) is Outcome and type(outcome.kind) is OutcomeKind
+        type(outcome) is Outcome
+        and type(outcome.kind) is OutcomeKind
+        and (
+            outcome.capture_cause is None
+            or type(outcome.capture_cause) is CaptureCause
+        )
     )
     if not valid_status or not valid_outcome:
         issues.append(
             _issue(Category.INCORRECT_TYPE, "status_outcome", "invalid type")
         )
-    elif (status is EpisodeStatus.ACTIVE) != (outcome is None):
+    elif (
+        (status is EpisodeStatus.ACTIVE) != (outcome is None)
+        or outcome is not None
+        and (outcome.kind is OutcomeKind.CAPTURE)
+        != (outcome.capture_cause is not None)
+    ):
         issues.append(
             _issue(Category.STATUS_OUTCOME_MISMATCH, "status", "inconsistent")
         )

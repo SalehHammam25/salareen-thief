@@ -1,8 +1,8 @@
 """Tests for the standalone Python line-count quality gate."""
 
-from pathlib import Path
 import subprocess
 import sys
+from pathlib import Path
 
 CHECKER = Path("scripts/check_python_line_lengths.py")
 MAX_LINES = 150

@@ -1,0 +1,9 @@
+{
+  "config_path": "config/game.json",
+  "initial_state": "from_config",
+  "actions": [
+    {"type": "move", "role": "thief", "choice": "N"},
+    {"type": "move", "role": "thief", "choice": "E"},
+    {"type": "move", "role": "thief", "choice": "STAY"}
+  ]
+}
