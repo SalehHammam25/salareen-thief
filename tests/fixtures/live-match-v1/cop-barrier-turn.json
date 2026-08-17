@@ -1,0 +1,4 @@
+{
+  "scenario": "cop barrier replaces movement",
+  "tool": "submit_action_v1"
+}

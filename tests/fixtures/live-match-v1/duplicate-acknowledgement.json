@@ -1,0 +1,4 @@
+{
+  "scenario": "duplicate acknowledgement",
+  "tool": "acknowledge_action_v1"
+}

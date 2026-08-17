@@ -19,7 +19,7 @@ def validate_remote_endpoint(value: str) -> TunnelEndpoint | TunnelFailure:
         return TunnelFailure(FailureKind.CONFIGURATION, "invalid endpoint")
     if parsed.scheme != "https" or not parsed.hostname or parsed.username:
         return TunnelFailure(FailureKind.CONFIGURATION, "https endpoint required")
-    if parsed.password or parsed.fragment or port == 0:
+    if parsed.password or parsed.query or parsed.fragment or port == 0:
         return TunnelFailure(FailureKind.CONFIGURATION, "unsafe endpoint components")
     host = parsed.hostname.casefold()
     if host in LOCAL_HOSTS or host.endswith(".localhost") or _is_private_ip(host):

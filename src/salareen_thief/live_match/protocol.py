@@ -1,0 +1,63 @@
+"""Byte-stable live-match v1 schemas and canonicalization."""
+
+import json
+import re
+from typing import Any
+
+VERSION = "1.0-provisional"
+ROLES = {"cop", "thief"}
+ID_PATTERN = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$")
+IDENTITY = {
+    "protocol_version": str,
+    "correlation_id": str,
+    "sender_role": str,
+    "game_id": str,
+    "session_id": str,
+    "game_number": int,
+}
+SCHEMAS: dict[str, dict[str, type]] = {
+    "initialize_game_v1": {**IDENTITY, "config_schema_version": str, "starting_role": str},
+    "submit_action_v1": {**IDENTITY, "turn_index": int, "action_kind": str,
+        "direction": (str, type(None)), "x": (int, type(None)), "y": (int, type(None))},
+    "acknowledge_action_v1": {**IDENTITY, "turn_index": int,
+        "action_correlation_id": str, "result": str, "result_code": str,
+        "next_turn_index": int, "next_role": str},
+    "publish_scent_v1": {**IDENTITY, "turn_index": int, "axis_start_index": int,
+        "width": int, "height": int, "values": list},
+    "send_language_hint_v1": {**IDENTITY, "turn_index": int, "text": str,
+        "word_count": int},
+    "submit_capture_claim_v1": {**IDENTITY, "turn_index": int,
+        "claimant_role": str, "capture_kind": str, "cop_x": int, "cop_y": int,
+        "thief_x": int, "thief_y": int},
+    "reconcile_terminal_v1": {**IDENTITY, "turn_index": int, "outcome": str,
+        "winner_role": (str, type(None)), "loser_role": (str, type(None)),
+        "attribution": str, "reason_code": str},
+    "reconcile_score_v1": {**IDENTITY, "turn_index": int, "outcome": str,
+        "cop_score": int, "thief_score": int},
+    "resume_match_v1": {"protocol_version": str, "correlation_id": str,
+        "sender_role": str, "game_id": str, "session_id": str, "turn_index": int,
+        "phase": str},
+    "shutdown_match_v1": {**IDENTITY, "turn_index": int, "mode": str,
+        "reason_code": str},
+}
+
+
+def canonical(payload: dict[str, Any]) -> str:
+    return json.dumps(payload, sort_keys=True, separators=(",", ":"), ensure_ascii=True)
+
+
+def validate_shape(tool: str, payload: Any) -> tuple[str, str] | None:
+    if type(payload) is not dict or tool not in SCHEMAS:
+        return "INVALID_SHAPE", "payload"
+    schema = SCHEMAS[tool]
+    extra = payload.keys() - schema.keys()
+    missing = schema.keys() - payload.keys()
+    if extra:
+        return "UNKNOWN_FIELD", sorted(extra)[0]
+    if missing:
+        return "MISSING_FIELD", sorted(missing)[0]
+    for field, expected in schema.items():
+        value = payload[field]
+        if isinstance(value, bool) or not isinstance(value, expected):
+            return "WRONG_TYPE", field
+    return None

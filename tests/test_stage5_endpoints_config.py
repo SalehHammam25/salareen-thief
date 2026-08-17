@@ -9,7 +9,11 @@ from salareen_thief.cloud_tunneling.exchange import (
     EndpointExchange,
     load_opponent_endpoint,
 )
-from salareen_thief.cloud_tunneling.models import TunnelEndpoint, TunnelFailure
+from salareen_thief.cloud_tunneling.models import (
+    FailureKind,
+    TunnelEndpoint,
+    TunnelFailure,
+)
 
 
 def test_defaults_match_annex_f_and_hide_credential() -> None:
@@ -93,5 +97,5 @@ def test_endpoint_exchange_is_environment_only_and_repeatable() -> None:
     secret = load_opponent_endpoint(
         {"SALAREEN_OPPONENT_URL": "https://cop.example.test/mcp?token=hidden"}
     )
-    assert isinstance(secret, EndpointExchange)
-    assert "hidden" not in repr(secret)
+    assert isinstance(secret, TunnelFailure)
+    assert secret.kind is FailureKind.CONFIGURATION
