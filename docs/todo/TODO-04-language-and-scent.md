@@ -86,8 +86,8 @@ A task is checked only when its evidence exists. Blocked items remain non-execut
 - [x] **LST-058** Run credential/dependency scans and verify <=150 lines. Evidence: Stage 4 verification. {Trace: PRD-04; PLAN:Stage 4; PDF:applicable authority}
 - [x] **LST-059** Record exact commands, versions, exits, failures and corrections. Evidence: Stage 4 verification. {Trace: PLAN:Cross-Stage Verification}
 - [x] **LST-060** Inspect the 20-file staged diff; whitespace and credential scans passed with no unrelated files. {Trace: PLAN:Git workflow}
-- [ ] **LST-061** Commit only reviewed Stage 4 files. {Trace: PLAN:Git workflow}
-- [ ] **LST-062** Push the dedicated Stage 4 branch. {Trace: PLAN:Git workflow}
+- [x] **LST-061** Commit only the 20 reviewed Stage 3 closeout and Stage 4 files. Evidence: `0c6b2ec`. {Trace: PLAN:Git workflow}
+- [x] **LST-062** Push the dedicated Stage 4 branch and establish upstream tracking. Evidence: `origin/feat/stage-4-language-scent`. {Trace: PLAN:Git workflow}
 - [ ] **LST-063** Open a focused Stage 4 Pull Request. {Trace: PLAN:Git workflow}
 - [x] **LST-064** Record ADR-002 owner-approved Codex review; independent human reviewer: None. {Trace: PLAN:Review Policy; PLAN:Stage 4 gate}
 - [ ] **LST-065** Record PASS only after merge and synchronization; otherwise FAIL. {Trace: PDF:Ch10.4; PLAN:Stage 4 gate}

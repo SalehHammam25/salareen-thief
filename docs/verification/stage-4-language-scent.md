@@ -78,3 +78,13 @@ LS-BQ-01 through LS-BQ-04 block scent emission, decay, overlap, boundaries, and
 their repeatability fixtures. LS-BQ-06 blocks belief construction and updates.
 LS-BQ-05 blocks a claim of comprehensive numeric-language smuggling coverage.
 The Pull Request, merge, synchronization, and final PASS gate have not occurred.
+
+## Delivery evidence
+
+- Reviewed implementation commit: `0c6b2ec` (`feat: implement Stage 4 language
+  and scent`).
+- Initial push: successful; upstream set to
+  `origin/feat/stage-4-language-scent`.
+- Pull Request: deliberately not created.
+- Final Stage 4 gate remains FAIL because the retained blockers and merge gate
+  are incomplete.
