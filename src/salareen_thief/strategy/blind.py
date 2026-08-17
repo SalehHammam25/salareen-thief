@@ -8,12 +8,13 @@ from salareen_thief.base_logic.state_types import EpisodeStatus, Role
 from .models import StrategySnapshot
 from .results import DecisionError, DecisionFailure, ProposalResult, ProposedAction
 from .search import distance_map, shortest_first_choices
+from .tie import configured_order_tie
 
 TiePolicy = Callable[[tuple[MoveChoice, ...]], MoveChoice]
 
 
 class BlindShortestPath:
-    def __init__(self, tie_policy: TiePolicy) -> None:
+    def __init__(self, tie_policy: TiePolicy = configured_order_tie) -> None:
         self._tie_policy = tie_policy
 
     def propose(self, snapshot: StrategySnapshot) -> ProposalResult:

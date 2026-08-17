@@ -1,8 +1,8 @@
 # TODO 03 - Blind Strategy
 
-**Status:** Unblocked implementation verified; three decisions block final gate
+**Status:** Implementation verified; PR/merge gate pending
 **Related PRD:** `../prd/PRD-03-blind-strategy.md`
-**Implementation:** Complete except blocked default/tie/plugin behavior and delivery
+**Implementation:** Complete; delivery tasks remain
 **Task ID range:** STR-001 through STR-065
 
 Checked tasks have evidence in `../verification/stage-3-blind-strategy.md`. Items that depend on a PRD blocked question remain non-executable until the decision is approved.
@@ -13,14 +13,14 @@ Checked tasks have evidence in `../verification/stage-3-blind-strategy.md`. Item
 
 - [x] **STR-001** Reconfirm PRD-03 mapping against Chapter 6, Chapter 10, Appendix E 25 and Annex F 22. {Trace: PRD-03; PLAN:Stage 3; PDF:applicable authority}
 - [x] **STR-002** Retain STR-BQ-01 through STR-BQ-03 without inventing defaults. {Trace: PRD-03; PLAN:Stage 3; PDF:Ch6}
-- [ ] **STR-003** [BLOCKED: STR-BQ-01] Approve the thief default strategy path. {Trace: PRD-03; PLAN:Stage 3; PDF:Ch6.3}
-- [ ] **STR-004** [BLOCKED: STR-BQ-03] Approve deterministic equal-cost tie-breaking. {Trace: PRD-03; PLAN:Stage 3; PDF:Ch6.4}
-- [ ] **STR-005** [BLOCKED: STR-BQ-02] Approve plugin import/fallback contract. {Trace: PRD-03; PLAN:Stage 3; PDF:Annex F 22}
+- [x] **STR-003** Approve built-in `salareen_thief.strategy.blind:BlindShortestPath` as the default. {Trace: PRD-03; PLAN:Stage 3; PDF:Ch6.3; ADR-004}
+- [x] **STR-004** Approve deterministic `N, S, E, W` equal-cost tie-breaking with STAY excluded. {Trace: PRD-03; PLAN:Stage 3; PDF:Ch6.4; ADR-004}
+- [x] **STR-005** Approve the trusted private `module.path:ClassName` plugin seam and visible fallback. {Trace: PRD-03; PLAN:Stage 3; PDF:Annex F 22; ADR-004}
 - [x] **STR-006** Map all acceptance criteria to tests and explicit blockers. {Trace: PRD-03; PLAN:Stage 3; PDF:applicable authority}
 - [x] **STR-007** Document why Q-learning is optional. {Trace: PRD-03; PLAN:Stage 3; PDF:applicable authority}
 - [x] **STR-008** Document and test Stage 4 language/scent exclusions. {Trace: PRD-03; PLAN:Stage 3; PDF:applicable authority}
 - [x] **STR-009** Bound search to at most one visit per board cell, O(N squared), without changing rules. {Trace: PRD-03; PLAN:Stage 3; PDF:applicable authority}
-- [x] **STR-010** Preserve the binary Stage 3 gate as FAIL while decision/delivery requirements remain. {Trace: PRD-03; PLAN:Stage 3; PDF:applicable authority}
+- [x] **STR-010** Preserve the binary Stage 3 gate as pending until PR, merge, and synchronization. {Trace: PRD-03; PLAN:Stage 3; PDF:applicable authority}
 
 ## Strategy architecture
 
@@ -32,7 +32,7 @@ Checked tasks have evidence in `../verification/stage-3-blind-strategy.md`. Item
 - [x] **STR-016** Prevent strategy from mutating immutable GameState/snapshots. {Trace: PRD-03; PLAN:Stage 3; PDF:applicable authority}
 - [x] **STR-017** Prevent strategy from importing transport internals. {Trace: PRD-03; PLAN:Stage 3; PDF:applicable authority}
 - [x] **STR-018** Prevent deterministic rules from importing strategy. {Trace: PRD-03; PLAN:Stage 3; PDF:applicable authority}
-- [x] **STR-019** Define dependency-injected deterministic tie policy without selecting a default. {Trace: PRD-03; PLAN:Stage 3; PDF:applicable authority}
+- [x] **STR-019** Define the approved default tie policy while retaining dependency injection for tests. {Trace: PRD-03; PLAN:Stage 3; PDF:applicable authority; ADR-004}
 - [x] **STR-020** Keep each Python file within 150 lines. {Trace: PRD-03; PLAN:Stage 3; PDF:applicable authority}
 
 ## Blind policy
@@ -44,7 +44,7 @@ Checked tasks have evidence in `../verification/stage-3-blind-strategy.md`. Item
 - [x] **STR-025** Propose STAY only when already at the known target and validate it through Base Logic. {Trace: PRD-03; PLAN:Stage 3; PDF:applicable authority}
 - [x] **STR-026** Return explicit unreachable result. {Trace: PRD-03; PLAN:Stage 3; PDF:applicable authority}
 - [x] **STR-027** Return explicit terminal-state result. {Trace: PRD-03; PLAN:Stage 3; PDF:applicable authority}
-- [ ] **STR-028** [BLOCKED: STR-BQ-03] Choose deterministic first step on equal routes. {Trace: PRD-03; PLAN:Stage 3; PDF:applicable authority}
+- [x] **STR-028** Choose the first legal shortest move in configured `N, S, E, W` order. {Trace: PRD-03; PLAN:Stage 3; PDF:applicable authority; ADR-004}
 - [x] **STR-029** Test a direct one-step target through Base Logic. {Trace: PRD-03; PLAN:Stage 3; PDF:applicable authority}
 - [x] **STR-030** Test multi-turn shortest-route behavior with an injected policy. {Trace: PRD-03; PLAN:Stage 3; PDF:applicable authority}
 
@@ -59,26 +59,26 @@ Checked tasks have evidence in `../verification/stage-3-blind-strategy.md`. Item
 - [x] **STR-037** Test no hidden opponent, scent, or language input is consumed. {Trace: PRD-03; PLAN:Stage 3; PDF:applicable authority}
 - [x] **STR-038** Test malicious diagonal and off-board outputs cannot bypass Base Logic/search. {Trace: PRD-03; PLAN:Stage 3; PDF:applicable authority}
 - [x] **STR-039** Test rejected proposal leaves state unchanged. {Trace: PRD-03; PLAN:Stage 3; PDF:applicable authority}
-- [ ] **STR-040** [BLOCKED: Annex F defines a minimum grid size but no largest approved board] Measure bounded search on a formally bounded largest board. {Trace: PRD-03; PLAN:Stage 3; PDF:applicable authority}
+- [x] **STR-040** Prove the N-squared visited-cell bound on representative large boards without inventing a maximum or timing gate. {Trace: PRD-03; PLAN:Stage 3; PDF:applicable authority; ADR-004}
 
 ## Adversarial tests
 
-- [ ] **STR-041** [BLOCKED: STR-BQ-02] Define private strategy selector schema. {Trace: PRD-03; PLAN:Stage 3; PDF:applicable authority}
-- [ ] **STR-042** [BLOCKED: STR-BQ-02] Load thief_class only from private TOML. {Trace: PRD-03; PLAN:Stage 3; PDF:applicable authority}
-- [ ] **STR-043** [BLOCKED: STR-BQ-02] Reject malformed module/class references. {Trace: PRD-03; PLAN:Stage 3; PDF:applicable authority}
-- [ ] **STR-044** [BLOCKED: STR-BQ-02] Require the selected class to satisfy the thief interface. {Trace: PRD-03; PLAN:Stage 3; PDF:applicable authority}
-- [ ] **STR-045** [BLOCKED: STR-BQ-02] Test missing plugin and wrong-base-class failures. {Trace: PRD-03; PLAN:Stage 3; PDF:applicable authority}
-- [ ] **STR-046** [BLOCKED: STR-BQ-02] Test plugin exception becomes typed decision failure. {Trace: PRD-03; PLAN:Stage 3; PDF:applicable authority}
-- [ ] **STR-047** [BLOCKED: STR-BQ-02] Test plugin cannot bypass Base Logic. {Trace: PRD-03; PLAN:Stage 3; PDF:applicable authority}
-- [ ] **STR-048** [BLOCKED: STR-BQ-02] Test shared JSON cannot be weakened by private strategy config. {Trace: PRD-03; PLAN:Stage 3; PDF:applicable authority}
-- [ ] **STR-049** [BLOCKED: STR-BQ-01] Document the selected team algorithm if it becomes the approved default. {Trace: PRD-03; PLAN:Stage 3; PDF:applicable authority}
+- [x] **STR-041** Define private `[strategy].thief_class` selector schema. {Trace: PRD-03; PLAN:Stage 3; PDF:applicable authority; ADR-004}
+- [x] **STR-042** Load `thief_class` only from trusted private TOML. {Trace: PRD-03; PLAN:Stage 3; PDF:applicable authority; ADR-004}
+- [x] **STR-043** Reject malformed `module.path:ClassName` references with stable typed reasons. {Trace: PRD-03; PLAN:Stage 3; PDF:applicable authority; ADR-004}
+- [x] **STR-044** Require no-argument construction, callable `propose`, restricted snapshots, and typed results. {Trace: PRD-03; PLAN:Stage 3; PDF:applicable authority; ADR-004}
+- [x] **STR-045** Test missing module/class, invalid interface, and constructor failures. {Trace: PRD-03; PLAN:Stage 3; PDF:applicable authority; ADR-004}
+- [x] **STR-046** Test runtime plugin exceptions produce visible typed deterministic fallback. {Trace: PRD-03; PLAN:Stage 3; PDF:applicable authority; ADR-004}
+- [x] **STR-047** Test invalid plugin proposals cannot bypass Base Logic and fall back visibly. {Trace: PRD-03; PLAN:Stage 3; PDF:applicable authority; ADR-004}
+- [x] **STR-048** Test shared JSON and remote data cannot select or weaken private strategy configuration. {Trace: PRD-03; PLAN:Stage 3; PDF:applicable authority; ADR-004}
+- [x] **STR-049** Record that the approved default is the built-in heuristic, so no separate team algorithm applies. {Trace: PRD-03; PLAN:Stage 3; PDF:applicable authority; ADR-004}
 - [x] **STR-050** Keep optional RL dependencies absent unless separately approved. {Trace: PRD-03; PLAN:Stage 3; PDF:applicable authority}
 
 ## Verification and delivery
 
 - [x] **STR-051** Add focused positive path tests for direct, multi-turn, barrier, edge, and STAY paths. {Trace: PRD-03; PLAN:Stage 3; PDF:applicable authority}
 - [x] **STR-052** Add negative and invariant tests. {Trace: PRD-03; PLAN:Stage 3; PDF:applicable authority}
-- [ ] **STR-053** [BLOCKED: STR-BQ-02] Add malicious dynamic-plugin tests after the loader contract is approved. {Trace: PRD-03; PLAN:Stage 3; PDF:applicable authority}
+- [x] **STR-053** Add malicious and incompatible plugin tests covering runtime, result, role, and Base Logic boundaries. {Trace: PRD-03; PLAN:Stage 3; PDF:applicable authority; ADR-004}
 - [x] **STR-054** Run full regression and dependency-boundary tests. {Trace: PRD-03; PLAN:Stage 3; PDF:applicable authority}
 - [x] **STR-055** Run uv sync, Ruff, pytest and line checker. {Trace: PRD-03; PLAN:Stage 3; PDF:applicable authority}
 - [x] **STR-056** Run credential/generated-file scans. {Trace: PRD-03; PLAN:Stage 3; PDF:applicable authority}
