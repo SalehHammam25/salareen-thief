@@ -1,7 +1,7 @@
 # PRD 05 - Cloud Exposure and Tunneling
-**Status:** Ready for review
+**Status:** Safe local subset implemented; external acceptance blocked
 **Repository:** salareen-thief
-**Implementation:** Not started
+**Implementation:** Local lifecycle complete; real tunnel proof pending
 **Specification:** 3.0.0
 
 ## Purpose

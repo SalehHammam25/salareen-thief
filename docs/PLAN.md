@@ -415,16 +415,18 @@ Pull Request review, merge, and synchronization.
 network timeout values. **Milestone:** a complete match runs between remote
 machines through public tunnel endpoints.
 
-Dependency order: (1) approve provider, URL exchange and failure attribution;
-(2) provision external account/token outside Git; (3) implement provider
-adapter and lifecycle; (4) validate/redact endpoints; (5) expose both peers and
+Dependency order: (1) implement the ADR-007 provider-neutral safe local boundary;
+(2) obtain owner/team approval for provider, exchange, and failure policy;
+(3) provision external account/token outside Git and implement its adapter;
+(4) validate/redact endpoints; (5) expose both peers and
 perform symmetric health checks; (6) add latency, disconnect, retry, watchdog
 and shutdown behavior; (7) run two-machine match and fault-injection tests.
 
 Gate: remote bidirectional MCP and a complete match pass; no localhost shortcut
 or secret leakage exists; failures never wait indefinitely. Reachability is not
 authentication. CLD-BQ-01 through CLD-BQ-05 and external account/firewall work
-remain explicit blockers.
+remain explicit blockers. Local verification may pass while the final Stage 5
+gate remains FAIL until authorized two-machine public-tunnel evidence exists.
 
 ## Stage 6 - Security and Cryptography
 

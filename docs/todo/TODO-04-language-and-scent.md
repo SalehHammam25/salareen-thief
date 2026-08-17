@@ -1,6 +1,6 @@
 # TODO 04 - Language and Scent
 
-**Status:** Implementation verified; PR/merge gate pending
+**Status:** Complete; final Stage 4 gate PASS
 **Related PRD:** `../prd/PRD-04-language-and-scent.md`
 **Implementation:** Complete before Pull Request
 **Task ID range:** LST-001 through LST-065
@@ -88,6 +88,6 @@ A task is checked only when its evidence exists. Blocked items remain non-execut
 - [x] **LST-060** Inspect the 20-file staged diff; whitespace and credential scans passed with no unrelated files. {Trace: PLAN:Git workflow}
 - [x] **LST-061** Commit only reviewed Stage 4 files. Evidence: initial `0c6b2ec`; finalization `77af8b7`. {Trace: PLAN:Git workflow}
 - [x] **LST-062** Push both reviewed deliveries to `origin/feat/stage-4-language-scent`. {Trace: PLAN:Git workflow}
-- [ ] **LST-063** Open a focused Stage 4 Pull Request. {Trace: PLAN:Git workflow}
+- [x] **LST-063** Open and merge focused Stage 4 PR #12 as `48d24e6`. {Trace: PLAN:Git workflow}
 - [x] **LST-064** Record ADR-002 owner-approved Codex review; independent human reviewer: None. {Trace: PLAN:Review Policy; PLAN:Stage 4 gate}
-- [ ] **LST-065** Record PASS only after merge and synchronization; otherwise FAIL. {Trace: PDF:Ch10.4; PLAN:Stage 4 gate}
+- [x] **LST-065** Record PASS after PR #12 merge, ancestor verification for `77af8b7`/`c2f8e50`, fast-forward synchronization, and clean `main`. {Trace: PDF:Ch10.4; PLAN:Stage 4 gate}
