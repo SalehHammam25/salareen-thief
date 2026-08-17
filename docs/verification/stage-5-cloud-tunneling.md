@@ -83,3 +83,13 @@ provider-specific adapter, and run the redacted bidirectional/public match,
 restart, disconnect, latency, watchdog, and shutdown acceptance procedure in the
 runbook. Until that happens, CLD-003/005-007, 021, 023, 025, 029, 036, 040,
 044, 046-049, and 065 remain blocked or incomplete.
+
+## Delivery evidence
+
+- Reviewed implementation commit: `ea4a053` (`feat: implement Stage 5 cloud
+  tunneling`).
+- Push: successful; upstream set to
+  `origin/feat/stage-5-cloud-tunneling`.
+- Pull Request: deliberately not created.
+- Final Stage 5 gate remains FAIL pending the documented external actions,
+  Pull Request, merge, and synchronization.

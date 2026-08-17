@@ -86,8 +86,8 @@ All tasks are unchecked. A task may be checked only when its evidence exists. It
 - [x] **CLD-058** Inspect the complete 22-file staged diff and unrelated files. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
 - [x] **CLD-059** Confirm no tunnel token, private URL, generated artifact, or unrelated file is staged. {Trace: PLAN:Git workflow}
 - [x] **CLD-060** Record cached names/statistics/whitespace and credential audit. {Trace: PLAN:Cross-Stage Verification}
-- [ ] **CLD-061** Commit only reviewed Stage 5 files. {Trace: PLAN:Git workflow}
-- [ ] **CLD-062** Push the dedicated Stage 5 branch. {Trace: PLAN:Git workflow}
+- [x] **CLD-061** Commit only the 22 reviewed Stage 4 closeout and Stage 5 files. Evidence: `ea4a053`. {Trace: PLAN:Git workflow}
+- [x] **CLD-062** Push and track `origin/feat/stage-5-cloud-tunneling`. {Trace: PLAN:Git workflow}
 - [ ] **CLD-063** Open a focused Stage 5 Pull Request. {Trace: PLAN:Git workflow}
 - [x] **CLD-064** Record ADR-002 owner-approved Codex adversarial review; independent human reviewer: None. {Trace: PLAN:Review Policy; PLAN:Stage 5 gate}
 - [ ] **CLD-065** Record PASS only after merge and synchronization; otherwise FAIL. {Trace: PDF:Ch10.4; PLAN:Stage 5 gate}
