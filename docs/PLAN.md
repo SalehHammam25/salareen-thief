@@ -187,19 +187,23 @@ This sequence defines responsibilities and dependencies, not filenames, class na
    - accept one-cell orthogonal movement and stay;
    - reject diagonal movement;
    - reject movement into barriers;
-   - keep off-board response behavior blocked pending an approved specification decision.
+   - reject off-board targets explicitly without mutating state.
 
 5. **Barrier transitions**
    - permit barrier actions only for the cop in the local rules model;
    - make placement replace movement;
    - validate unambiguous placement constraints and quota;
    - preserve barriers permanently;
-   - keep cop-on-own-new-barrier occupancy behavior blocked.
+   - implement Chapter 3.4 own-cell placement with grandfathered occupancy,
+     permanent blocking of future entry, and overlap-claim priority.
 
 6. **End-condition evaluation**
    - implement coordinate-overlap capture with the Stage 1 non-cryptographic Capture Claim representation;
-   - represent barrier-on-thief and trapped-thief capture only after their blocked procedural interpretations are approved;
-   - implement survival only after move-ceiling/threshold precedence is approved where values may differ;
+   - apply one local deterministic Capture Claim boundary to overlap,
+     barrier-on-thief, and trapped-thief capture;
+   - evaluate trapping from adjacent orthogonal destinations; STAY does not
+     prevent a genuinely trapped capture;
+   - reject configurations whose move ceiling and survival threshold differ;
    - represent technical loss without implementing detection.
 
 7. **Scoring**
@@ -229,8 +233,9 @@ This sequence defines responsibilities and dependencies, not filenames, class na
 - Test both successful transitions and explicit rejection paths.
 - Assert that rejected actions preserve the complete prior state.
 - Test terminal states so later actions cannot silently alter completed outcomes.
-- Maintain direct traceability from each approved PRD acceptance criterion to at least one test or an explicit blocked record.
-- Do not encode a blocked interpretation in fixtures, helper defaults, or expected values.
+- Maintain direct traceability from each approved PRD acceptance criterion to
+  at least one test or an explicit approved decision record.
+- Encode clarified behavior only as recorded in PRD-01 and ADR-001.
 
 ## Deterministic-Repeatability Strategy
 
@@ -292,25 +297,21 @@ Evidence must record:
 
 Changing a command requires PLAN or TODO review before relying on the replacement as gate evidence. The planned line-length script is an implementation-support artifact and must itself remain at or below 150 lines.
 
-## Blocked-Question Handling
+## Approved Clarification Handling
 
-The following approved PRD questions remain blocked:
+ADR-001 records Areen's approval of the five former blockers. Implementation
+must now follow those decisions exactly and must distinguish the PDF's explicit
+rules from project interpretations:
 
-1. the exact response to an off-board movement target;
-2. the relationship and precedence between move ceiling and survival threshold when they differ;
-3. whether barrier-on-thief and trapped-thief capture use the same Capture Claim and later truth-verification flow as overlap capture;
-4. immediate cop occupancy after placing a barrier on the cop's own cell.
+- Chapter 3.4 explicitly permits own-cell barrier placement;
+- Appendix E rules 46-47 explicitly require the special capture paths;
+- off-board response, common claim procedure, and parameter relationship were
+  unspecified;
+- STAY and trapped capture were in tension.
 
-An additional recorded tension remains blocked: the fixed permission to stay versus capture when all adjacent thief cells are unavailable.
-
-For every blocker:
-
-- TODO-01 must label all dependent tasks as blocked;
-- implementation must not choose a behavior through defaults, tests, exception types, control flow, or comments;
-- unaffected work may continue;
-- resolution requires an explicit documented decision and approval;
-- after approval, update the relevant documentation and tests before closing the dependent task;
-- Stage 1 cannot pass its final binary gate while a mandatory acceptance path remains undefined.
+Any newly discovered contradiction with higher-authority mandatory text must
+stop implementation and return to PRD/ADR review. Cryptographic claim proof and
+remote verification remain deferred and are not implied by the local claim.
 
 ## Binary Stage 1 Verification Gate
 
@@ -318,7 +319,7 @@ Stage 1 is either **PASS** or **FAIL**. It passes only when all conditions below
 
 - PRD-01, this PLAN, and TODO-01 are approved and traceable;
 - every mandatory Stage 1 requirement is implemented or has an approved interpretation that is implemented;
-- no blocked question remains capable of changing required Stage 1 behavior;
+- every former blocked question is implemented exactly as ADR-001 records;
 - local `config/game.json` loading and validation pass without remote-peer communication;
 - deterministic Base Logic uses the validated configuration values;
 - every unblocked acceptance criterion maps to passing unit tests;
@@ -344,10 +345,9 @@ If any condition is false, the gate is **FAIL**, Stage 1 remains incomplete, and
 
 Each later stage requires its own reviewed PRD, expanded PLAN content, detailed TODO, tests, and verification gate before implementation.
 
-## Decisions Requiring Approval Before Stage 1 Execution
+## Approved Stage 1 Execution Decisions
 
-- the four blocked PRD questions;
-- the stay-versus-trapped interpretation;
+- the five approved ADR-001 rule clarifications;
 - the detailed TODO-01 decomposition and traceability mapping;
 - the proposed responsibility sequence in this PLAN;
 - the exact project metadata and dependency set introduced through `uv`;

@@ -11,6 +11,7 @@ class StateErrorCategory(StrEnum):
     POSITION_OUT_OF_BOUNDS = "position_out_of_bounds"
     DUPLICATE_BARRIER = "duplicate_barrier"
     BARRIER_OUT_OF_BOUNDS = "barrier_out_of_bounds"
+    INVALID_BARRIER_OCCUPANCY = "invalid_barrier_occupancy"
     NEGATIVE_BARRIER_USAGE = "negative_barrier_usage"
     BARRIER_QUOTA_EXCEEDED = "barrier_quota_exceeded"
     NEGATIVE_VALID_STEPS = "negative_valid_steps"

@@ -47,8 +47,28 @@ def test_increased_minimum_is_accepted(
     default_data, section: str, key: str, minimum: int
 ) -> None:
     default_data[section][key] = minimum + 1
+    if key in ("max_moves", "survival_threshold"):
+        default_data[section]["max_moves"] = minimum + 1
+        default_data[section]["survival_threshold"] = minimum + 1
     result = validate_config(default_data)
     assert isinstance(result, ConfigAccepted)
+
+
+def test_unequal_ceiling_and_survival_are_rejected(default_data) -> None:
+    default_data["movement_and_barriers"]["max_moves"] = 36
+    result = validate_config(default_data)
+    assert isinstance(result, ConfigRejected)
+    assert result.issues[-1].category is Error.RELATIONSHIP_MISMATCH
+    assert result.issues[-1].path == (
+        "movement_and_barriers",
+        "survival_threshold",
+    )
+
+
+def test_equal_increased_ceiling_and_survival_are_accepted(default_data) -> None:
+    movement = default_data["movement_and_barriers"]
+    movement["max_moves"] = movement["survival_threshold"] = 40
+    assert isinstance(validate_config(default_data), ConfigAccepted)
 
 
 @pytest.mark.parametrize("section,key,expected", FIXED)

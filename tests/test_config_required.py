@@ -1,7 +1,5 @@
 """Tests for required configuration structure and types."""
 
-from copy import deepcopy
-
 import pytest
 
 from salareen_thief.base_logic.config_errors import ConfigErrorCategory as Error

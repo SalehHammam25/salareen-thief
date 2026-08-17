@@ -13,6 +13,7 @@ class ConfigErrorCategory(StrEnum):
     INCORRECT_TYPE = "incorrect_type"
     BELOW_MINIMUM = "below_minimum"
     FIXED_VALUE_DEVIATION = "fixed_value_deviation"
+    RELATIONSHIP_MISMATCH = "relationship_mismatch"
     OUT_OF_BOUNDS = "out_of_bounds"
 
 

@@ -2,7 +2,7 @@
 
 **Status:** Approved for planning
 **Repository:** salareen-thief
-**Implementation:** Not started
+**Implementation:** In progress on `feat/stage-1-gameplay`
 
 ## Purpose
 
@@ -52,13 +52,24 @@ This PRD defines behavior only. It contains no networking and no intelligence (h
 - An illegal diagonal-move attempt is rejected deterministically.
 - Blocked (barrier) cells cannot be crossed by either agent.
 
-Off-grid movement behavior is not invented here — see Blocked Specification Questions.
+An attempted move whose target is outside the board is rejected explicitly as
+out of bounds. Rejection preserves the exact original immutable state. Chapter
+3.4 defines legal movement but is silent about this response, so this is an
+approved project decision rather than a quoted mandatory rule.
 
 ### Barriers
 
 - Only the cop may place barriers.
 - Placing a barrier replaces movement for that turn (the cop cannot move and place a barrier in the same turn).
 - Placement is allowed on the cop's current cell or on one orthogonally adjacent cell.
+- Chapter 3.4 explicitly permits placement on the cop's current cell. The
+  approved deterministic interpretation grandfathers the cop's existing
+  occupancy: placement adds a permanent barrier and increments usage without
+  relocating the cop. STAY is allowed because it does not enter a cell. The cop
+  may leave through a legal non-barrier destination; after leaving, neither
+  agent may enter the barrier cell. Duplicate placement is rejected without
+  consuming quota. If both agents already overlap, the required overlap
+  Capture Claim has priority and own-cell placement cannot bypass it.
 - [מכסת המחסומים] — default 14 — Annex F status: **minimum**. It functions as the maximum number of barriers the cop may place, but the configured quota itself may be increased by mutual agreement and may not be below 14.
 - Barriers are permanent and impassable to both agents for the rest of the episode.
 - Every barrier placement, and its exact location, must be declared truthfully.
@@ -71,13 +82,27 @@ An episode ends as a **capture** when any of the following occurs:
 - the cop places a barrier on the thief's current cell;
 - the thief has no legal move because all adjacent cells are blocked by barriers and/or board edges.
 
-The second and third capture paths are mandatory in Appendix E rules 46 and 47. The PDF does not state clearly whether they use the same Capture Claim and later truth-verification flow as coordinate-overlap capture; that protocol question remains blocked.
+The second and third capture paths are mandatory in Appendix E rules 46 and 47.
+The PDF does not specify their claim procedure. Areen therefore approved one
+common deterministic Capture Claim boundary for all three capture causes.
+Stage 1 validates only local board/state evidence; cryptographic truth
+verification, Nonce, Commit-Reveal, signatures, and peer verification remain
+later-stage work.
 
-The trapped-thief rule also has an unresolved tension with the fixed permission to stay in place. The PDF describes a thief with no legal move because all adjacent cells are blocked or outside the board as captured, while [מערך התנועה] includes staying. This PRD records both statements and does not decide whether staying prevents trapped capture.
+The PDF contains a tension between fixed STAY and mandatory trapped capture.
+The approved project decision is that STAY does not prevent trapped capture.
+Trapping asks whether the thief has an available adjacent orthogonal
+destination; board edges and barriers make such destinations unavailable. No
+unrelated capture condition is introduced.
 
 An episode ends as a **survival** when the thief survives [סף ההישרדות] valid steps without capture. Annex F gives [סף ההישרדות] a default/minimum value of **35**.
 
-[תקרת הצעדים] is a separate mandatory parameter (a per-episode move ceiling). Annex F gives it a default/minimum value of **35**. Its precise relationship to [סף ההישרדות] — whether they must coincide or can be negotiated to different values with different consequences — is left unresolved here; see Blocked Specification Questions.
+[תקרת הצעדים] is a separate mandatory parameter (a per-episode move ceiling).
+Annex F gives it a default/minimum value of **35**. Annex F is silent about its
+relationship to [סף ההישרדות]. Stage 1 therefore requires the two validated
+values to be equal and rejects unequal configuration with an explicit
+relationship-validation issue; it selects no episode outcome for unequal
+values. Equal values may be increased together subject to Annex F minimums.
 
 A **technical-loss** outcome (a side crashing, exceeding time, or committing cryptographic forgery) is recognized as an end condition by Base Logic. Detection of crashes, timeouts, and cryptographic forgery itself belongs to later stages (orchestrator/watchdog, cryptography), not to this PRD.
 
@@ -151,11 +176,13 @@ The tie score (2) is a league/series-level rule — it applies when the *cumulat
 6. A placement beyond [מכסת המחסומים] is rejected.
 7. Coordinate overlap with a valid Capture Claim ends the episode as capture.
 8. A barrier placed on the thief's cell ends the episode as capture.
-9. Subject to resolution of the stay-versus-trapped tension, the mandatory trapped-thief capture rule is implemented exactly as the approved interpretation specifies.
+9. A thief with no available adjacent orthogonal destination is captured after
+   the common deterministic Capture Claim; STAY does not prevent this capture.
 10. Reaching [סף ההישרדות] valid steps without capture ends the episode as survival; its default/minimum is 35.
 11. Capture, survival, and technical loss return the correct fixed score pairs.
 12. The same agreed physics configuration produces the same deterministic outcome.
-13. [תקרת הצעדים] has a default/minimum of 35; behavior when it differs from [סף ההישרדות] remains blocked until specified.
+13. [תקרת הצעדים] and [סף ההישרדות] each have a default/minimum
+    of 35 and must be equal in an accepted Stage 1 configuration.
 14. Stage 1 loads and validates its local Base Logic parameters from `config/game.json`, and deterministic Base Logic uses those validated values.
 15. Stage 1 configuration acceptance is verified locally and does not require communication with a remote peer; byte comparison, signed exchange, and remote mismatch refusal are verified in later integration stages.
 
@@ -164,11 +191,18 @@ The following is a **recommended Chapter-10 milestone**, not an additional manda
 - excess barriers are rejected;
 - coordinate overlap triggers capture.
 
-## Blocked Specification Questions
+## Approved Rule Clarifications
 
-1. What exact response is required when a move targets a coordinate outside the board?
-2. What is the precise relationship between [תקרת הצעדים] and [סף ההישרדות] if negotiated to different values?
-3. Do barrier-on-thief-cell capture and trapped-thief capture require the same Capture Claim and later cryptographic truth-verification flow as coordinate-overlap capture?
-4. When the cop places a barrier on the cell it currently occupies, how is its immediate occupancy handled after that cell becomes impassable to both agents?
+On 2026-08-17, Areen approved the five previously unresolved interpretations:
 
-These questions must remain visibly blocked in PLAN, TODO, implementation, and acceptance testing wherever behavior depends on them. The stay-versus-trapped tension documented above is an additional blocked interpretation issue. No behavior may be selected by assumption.
+1. off-board movement is rejected out of bounds with exact state preservation;
+2. Stage 1 configuration requires equal move-ceiling and survival values;
+3. all capture causes use one deterministic Capture Claim boundary;
+4. Chapter 3.4 own-cell placement is accepted with grandfathered occupancy;
+5. STAY does not prevent capture when no adjacent orthogonal destination exists.
+
+Chapter 3.4 is explicit about own-cell placement and special capture facts.
+Appendix E rules 46-47 make the special captures mandatory. The remaining
+response and procedural details are silent or contradictory in the PDF and are
+therefore recorded as approved project decisions in ADR-001, not attributed to
+the specification itself.
