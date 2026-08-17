@@ -89,5 +89,5 @@ All tasks are unchecked. A task may be checked only when its evidence exists. It
 - [ ] **SEC-061** Commit only reviewed Stage 6 files. {Trace: PLAN:Git workflow}
 - [ ] **SEC-062** Push the dedicated Stage 6 branch. {Trace: PLAN:Git workflow}
 - [ ] **SEC-063** Open a focused Stage 6 Pull Request. {Trace: PLAN:Git workflow}
-- [ ] **SEC-064** Obtain independent cryptographic and cross-peer review. {Trace: PLAN:Stage 6 gate}
+- [ ] **SEC-064** Obtain independent security review when available or record the ADR-002 owner-approved Codex review exception. {Trace: PLAN:Review Policy; PLAN:Stage 6 gate}
 - [ ] **SEC-065** Record PASS only after merge and synchronization; otherwise FAIL. {Trace: PDF:Ch10.4; PLAN:Stage 6 gate}

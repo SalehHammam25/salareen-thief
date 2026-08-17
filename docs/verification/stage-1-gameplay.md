@@ -111,10 +111,26 @@ For both `rg` scans, exit 1 is the expected no-match result. The working tree
 contains only the approved Stage 1 documentation, deterministic logic, tests,
 Ruff metadata, and verification evidence.
 
+## Corrective Closeout and Final Gate
+
+Deterministic technical gate: **PASS**
+
+Independent human reviewer: None
+
+Owner approval: Areen
+
+Review method: Codex-assisted adversarial review and automated verification
+
+PR #8 was merged before review. No false review evidence exists. ADR-002
+records Areen's explicit waiver of the project-added independent-human-review
+condition and the corrective disclosure. The 199-test, Ruff, dependency,
+line-length and credential results above support the technical PASS. The
+merge-before-review process deviation is not presented as compliant ordering.
+
 ## Deferred Integration
 
 Nonce, Commit-Reveal, hashes, signatures, log audit, peer verification, remote
 configuration comparison/refusal, networking, MCP, LLM behavior, strategy,
 cloud exposure, GUI, league orchestration, and presentation replay remain out
-of Stage 1. The binary gate cannot become PASS until commit, PR, review, and
-merge requirements are satisfied; Stage 2 must not begin.
+of Stage 1. Commit, PR, merge, synchronization and the owner-approved review
+exception are now evidenced; the amended Stage 1 gate is PASS.

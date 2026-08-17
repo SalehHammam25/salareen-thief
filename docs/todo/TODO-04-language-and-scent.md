@@ -89,5 +89,5 @@ All tasks are unchecked. A task may be checked only when its evidence exists. It
 - [ ] **LST-061** Commit only reviewed Stage 4 files. {Trace: PLAN:Git workflow}
 - [ ] **LST-062** Push the dedicated Stage 4 branch. {Trace: PLAN:Git workflow}
 - [ ] **LST-063** Open a focused Stage 4 Pull Request. {Trace: PLAN:Git workflow}
-- [ ] **LST-064** Obtain cross-peer language/scent contract review. {Trace: PLAN:Stage 4 gate}
+- [ ] **LST-064** Obtain cross-peer review when available or record the ADR-002 owner-approved Codex review exception. {Trace: PLAN:Review Policy; PLAN:Stage 4 gate}
 - [ ] **LST-065** Record PASS only after merge and synchronization; otherwise FAIL. {Trace: PDF:Ch10.4; PLAN:Stage 4 gate}

@@ -89,5 +89,5 @@ All tasks are unchecked. A task may be checked only when its evidence exists. It
 - [ ] **CLD-061** Commit only reviewed Stage 5 files. {Trace: PLAN:Git workflow}
 - [ ] **CLD-062** Push the dedicated Stage 5 branch. {Trace: PLAN:Git workflow}
 - [ ] **CLD-063** Open a focused Stage 5 Pull Request. {Trace: PLAN:Git workflow}
-- [ ] **CLD-064** Obtain independent and remote cross-peer review. {Trace: PLAN:Stage 5 gate}
+- [ ] **CLD-064** Obtain independent review when available or record the ADR-002 owner-approved Codex review exception. {Trace: PLAN:Review Policy; PLAN:Stage 5 gate}
 - [ ] **CLD-065** Record PASS only after merge and synchronization; otherwise FAIL. {Trace: PDF:Ch10.4; PLAN:Stage 5 gate}

@@ -1,7 +1,7 @@
 # PRD 02 - Basic MCP Infrastructure
-**Status:** Ready for review
+**Status:** Technical implementation verified; contract and delivery gate pending
 **Repository:** salareen-thief
-**Implementation:** Not started
+**Implementation:** Provisional unblocked transport slice implemented
 **Specification:** 3.0.0
 
 ## Purpose
@@ -46,3 +46,9 @@ Public tunnels, strategy, scent/language, cryptography, signed config comparison
 - **MCP-BQ-01:** production tool names, schemas, protocol versions and error vocabulary are unspecified.
 - **MCP-BQ-02:** exact idempotency/duplicate-message policy is unspecified.
 - **MCP-BQ-03:** attribution of remote technical loss versus local infrastructure failure is unspecified.
+
+The provisional implementation deliberately does not claim production
+cross-repository contract approval. In particular, duplicate/idempotency
+behavior remains unimplemented because AC02-04's duplicate-rejection wording
+depends on MCP-BQ-02. The final Stage 2 gate therefore remains FAIL until the
+blocked contracts and required delivery workflow are completed.
