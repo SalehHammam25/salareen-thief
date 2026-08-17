@@ -96,6 +96,10 @@ LS-BQ-01 through LS-BQ-06 are resolved by ADR-006 and verified. Only LST-063
   and scent`).
 - Initial push: successful; upstream set to
   `origin/feat/stage-4-language-scent`.
+- Finalization commit: `77af8b7` (`feat: finalize Stage 4 language and scent`),
+  containing the 29-file reviewed ADR/documentation, scent, belief, language,
+  and focused-test update.
+- Finalization push: successful to the existing upstream branch.
 - Pull Request: deliberately not created.
 - Final Stage 4 gate remains FAIL solely because the Pull Request and merge gate
   are incomplete.
