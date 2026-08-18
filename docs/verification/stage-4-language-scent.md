@@ -6,7 +6,7 @@
 
 **Technical verification:** PASS
 
-**Final Stage 4 gate:** FAIL pending Pull Request, merge, and synchronization
+**Final Stage 4 gate:** PASS
 
 ## Authority and scope
 
@@ -100,6 +100,13 @@ LS-BQ-01 through LS-BQ-06 are resolved by ADR-006 and verified. Only LST-063
   containing the 29-file reviewed ADR/documentation, scent, belief, language,
   and focused-test update.
 - Finalization push: successful to the existing upstream branch.
-- Pull Request: deliberately not created.
-- Final Stage 4 gate remains FAIL solely because the Pull Request and merge gate
-  are incomplete.
+- At initial branch delivery, the Pull Request was deliberately not created and
+  the final gate correctly remained FAIL pending later GitHub events.
+
+## Post-merge closeout
+
+- Pull Request #12 merged into `main` as `48d24e6`.
+- `77af8b7` and `c2f8e50` are ancestors of `origin/main`.
+- Local `main` fast-forwarded to `48d24e6` with a clean worktree before the
+  Stage 5 branch was created.
+- LST-063 and LST-065 are complete; final Stage 4 gate: PASS.

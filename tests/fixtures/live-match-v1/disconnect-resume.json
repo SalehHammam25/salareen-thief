@@ -1,0 +1,4 @@
+{
+  "scenario": "exact recovery identity",
+  "tool": "resume_match_v1"
+}

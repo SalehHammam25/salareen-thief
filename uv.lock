@@ -1034,8 +1034,8 @@ requires-dist = [{ name = "fastmcp", specifier = ">=2.0,<3" }]
 
 [package.metadata.requires-dev]
 dev = [
-    { name = "pytest", specifier = ">=8.0,<9" },
-    { name = "ruff", specifier = ">=0.16.3" },
+    { name = "pytest", specifier = ">=8.4.2,<9" },
+    { name = "ruff", specifier = ">=0.16.3,<0.17" },
 ]
 
 [[package]]

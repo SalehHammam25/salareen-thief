@@ -91,3 +91,11 @@ Checked tasks have evidence in `../verification/stage-2-mcp-infrastructure.md`. 
 - [x] **MCP-063** Open focused Stage 2 PR #10 against `main`; merged as `751a931`. {Trace: PLAN:Git workflow}
 - [x] **MCP-064** Obtain independent review when available; otherwise record Codex adversarial review, no human reviewer, and Areen's owner approval. {Trace: PLAN:Review Policy; PLAN:Stage 2 gate}
 - [x] **MCP-065** Record PASS after PR #10 merge, fast-forward synchronization, clean status, and ancestor verification for all Stage 2 commits. {Trace: PDF:Ch10.4; PLAN:Stage 2 gate}
+
+## Live-match composition backlog
+
+- [ ] **LM-MCP-001** Implement strict schemas and tools from live-match-orchestration-v1 without changing the six-field geometry envelope.
+- [ ] **LM-MCP-002** Enforce configured expected-opponent role and test `WRONG_EXPECTED_ROLE` without claiming authentication.
+- [ ] **LM-MCP-003** Implement validation order, shared rejection vocabulary and mutating-message idempotency keys.
+- [ ] **LM-MCP-004** Add byte-identical initialization, normal-turn, barrier, duplicate-ack and terminal fixtures.
+- [ ] **LM-MCP-005** Test lost acknowledgement, duplicate mismatch, FIFO retention and fresh-process replay.

@@ -1,8 +1,8 @@
 # TODO 05 - Cloud Exposure and Tunneling
 
-**Status:** Ready for review
+**Status:** ngrok adapter verified; two-machine acceptance blocked
 **Related PRD:** `../prd/PRD-05-cloud-exposure-and-tunneling.md`
-**Implementation:** Not started
+**Implementation:** Local and single-endpoint public proof complete
 **Task ID range:** CLD-001 through CLD-065
 
 All tasks are unchecked. A task may be checked only when its evidence exists. Items that depend on a PRD blocked question remain non-executable until the decision is approved.
@@ -11,83 +11,95 @@ All tasks are unchecked. A task may be checked only when its evidence exists. It
 
 ## Authority and external actions
 
-- [ ] **CLD-001** Reconfirm PRD-05 mapping against Chapters 2.4 and 10.3.5 and Appendix E 1-2/10. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
-- [ ] **CLD-002** [BLOCKED: CLD-BQ-01..05] Resolve or retain every cloud blocker. {Trace: PRD-05; PLAN:Stage 5; PDF:Ch2.4}
-- [ ] **CLD-003** [BLOCKED: CLD-BQ-01] Approve tunnel provider without assuming ngrok. {Trace: PRD-05; PLAN:Stage 5; PDF:Ch2.4}
-- [ ] **CLD-004** Document required external account and operator permissions. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
-- [ ] **CLD-005** [BLOCKED: CLD-BQ-02] Approve public URL exchange mechanism. {Trace: PRD-05; PLAN:Stage 5; PDF:Ch2.4}
-- [ ] **CLD-006** [BLOCKED: CLD-BQ-03] Approve reconnect/resume versus technical-loss policy. {Trace: PRD-05; PLAN:Stage 5; PDF:Ch8.4}
-- [ ] **CLD-007** [BLOCKED: CLD-BQ-04] Approve provider-outage attribution policy. {Trace: PRD-05; PLAN:Stage 5; PDF:Ch8.4}
-- [ ] **CLD-008** Map acceptance criteria to remote tests. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
-- [ ] **CLD-009** Document Stage 6 authentication exclusion. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
-- [ ] **CLD-010** Approve binary Stage 5 gate. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
+- [x] **CLD-001** Reconfirm mapping against Chapters 2.4/8.4/10.3.5, Appendix E 1-2/10, and Annex F 19. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
+- [x] **CLD-002** Retain every external cloud blocker without assumptions. Evidence: ADR-007. {Trace: PRD-05; PLAN:Stage 5; PDF:Ch2.4}
+- [x] **CLD-003** Approve ngrok stable-domain provider contract. Evidence: Areen approval; ADR-007. {Trace: PRD-05; PLAN:Stage 5; PDF:Ch2.4}
+- [x] **CLD-004** Document required external account and operator permissions. Evidence: Stage 5 runbook. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
+- [x] **CLD-005** Approve manual private URL exchange for Stage 5. Evidence: Areen approval; ADR-007. {Trace: PRD-05; PLAN:Stage 5; PDF:Ch2.4}
+- [x] **CLD-006** Approve identity-safe reconnect/resume policy. Evidence: Areen approval; ADR-007. {Trace: PRD-05; PLAN:Stage 5; PDF:Ch8.4}
+- [x] **CLD-007** Approve conservative failure-attribution policy. Evidence: Areen approval; ADR-007. {Trace: PRD-05; PLAN:Stage 5; PDF:Ch8.4}
+- [x] **CLD-008** Map local and external acceptance criteria to tests/runbook evidence. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
+- [x] **CLD-009** Document Stage 6 authentication exclusion. Evidence: ADR-007/runbook. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
+- [x] **CLD-010** Retain binary gate: local PASS cannot replace remote-machine proof. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
 
 ## Tunnel abstraction
 
-- [ ] **CLD-011** Define tunnel-provider interface. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
-- [ ] **CLD-012** Keep provider adapter outside deterministic/strategy packages. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
-- [ ] **CLD-013** Load tunnel credentials only from ignored private environment/config. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
-- [ ] **CLD-014** Load public/private endpoint values through typed configuration. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
-- [ ] **CLD-015** Validate URL scheme, host and path. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
-- [ ] **CLD-016** Reject localhost endpoint in remote-mode acceptance. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
-- [ ] **CLD-017** Redact credentials/query secrets from endpoint display. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
-- [ ] **CLD-018** Define start/stop/health lifecycle. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
-- [ ] **CLD-019** Define public endpoint readiness result. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
-- [ ] **CLD-020** Keep all Python files under 150 lines. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
+- [x] **CLD-011** Define tunnel-provider interface. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
+- [x] **CLD-012** Keep cloud lifecycle outside deterministic/strategy packages. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
+- [x] **CLD-013** Load tunnel credentials only from private environment mapping. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
+- [x] **CLD-014** Load opponent endpoint and local settings through typed configuration. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
+- [x] **CLD-015** Validate URL scheme, host, port, userinfo, fragment and path. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
+- [x] **CLD-016** Reject localhost/private endpoint in remote-mode acceptance. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
+- [x] **CLD-017** Redact credentials, fragments and secret query values. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
+- [x] **CLD-018** Define start/stop/health lifecycle. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
+- [x] **CLD-019** Define typed public endpoint readiness result. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
+- [x] **CLD-020** Keep all Python files under 150 lines. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
 
 ## Remote lifecycle
 
-- [ ] **CLD-021** Implement selected provider start adapter. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
-- [ ] **CLD-022** Capture assigned public URL safely. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
-- [ ] **CLD-023** Expose thief FastMCP endpoint. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
-- [ ] **CLD-024** Connect thief client to remote cop endpoint. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
-- [ ] **CLD-025** Verify symmetric server/client reachability. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
-- [ ] **CLD-026** Add health check before match start. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
-- [ ] **CLD-027** Close tunnels during controlled shutdown. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
-- [ ] **CLD-028** Prevent orphan tunnel process. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
-- [ ] **CLD-029** Record provider version and nonsecret settings. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
-- [ ] **CLD-030** Write operator startup/shutdown runbook. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
+- [x] **CLD-021** Implement production ngrok stable-domain adapter. Evidence: focused tests and authorized public check. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
+- [x] **CLD-022** Capture and validate provider-assigned public URL safely through `TunnelReady`. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
+- [x] **CLD-023** Expose the test thief FastMCP endpoint through an authorized real public tunnel. Evidence: redacted Stage 5 verification. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
+- [x] **CLD-024** Inject and validate a remote cop endpoint for the existing MCP client. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
+- [ ] **CLD-025** [BLOCKED: CLD-BQ-05] Verify symmetric server/client reachability on two machines. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
+- [x] **CLD-026** Add provider readiness and health checks before match start. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
+- [x] **CLD-027** Close tunnels during controlled shutdown. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
+- [x] **CLD-028** Prevent orphan tunnel process through idempotent stop/context management. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
+- [x] **CLD-029** Record ngrok 3.39.9 and nonsecret test settings. Evidence: Stage 5 verification. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
+- [x] **CLD-030** Write credential-safe operator startup/shutdown runbook. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
 
 ## Failure handling
 
-- [ ] **CLD-031** Apply agreed response timeout. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
-- [ ] **CLD-032** Apply agreed watchdog timeout. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
-- [ ] **CLD-033** Bound connection retries and backoff. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
-- [ ] **CLD-034** Handle DNS resolution failure. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
-- [ ] **CLD-035** Handle TLS/certificate failure. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
-- [ ] **CLD-036** Handle expired/rotated tunnel URL. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
-- [ ] **CLD-037** Handle mid-request disconnect. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
-- [ ] **CLD-038** Handle high latency and timeout. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
-- [ ] **CLD-039** Handle provider process crash. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
-- [ ] **CLD-040** Handle reconnect only per approved policy. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
+- [x] **CLD-031** Apply negotiable response timeout with Annex F default 30 seconds. {Trace: PRD-05; PLAN:Stage 5; PDF:Annex F 19}
+- [x] **CLD-032** Apply negotiable watchdog timeout with Annex F default 60 seconds. {Trace: PRD-05; PLAN:Stage 5; PDF:Annex F 19}
+- [x] **CLD-033** Bound connection retries and backoff. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
+- [x] **CLD-034** Classify DNS resolution failure. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
+- [x] **CLD-035** Classify TLS/certificate failure. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
+- [x] **CLD-036** Reject any assigned URL other than the configured stable endpoint and retain it across restart. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
+- [x] **CLD-037** Classify mid-request disconnect without leaking details. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
+- [x] **CLD-038** Bound high latency with timeout and retry exhaustion. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
+- [x] **CLD-039** Surface provider process crash through health result. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
+- [x] **CLD-040** Pause, bound reconnect, and resume only on exact identity match. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
 
 ## Security tests
 
-- [ ] **CLD-041** Test remote failure never hangs. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
-- [ ] **CLD-042** Test local failure is distinguishable from peer failure where possible. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
-- [ ] **CLD-043** Test retry exhaustion produces one outcome. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
-- [ ] **CLD-044** Test shutdown persists required state. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
-- [ ] **CLD-045** Test endpoint logs contain no secrets. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
-- [ ] **CLD-046** Run two-machine thief-to-cop call. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
-- [ ] **CLD-047** Run two-machine cop-to-thief call. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
-- [ ] **CLD-048** Run complete remote match. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
-- [ ] **CLD-049** Repeat remote fixture after tunnel restart. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
-- [ ] **CLD-050** Capture latency/failure evidence without credentials. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
+- [x] **CLD-041** Test fake remote failures and latency never hang. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
+- [x] **CLD-042** Test stable known and unknown attribution categories where possible. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
+- [x] **CLD-043** Test retry exhaustion produces one deterministic result. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
+- [x] **CLD-044** Test restart persistence, identity-safe resume, and idempotent shutdown. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
+- [x] **CLD-045** Test endpoint diagnostics contain no userinfo/query secrets. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
+- [ ] **CLD-046** [BLOCKED: CLD-BQ-05] Run two-machine thief-to-cop call. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
+- [ ] **CLD-047** [BLOCKED: CLD-BQ-05] Run two-machine cop-to-thief call. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
+- [ ] **CLD-048** [BLOCKED: CLD-BQ-01/05] Run complete remote match. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
+- [ ] **CLD-049** [BLOCKED: CLD-BQ-02/03/05] Repeat remote fixture after tunnel restart. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
+- [x] **CLD-050** Capture fake latency/failure evidence without credentials. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
 
 ## Verification and delivery
 
-- [ ] **CLD-051** Run contract regression against localhost. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
-- [ ] **CLD-052** Run unit/integration/negative/repeatability tests. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
-- [ ] **CLD-053** Run uv sync, Ruff, pytest and line checker. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
-- [ ] **CLD-054** Run credential and generated-artifact scans. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
-- [ ] **CLD-055** Review external-action evidence and redactions. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
-- [ ] **CLD-056** Record exact commands/versions/exits. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
-- [ ] **CLD-057** Audit TODO and PRD traceability. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
-- [ ] **CLD-058** Inspect staged diff and unrelated files. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
-- [ ] **CLD-059** Confirm no tunnel token, private URL or unrelated file is staged. {Trace: PLAN:Git workflow}
-- [ ] **CLD-060** Record the complete staged-diff audit. {Trace: PLAN:Cross-Stage Verification}
-- [ ] **CLD-061** Commit only reviewed Stage 5 files. {Trace: PLAN:Git workflow}
-- [ ] **CLD-062** Push the dedicated Stage 5 branch. {Trace: PLAN:Git workflow}
+- [x] **CLD-051** Run complete localhost contract regression. Evidence: Stage 5 verification, 398 passing tests. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
+- [x] **CLD-052** Run unit/integration/negative/repeatability tests using deterministic fakes. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
+- [x] **CLD-053** Run uv sync, Ruff, pytest and line checker. Evidence: Stage 5 verification. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
+- [x] **CLD-054** Run credential, isolation, and generated-artifact scans. Evidence: Stage 5 verification. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
+- [x] **CLD-055** Review absent external evidence and verify redaction behavior locally. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
+- [x] **CLD-056** Record exact commands, versions, exits, failures, and corrections. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
+- [x] **CLD-057** Audit TODO and PRD traceability against local/external evidence. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
+- [x] **CLD-058** Inspect the complete 22-file staged diff and unrelated files. {Trace: PRD-05; PLAN:Stage 5; PDF:applicable authority}
+- [x] **CLD-059** Confirm no tunnel token, private URL, generated artifact, or unrelated file is staged. {Trace: PLAN:Git workflow}
+- [x] **CLD-060** Record cached names/statistics/whitespace and credential audit. {Trace: PLAN:Cross-Stage Verification}
+- [x] **CLD-061** Commit only the 22 reviewed Stage 4 closeout and Stage 5 files. Evidence: `ea4a053`. {Trace: PLAN:Git workflow}
+- [x] **CLD-062** Push and track `origin/feat/stage-5-cloud-tunneling`. {Trace: PLAN:Git workflow}
 - [ ] **CLD-063** Open a focused Stage 5 Pull Request. {Trace: PLAN:Git workflow}
-- [ ] **CLD-064** Obtain independent review when available or record the ADR-002 owner-approved Codex review exception. {Trace: PLAN:Review Policy; PLAN:Stage 5 gate}
+- [x] **CLD-064** Record ADR-002 owner-approved Codex adversarial review; independent human reviewer: None. {Trace: PLAN:Review Policy; PLAN:Stage 5 gate}
 - [ ] **CLD-065** Record PASS only after merge and synchronization; otherwise FAIL. {Trace: PDF:Ch10.4; PLAN:Stage 5 gate}
+
+## Live-match composition backlog
+
+- [x] **LM-CLD-001** Implement the independent `salareen_thief` production game runner; do not create a central runner.
+- [x] **LM-CLD-002** Compose configuration, Base Logic, thief strategy, MCP, scent/language/belief, recovery and local structured logs.
+- [x] **LM-CLD-003** Enforce the strict no-query remote endpoint rule and add shared endpoint fixtures.
+- [x] **LM-CLD-004** Wire pause/resume around the live turn loop using exact recovery identity.
+- [x] **LM-CLD-005** Prevent acknowledged actions from being applied twice after retry or reconnect and add the missing explicit regression test.
+- [x] **LM-CLD-006** Implement Capture Claim, survival, terminal and Annex F score reconciliation without Stage 6 proof.
+- [x] **LM-CLD-007** Add all eight byte-stable cross-repository fixtures specified by the contract.
+- [x] **LM-CLD-008** Run deterministic two-process complete localhost matches with logs and orphan-free shutdown.
+- [x] **LM-CLD-009** Align Python/FastMCP/MCP/pytest/Ruff manifest constraints in a later implementation branch.

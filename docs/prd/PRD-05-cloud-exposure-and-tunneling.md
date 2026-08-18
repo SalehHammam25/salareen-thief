@@ -1,7 +1,7 @@
 # PRD 05 - Cloud Exposure and Tunneling
-**Status:** Ready for review
+**Status:** ngrok adapter verified; two-machine acceptance blocked
 **Repository:** salareen-thief
-**Implementation:** Not started
+**Implementation:** Local and single-endpoint public proof complete
 **Specification:** 3.0.0
 
 ## Purpose
@@ -11,7 +11,8 @@ Expose each working FastMCP peer through a public tunnel and complete a match be
 - **Mandatory:** public tunnel exposure for league play, independent environments and symmetric access (E10; Ch2.4).
 - **Options/examples:** ngrok and Localtonet; no provider is uniquely required.
 - **Annex F:** response 30 seconds and watchdog 60 seconds are negotiable.
-- **Engineering/external:** provider/account, URL lifecycle, TLS/firewall and operator runbook need approval and human authorization.
+- **Approved engineering:** ngrok stable development domain, manual private URL exchange, identity-safe bounded reconnect, and conservative failure attribution (ADR-007).
+- **External:** a compatible cop endpoint and two machines remain required.
 
 ## Scope
 Tunnel abstraction/runbook; private endpoint injection; health checks/redacted diagnostics; remote two-machine integration; latency, disconnect, retry, reconnect and shutdown behavior; removal of localhost assumptions.
@@ -36,9 +37,10 @@ Cryptographic trust, signatures, Commit-Reveal, Gmail, GUI, replay and league sc
 - AC05-05: logs redact secrets and contracts match localhost schemas.
 - AC05-06: all integration, credential and quality gates pass.
 
-## Blocked Questions
-- **CLD-BQ-01:** provider/account/plan is not mandated.
-- **CLD-BQ-02:** URL discovery/exchange is unspecified.
-- **CLD-BQ-03:** reconnect/resume versus technical loss is unspecified.
-- **CLD-BQ-04:** attribution of provider outage is unresolved.
-- **CLD-BQ-05:** account, firewall and token provisioning are external actions.
+## Approved Decisions and Remaining Blocker
+- **CLD-BQ-01 through CLD-BQ-04:** resolved by ADR-007 and Areen's ngrok contract.
+- **CLD-BQ-05:** symmetric calls and a complete match require a compatible cop endpoint on another machine.
+
+## Live runner and strict endpoint extension
+
+ADR-008 and the shared live-match contract own independent runner composition, exact-identity pause/resume, acknowledged-action protection, terminal reconciliation and controlled shutdown. Remote endpoints must use HTTPS, exact configured host/permitted port and `/mcp`, with no userinfo, query, fragment, localhost or private address. Expected-role checking is protocol validation only. The current query-permitting endpoint behavior must be corrected during implementation; the runner, adapters and full-match tests remain unimplemented.

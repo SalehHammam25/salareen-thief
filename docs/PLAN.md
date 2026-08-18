@@ -415,16 +415,20 @@ Pull Request review, merge, and synchronization.
 network timeout values. **Milestone:** a complete match runs between remote
 machines through public tunnel endpoints.
 
-Dependency order: (1) approve provider, URL exchange and failure attribution;
-(2) provision external account/token outside Git; (3) implement provider
-adapter and lifecycle; (4) validate/redact endpoints; (5) expose both peers and
+Dependency order: (1) implement the ADR-007 provider-neutral safe local boundary;
+(2) apply the owner-approved ngrok stable-domain, manual exchange, reconnect,
+and attribution contracts; (3) use the authenticated local ngrok agent and
+implement its adapter without passing a token;
+(4) validate/redact endpoints; (5) expose both peers and
 perform symmetric health checks; (6) add latency, disconnect, retry, watchdog
 and shutdown behavior; (7) run two-machine match and fault-injection tests.
 
 Gate: remote bidirectional MCP and a complete match pass; no localhost shortcut
 or secret leakage exists; failures never wait indefinitely. Reachability is not
-authentication. CLD-BQ-01 through CLD-BQ-05 and external account/firewall work
-remain explicit blockers.
+authentication. CLD-BQ-01 through CLD-BQ-04 are resolved by ADR-007. CLD-BQ-05
+remains an external two-machine/cop-endpoint blocker. Local and authorized
+single-endpoint verification may pass while the final Stage 5 gate remains FAIL
+until bidirectional public-tunnel and complete-match evidence exists.
 
 ## Stage 6 - Security and Cryptography
 
@@ -532,3 +536,7 @@ stage is allowed to redefine the underlying Stage 1 outcome.
 - the planned automated line-length check and its repository location.
 
 Approval of this PLAN authorizes TODO preparation, not implementation.
+
+## Live-match composition recovery plan
+
+The Stage 1-5 components are not yet a playable system. ADR-008 and `docs/contracts/live-match-orchestration-v1.md` define the production composition. Implementation order is shared schemas/fixtures, expected-role and endpoint convergence, thief runner/adapters, cop runner compatibility, exactly-once/recovery wiring, deterministic localhost matches, then authorized remote proof. Every runner remains peer-local; no central coordinator is allowed. Stage 6 security primitives and Stage 7 reporting remain excluded.
