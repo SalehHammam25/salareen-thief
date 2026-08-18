@@ -27,9 +27,7 @@ def test_missing_file_is_rejected(tmp_path: Path) -> None:
     assert only_error(result) is Error.FILE_NOT_FOUND
 
 
-def test_unreadable_file_is_rejected(
-    tmp_path: Path, monkeypatch
-) -> None:
+def test_unreadable_file_is_rejected(tmp_path: Path, monkeypatch) -> None:
     path = tmp_path / "game.json"
     path.write_text("{}", encoding="utf-8")
 

@@ -21,7 +21,9 @@ def test_every_chebyshev_ring_value_in_five_by_five_window() -> None:
         ("0.3", "0.6", "0.6", "0.6", "0.3"),
         ("0.3", "0.3", "0.3", "0.3", "0.3"),
     )
-    actual = tuple(tuple(str(field.at(row, col)) for col in range(1, 6)) for row in range(1, 6))
+    actual = tuple(
+        tuple(str(field.at(row, col)) for col in range(1, 6)) for row in range(1, 6)
+    )
     assert actual == expected
     assert field.at(0, 0) == D("0")
 

@@ -42,9 +42,7 @@ def test_overlap_capture_requires_valid_cop_claim(accepted_config, rules) -> Non
         state, CaptureClaim(Role.THIEF, CaptureCause.COORDINATE_OVERLAP)
     )
     assert invalid == ActionRejected(state, ActionError.INVALID_CAPTURE_CLAIM)
-    result = rules.apply(
-        state, CaptureClaim(Role.COP, CaptureCause.COORDINATE_OVERLAP)
-    )
+    result = rules.apply(state, CaptureClaim(Role.COP, CaptureCause.COORDINATE_OVERLAP))
     assert isinstance(result, ActionAccepted)
     assert result.state.status is EpisodeStatus.TERMINAL
     assert result.state.outcome == Outcome(
@@ -71,9 +69,7 @@ def test_terminal_episode_rejects_later_action(accepted_config, rules) -> None:
     action = MoveAction(Role.THIEF, MoveChoice.STAY)
     score_before = score_episode(captured.state, accepted_config.scoring)
     rejected = rules.apply(captured.state, action)
-    assert rejected == ActionRejected(
-        captured.state, ActionError.TERMINAL_EPISODE
-    )
+    assert rejected == ActionRejected(captured.state, ActionError.TERMINAL_EPISODE)
     assert score_episode(rejected.state, accepted_config.scoring) == score_before
 
 
@@ -90,7 +86,9 @@ def test_survival_at_default_threshold(rules, initial_game, accepted_config) -> 
     )
 
 
-def test_external_technical_loss_and_score(rules, initial_game, accepted_config) -> None:
+def test_external_technical_loss_and_score(
+    rules, initial_game, accepted_config
+) -> None:
     result = rules.technical_loss(initial_game)
     assert isinstance(result, ActionAccepted)
     assert result.state.outcome == Outcome(OutcomeKind.TECHNICAL_LOSS)
@@ -110,9 +108,7 @@ def test_active_and_malformed_outcomes_are_not_scored(
         status=EpisodeStatus.TERMINAL,
         outcome=Outcome("unsupported"),
     )
-    assert isinstance(
-        score_episode(malformed, accepted_config.scoring), ScoreRejected
-    )
+    assert isinstance(score_episode(malformed, accepted_config.scoring), ScoreRejected)
     missing_cause = replace(
         initial_game,
         status=EpisodeStatus.TERMINAL,

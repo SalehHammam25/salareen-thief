@@ -20,4 +20,17 @@ and an authorized remote-peer run remain intentionally external/deferred.
 - Focused production security tests: 9 passed.
 - Full suite: 446 passed, one third-party deprecation warning.
 - Complete cop-driven live/security gate: 11/11 scenarios passed in 549.6 seconds.
-- Executable Tk reporting GUI and environment-only Gmail SMTP sender added.
+- Executable Tk reporting GUI added.
+
+## Final compliance cleanup (2026-08-19)
+
+- Gmail delivery uses the Gmail API OAuth flow with only the `gmail.send` scope;
+  SMTP and app-password handling were removed.
+- OAuth client and token locations are caller-supplied paths, and credential,
+  token, secret-directory, and runtime-database patterns are ignored by Git.
+- Focused OAuth and Stage 6/7 tests: 13 passed.
+- Ruff: passed. Python 150-line gate: 179 files checked, passed.
+- Full suite: 451 passed, one third-party deprecation warning.
+- The nine-minute live gate was not rerun because cleanup changed no live-match
+  behavior; the preceding 11/11 cop-driven live/security result remains the
+  live evidence.

@@ -15,7 +15,11 @@ class ReliabilityPolicy:
     max_retries: int = 3
 
     def __post_init__(self) -> None:
-        values = (self.response_timeout_sec, self.watchdog_timeout_sec, self.retry_backoff_sec)
+        values = (
+            self.response_timeout_sec,
+            self.watchdog_timeout_sec,
+            self.retry_backoff_sec,
+        )
         if any(type(value) not in {int, float} or value <= 0 for value in values):
             raise ValueError("timeouts and backoff must be positive numbers")
         if type(self.max_retries) is not int or self.max_retries < 0:
@@ -30,7 +34,9 @@ async def with_retries[T](
             return await asyncio.wait_for(operation(), policy.response_timeout_sec)
         except TimeoutError:
             if attempt == policy.max_retries:
-                return TransportRejected(TransportError.RETRIES_EXHAUSTED, str(attempt + 1))
+                return TransportRejected(
+                    TransportError.RETRIES_EXHAUSTED, str(attempt + 1)
+                )
             await asyncio.sleep(policy.retry_backoff_sec)
         except asyncio.CancelledError:
             raise

@@ -4,8 +4,9 @@ import ipaddress
 from urllib.parse import urlsplit
 
 
-def validate_endpoint(value: str, *, mode: str, host: str,
-                      permitted_port: int | None = None) -> str:
+def validate_endpoint(
+    value: str, *, mode: str, host: str, permitted_port: int | None = None
+) -> str:
     try:
         parsed = urlsplit(value)
         port = parsed.port

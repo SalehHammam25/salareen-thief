@@ -29,7 +29,11 @@ def load_private_language_config(path: Path) -> PrivateLanguageConfig:
     reliability = section.get("reliability", 0.75)
     if isinstance(every, bool) or not isinstance(every, int) or every < 1:
         raise ValueError("every_n_steps must be a positive integer")
-    if isinstance(timeout, bool) or not isinstance(timeout, (int, float)) or timeout <= 0:
+    if (
+        isinstance(timeout, bool)
+        or not isinstance(timeout, (int, float))
+        or timeout <= 0
+    ):
         raise ValueError("timeout_seconds must be positive")
     if isinstance(reliability, bool) or not isinstance(reliability, (int, float)):
         raise ValueError("reliability must be numeric")

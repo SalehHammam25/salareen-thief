@@ -44,7 +44,9 @@ def main() -> None:
     journal = Journal(path)
     events = EventLog(log_path, "thief", args.game_id, args.session_id)
     saved = journal.get_state(args.game_id, args.session_id, "game_state")
-    security = LiveSecurity("thief", args.config, args.game_id, journal, args.session_id)
+    security = LiveSecurity(
+        "thief", args.config, args.game_id, journal, args.session_id
+    )
     gameplay = GameplayAdapter(args.config, saved, defer=True)
     session = LiveMatchSession(
         "thief", args.game_id, args.session_id, 1, journal, gameplay, security

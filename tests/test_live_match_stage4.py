@@ -41,8 +41,10 @@ def test_exhausted_budget_uses_template_without_consumption(tmp_path):
 def test_scent_precedes_language_and_invalid_hint_is_immutable(tmp_path):
     stage4, board = boundary(tmp_path)
     scent = empty_field(board)
-    payload = {"axis_start_index": scent.axis_start_index,
-               "values": [[str(value) for value in row] for row in scent.values]}
+    payload = {
+        "axis_start_index": scent.axis_start_index,
+        "values": [[str(value) for value in row] for row in scent.values],
+    }
     assert stage4.receive_scent(1, payload)
     before = stage4.belief
     assert not stage4.receive_hint(1, "go to row 3")

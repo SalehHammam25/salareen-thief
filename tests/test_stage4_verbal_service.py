@@ -12,7 +12,9 @@ from salareen_thief.scent.config import load_language_scent_config
 
 
 class FakeProvider:
-    def __init__(self, reply: ProviderReply | None = None, error: Exception | None = None):
+    def __init__(
+        self, reply: ProviderReply | None = None, error: Exception | None = None
+    ):
         self.reply = reply or ProviderReply("near the river", 2, 3)
         self.error = error
         self.last_request: VerbalRequest | None = None

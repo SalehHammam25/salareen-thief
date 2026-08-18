@@ -28,7 +28,9 @@ def test_scent_likelihood_is_monotonic_and_normalized() -> None:
     prior = uniform_prior(Board(2, 0, "top-left"))
     result = update_from_scent(prior, grid((("0", "0.3"), ("0.6", "0.9"))))
     assert isinstance(result, BeliefUpdated)
-    values = [result.belief.at(Coordinate(row, col)) for row in range(2) for col in range(2)]
+    values = [
+        result.belief.at(Coordinate(row, col)) for row in range(2) for col in range(2)
+    ]
     assert values == sorted(values)
     assert total(result) == D("1")
 

@@ -54,12 +54,10 @@ def _positive_int(value: Any, path: str) -> int:
 
 
 def parse_language_scent_config(root: Any) -> LanguageScentConfig:
-    data = _object(root, "$" )
+    data = _object(root, "$")
     pheromones = _object(_required(data, "pheromones", "$"), "pheromones")
     world = _object(_required(data, "world", "$"), "world")
-    league = _object(
-        _required(data, "network_and_league", "$"), "network_and_league"
-    )
+    league = _object(_required(data, "network_and_league", "$"), "network_and_league")
     area = _required(world, "map_area", "world")
     if not isinstance(area, str):
         raise Stage4ConfigError("incorrect_type", "world.map_area")
@@ -82,7 +80,9 @@ def parse_language_scent_config(root: Any) -> LanguageScentConfig:
             )
         ),
         area,
-        _positive_int(_required(world, "hint_max_words", "world"), "world.hint_max_words"),
+        _positive_int(
+            _required(world, "hint_max_words", "world"), "world.hint_max_words"
+        ),
         _positive_int(
             _required(league, "token_budget_per_series", "network_and_league"),
             "network_and_league.token_budget_per_series",
@@ -104,4 +104,4 @@ def load_language_scent_config(path: Path) -> LanguageScentConfig:
     except ValueError as error:
         if isinstance(error, Stage4ConfigError):
             raise
-        raise Stage4ConfigError("malformed_json", "$" ) from error
+        raise Stage4ConfigError("malformed_json", "$") from error

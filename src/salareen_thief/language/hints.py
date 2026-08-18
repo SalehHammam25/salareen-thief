@@ -45,7 +45,9 @@ class HintRejected:
     error: HintError
 
 
-def validate_hint(hint: FreeLanguageHint, max_words: int) -> HintAccepted | HintRejected:
+def validate_hint(
+    hint: FreeLanguageHint, max_words: int
+) -> HintAccepted | HintRejected:
     if isinstance(max_words, bool) or not isinstance(max_words, int) or max_words < 1:
         return HintRejected(HintError.WORD_LIMIT)
     if hint.version != HINT_VERSION:

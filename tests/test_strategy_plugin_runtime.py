@@ -67,7 +67,9 @@ def test_runtime_failure_uses_visible_validated_fallback(
     assert initial_game is before
 
 
-def test_runtime_fallback_is_repeatable(tmp_path, monkeypatch, rules, initial_game) -> None:
+def test_runtime_fallback_is_repeatable(
+    tmp_path, monkeypatch, rules, initial_game
+) -> None:
     selected = selection(
         tmp_path,
         monkeypatch,

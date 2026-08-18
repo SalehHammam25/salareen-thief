@@ -11,8 +11,7 @@ def adjacent_destinations(state: GameState) -> tuple[Coordinate, ...]:
     """Return in-board, non-barrier orthogonal thief destinations."""
     thief = state.positions.thief
     candidates = (
-        Coordinate(thief.row + row, thief.col + col)
-        for row, col in DIRECTIONS
+        Coordinate(thief.row + row, thief.col + col) for row, col in DIRECTIONS
     )
     return tuple(
         cell
@@ -32,8 +31,10 @@ def validate_claim(
 ) -> ActionError | None:
     """Validate a local non-cryptographic cop Capture Claim."""
     if type(claim) is not CaptureClaim:
-        return ActionError.CAPTURE_CLAIM_REQUIRED if claim is None else (
-            ActionError.INVALID_CAPTURE_CLAIM
+        return (
+            ActionError.CAPTURE_CLAIM_REQUIRED
+            if claim is None
+            else (ActionError.INVALID_CAPTURE_CLAIM)
         )
     if type(claim.role) is not Role or claim.role is not Role.COP:
         return ActionError.INVALID_CAPTURE_CLAIM

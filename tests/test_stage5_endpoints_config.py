@@ -77,14 +77,18 @@ def test_remote_endpoint_requires_safe_public_https() -> None:
         "https://user:pass@peer.example.test/mcp",
         "https://peer.example.test/mcp#secret",
     )
-    assert all(isinstance(validate_remote_endpoint(value), TunnelFailure) for value in rejected)
+    assert all(
+        isinstance(validate_remote_endpoint(value), TunnelFailure) for value in rejected
+    )
 
 
 def test_endpoint_redaction_removes_userinfo_fragment_and_secret_query() -> None:
     value = "https://user:pass@peer.example.test/mcp?token=hidden&mode=test#fragment"
     redacted = redact_endpoint(value)
     assert redacted == "https://peer.example.test/mcp?token=REDACTED&mode=test"
-    assert all(secret not in redacted for secret in ("user", "pass", "hidden", "fragment"))
+    assert all(
+        secret not in redacted for secret in ("user", "pass", "hidden", "fragment")
+    )
 
 
 def test_endpoint_exchange_is_environment_only_and_repeatable() -> None:

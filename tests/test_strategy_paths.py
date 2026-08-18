@@ -23,7 +23,10 @@ def first(choices):
 def state_with(accepted_config, *, thief, cop=None, barriers=()):
     cop = Coordinate(0, 0) if cop is None else cop
     result = build_state(
-        accepted_config, thief=thief, cop=cop, barriers=barriers,
+        accepted_config,
+        thief=thief,
+        cop=cop,
+        barriers=barriers,
         barrier_usage=len(tuple(barriers)),
     )
     assert isinstance(result, StateAccepted)
@@ -49,9 +52,7 @@ def test_direct_one_step_is_validated_by_base_logic(rules, initial_game) -> None
         (Coordinate(3, 4), Coordinate(3, 4)),
     ],
 )
-def test_table_driven_orthogonal_steps(
-    rules, initial_game, target, expected
-) -> None:
+def test_table_driven_orthogonal_steps(rules, initial_game, target, expected) -> None:
     result = StrategyGateway(rules, BlindShortestPath(first)).decide(
         initial_game, target
     )
@@ -95,8 +96,10 @@ def test_route_follows_board_edge_without_leaving_board(accepted_config, rules) 
 def test_unreachable_enclosed_target_is_explicit(accepted_config) -> None:
     target = Coordinate(1, 1)
     barriers = (
-        Coordinate(0, 1), Coordinate(1, 0),
-        Coordinate(1, 2), Coordinate(2, 1),
+        Coordinate(0, 1),
+        Coordinate(1, 0),
+        Coordinate(1, 2),
+        Coordinate(2, 1),
     )
     state = state_with(accepted_config, thief=Coordinate(3, 3), barriers=barriers)
     result = BlindShortestPath(first).propose(snapshot_for(state, target))

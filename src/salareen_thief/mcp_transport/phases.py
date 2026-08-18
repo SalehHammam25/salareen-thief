@@ -17,7 +17,10 @@ _TRANSITIONS = {
     PeerPhase.WAITING_FOR_OPPONENT: {PeerPhase.COMPUTING_MOVE, PeerPhase.COMPLETE},
     PeerPhase.COMPUTING_MOVE: {PeerPhase.SENDING, PeerPhase.TECHNICAL_LOSS},
     PeerPhase.SENDING: {PeerPhase.AWAITING_RESPONSE, PeerPhase.TECHNICAL_LOSS},
-    PeerPhase.AWAITING_RESPONSE: {PeerPhase.WAITING_FOR_OPPONENT, PeerPhase.TECHNICAL_LOSS},
+    PeerPhase.AWAITING_RESPONSE: {
+        PeerPhase.WAITING_FOR_OPPONENT,
+        PeerPhase.TECHNICAL_LOSS,
+    },
     PeerPhase.TECHNICAL_LOSS: set(),
     PeerPhase.COMPLETE: set(),
 }

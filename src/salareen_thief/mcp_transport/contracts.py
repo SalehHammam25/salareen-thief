@@ -51,7 +51,9 @@ class ContractRejected:
 
 def decode_geometry(value: Any) -> GeometryMessage | ContractRejected:
     if type(value) is not dict:
-        return ContractRejected(ContractError.INVALID_SHAPE, "payload must be an object")
+        return ContractRejected(
+            ContractError.INVALID_SHAPE, "payload must be an object"
+        )
     if any(type(key) is not str for key in value):
         return ContractRejected(ContractError.INVALID_SHAPE, "keys must be strings")
     keys = set(value)
@@ -76,4 +78,6 @@ def decode_geometry(value: Any) -> GeometryMessage | ContractRejected:
     step = value["step"]
     if type(step) is not int or step < 0:
         return ContractRejected(ContractError.INVALID_STEP, "step")
-    return GeometryMessage(PROTOCOL_VERSION, correlation, role, value["x"], value["y"], step)
+    return GeometryMessage(
+        PROTOCOL_VERSION, correlation, role, value["x"], value["y"], step
+    )

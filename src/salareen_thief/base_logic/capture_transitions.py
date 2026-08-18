@@ -59,9 +59,7 @@ def apply_barrier(
     if action.target == state.positions.thief:
         cause = CaptureCause.BARRIER_ON_THIEF
     else:
-        preview = rebuild(
-            config, state, barriers=barriers, barrier_usage=usage
-        )
+        preview = rebuild(config, state, barriers=barriers, barrier_usage=usage)
         cause = CaptureCause.TRAPPED_THIEF if is_trapped(preview) else None
     if cause is not None:
         claim_issue = validate_claim(action.capture_claim, cause)

@@ -15,7 +15,9 @@ class FakeProvider:
     version = "fake-1.0"
 
     def __init__(self, result=None, healthy=True) -> None:
-        self.result = result or TunnelReady(TunnelEndpoint("https://thief.example.test/mcp"))
+        self.result = result or TunnelReady(
+            TunnelEndpoint("https://thief.example.test/mcp")
+        )
         self.is_healthy = healthy
         self.starts = 0
         self.stops = 0

@@ -30,6 +30,7 @@ def test_fastmcp_tool_returns_validated_acknowledgement() -> None:
 
     asyncio.run(scenario())
 
+
 def test_fastmcp_tool_rejects_malformed_payload() -> None:
     async def scenario() -> None:
         server, gateway = build_server("thief", "game-1")

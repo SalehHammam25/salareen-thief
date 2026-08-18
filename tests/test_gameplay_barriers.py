@@ -26,17 +26,11 @@ def test_valid_barrier_replaces_movement(rules, initial_game) -> None:
 
 
 def test_barrier_is_permanent_across_transition(rules, initial_game) -> None:
-    first = rules.apply(
-        initial_game, BarrierAction(Role.COP, Coordinate(0, 1))
-    )
+    first = rules.apply(initial_game, BarrierAction(Role.COP, Coordinate(0, 1)))
     assert isinstance(first, ActionAccepted)
-    second = rules.apply(
-        first.state, BarrierAction(Role.COP, Coordinate(1, 0))
-    )
+    second = rules.apply(first.state, BarrierAction(Role.COP, Coordinate(1, 0)))
     assert isinstance(second, ActionAccepted)
-    assert second.state.barriers == frozenset(
-        {Coordinate(0, 1), Coordinate(1, 0)}
-    )
+    assert second.state.barriers == frozenset({Coordinate(0, 1), Coordinate(1, 0)})
 
 
 def test_thief_cannot_place_barrier(rules, initial_game) -> None:
@@ -63,9 +57,7 @@ def test_combined_action_is_rejected(rules, initial_game) -> None:
 def test_nonadjacent_barriers_are_rejected(rules, initial_game) -> None:
     for target in (Coordinate(1, 1), Coordinate(0, 2)):
         result = rules.apply(initial_game, BarrierAction(Role.COP, target))
-        assert result == ActionRejected(
-            initial_game, ActionError.BARRIER_NOT_ADJACENT
-        )
+        assert result == ActionRejected(initial_game, ActionError.BARRIER_NOT_ADJACENT)
 
 
 def test_exhausted_quota_rejects_without_mutation(accepted_config, rules) -> None:

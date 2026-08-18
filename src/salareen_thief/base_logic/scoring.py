@@ -39,11 +39,7 @@ def score_episode(state: GameState, config: ScoringConfig) -> ScoreResult:
     if state.outcome.capture_cause is not None:
         return ScoreRejected("capture cause on non-capture outcome")
     if kind is OutcomeKind.SURVIVAL:
-        return ScoreAccepted(
-            ScorePair(config.survival_cop, config.survival_thief)
-        )
+        return ScoreAccepted(ScorePair(config.survival_cop, config.survival_thief))
     if kind is OutcomeKind.TECHNICAL_LOSS:
-        return ScoreAccepted(
-            ScorePair(config.technical_loss, config.technical_loss)
-        )
+        return ScoreAccepted(ScorePair(config.technical_loss, config.technical_loss))
     return ScoreRejected("unsupported outcome")

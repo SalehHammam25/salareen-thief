@@ -39,9 +39,7 @@ def validate_state(
 ) -> tuple[frozenset[Coordinate], tuple[StateIssue, ...]]:
     """Return normalized barriers and ordered representation issues."""
     barrier_items = tuple(barriers)
-    valid_barriers = tuple(
-        item for item in barrier_items if _coordinate_is_exact(item)
-    )
+    valid_barriers = tuple(item for item in barrier_items if _coordinate_is_exact(item))
     barrier_set = frozenset(valid_barriers)
     issues: list[StateIssue] = []
     for field, position in (("thief", thief), ("cop", cop)):
@@ -63,9 +61,7 @@ def validate_state(
             _issue(Category.BARRIER_OUT_OF_BOUNDS, "barriers", "outside board")
         )
     if not invalid_barriers and len(barrier_items) != len(barrier_set):
-        issues.append(
-            _issue(Category.DUPLICATE_BARRIER, "barriers", "must be unique")
-        )
+        issues.append(_issue(Category.DUPLICATE_BARRIER, "barriers", "must be unique"))
     thief_on_capture_barrier = (
         outcome is not None
         and outcome.kind is OutcomeKind.CAPTURE
@@ -96,27 +92,21 @@ def validate_state(
             _issue(Category.INCORRECT_TYPE, "valid_steps", "expected integer")
         )
     elif valid_steps < 0:
-        issues.append(
-            _issue(Category.NEGATIVE_VALID_STEPS, "valid_steps", "negative")
-        )
+        issues.append(_issue(Category.NEGATIVE_VALID_STEPS, "valid_steps", "negative"))
     valid_status = type(status) is EpisodeStatus
     valid_outcome = outcome is None or (
         type(outcome) is Outcome
         and type(outcome.kind) is OutcomeKind
         and (
-            outcome.capture_cause is None
-            or type(outcome.capture_cause) is CaptureCause
+            outcome.capture_cause is None or type(outcome.capture_cause) is CaptureCause
         )
     )
     if not valid_status or not valid_outcome:
-        issues.append(
-            _issue(Category.INCORRECT_TYPE, "status_outcome", "invalid type")
-        )
+        issues.append(_issue(Category.INCORRECT_TYPE, "status_outcome", "invalid type"))
     elif (
         (status is EpisodeStatus.ACTIVE) != (outcome is None)
         or outcome is not None
-        and (outcome.kind is OutcomeKind.CAPTURE)
-        != (outcome.capture_cause is not None)
+        and (outcome.kind is OutcomeKind.CAPTURE) != (outcome.capture_cause is not None)
     ):
         issues.append(
             _issue(Category.STATUS_OUTCOME_MISMATCH, "status", "inconsistent")

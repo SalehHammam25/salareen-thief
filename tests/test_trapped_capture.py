@@ -43,9 +43,7 @@ def trapped_claim():
     return CaptureClaim(Role.COP, CaptureCause.TRAPPED_THIEF)
 
 
-def test_stay_does_not_prevent_claimed_trapped_capture(
-    accepted_config, rules
-) -> None:
+def test_stay_does_not_prevent_claimed_trapped_capture(accepted_config, rules) -> None:
     state = trapped_corner(accepted_config)
     assert is_trapped(state)
     stay = rules.apply(state, MoveAction(Role.THIEF, MoveChoice.STAY))
@@ -84,9 +82,7 @@ def test_cop_adjacent_cell_is_available(accepted_config) -> None:
 
 def test_false_trapped_claim_is_rejected(rules, initial_game) -> None:
     result = rules.apply(initial_game, trapped_claim())
-    assert result == ActionRejected(
-        initial_game, ActionError.INVALID_CAPTURE_CLAIM
-    )
+    assert result == ActionRejected(initial_game, ActionError.INVALID_CAPTURE_CLAIM)
 
 
 def test_barrier_completing_trap_requires_matching_claim(
@@ -112,9 +108,7 @@ def test_barrier_completing_trap_requires_matching_claim(
     assert result.state.outcome == Outcome(
         OutcomeKind.CAPTURE, CaptureCause.TRAPPED_THIEF
     )
-    assert result.state.barriers == frozenset(
-        {Coordinate(0, 1), Coordinate(1, 0)}
-    )
+    assert result.state.barriers == frozenset({Coordinate(0, 1), Coordinate(1, 0)})
 
 
 def test_trapped_terminal_state_is_immutable(accepted_config, rules) -> None:
@@ -128,6 +122,4 @@ def test_trapped_terminal_state_is_immutable(accepted_config, rules) -> None:
 
 def test_trapped_capture_replay_is_repeatable(accepted_config, rules) -> None:
     state = trapped_corner(accepted_config)
-    assert rules.apply(state, trapped_claim()) == rules.apply(
-        state, trapped_claim()
-    )
+    assert rules.apply(state, trapped_claim()) == rules.apply(state, trapped_claim())

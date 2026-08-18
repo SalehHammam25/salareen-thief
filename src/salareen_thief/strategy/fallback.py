@@ -37,7 +37,5 @@ class FallbackPolicy:
         return self._with_reason(self._fallback.propose(snapshot), reason)
 
     @staticmethod
-    def _with_reason(
-        result: ProposalResult, reason: FallbackReason
-    ) -> ProposalResult:
+    def _with_reason(result: ProposalResult, reason: FallbackReason) -> ProposalResult:
         return replace(result, fallback_reason=reason)

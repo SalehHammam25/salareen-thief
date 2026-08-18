@@ -4,55 +4,13 @@ import json
 import re
 from typing import Any
 
+from .live_schemas import SCHEMAS
+from .live_schemas import STATUSES as LIVE_STATUSES
+
 VERSION = "1.0-provisional"
 ROLES = {"cop", "thief"}
 ID_PATTERN = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$")
-IDENTITY = {
-    "protocol_version": str,
-    "correlation_id": str,
-    "sender_role": str,
-    "game_id": str,
-    "session_id": str,
-    "game_number": int,
-}
-SCHEMAS: dict[str, dict[str, type]] = {
-    "security_bootstrap_v1": {**IDENTITY, "bundle": dict},
-    "security_commit_v1": {**IDENTITY, "turn_index": int,
-        "action_correlation_id": str, "digest": str},
-    "security_nonce_audit_v1": {**IDENTITY, "turn_index": int, "nonces": dict},
-    "initialize_game_v1": {**IDENTITY, "config_schema_version": str, "starting_role": str},
-    "submit_action_v1": {**IDENTITY, "turn_index": int, "action_kind": str,
-        "direction": (str, type(None)), "x": (int, type(None)), "y": (int, type(None))},
-    "acknowledge_action_v1": {**IDENTITY, "turn_index": int,
-        "action_correlation_id": str, "result": str, "result_code": str,
-        "next_turn_index": int, "next_role": str},
-    "publish_scent_v1": {**IDENTITY, "turn_index": int, "axis_start_index": int,
-        "width": int, "height": int, "values": list},
-    "send_language_hint_v1": {**IDENTITY, "turn_index": int, "text": str,
-        "word_count": int},
-    "submit_capture_claim_v1": {**IDENTITY, "turn_index": int,
-        "claimant_role": str, "capture_kind": str, "cop_x": int, "cop_y": int,
-        "thief_x": int, "thief_y": int},
-    "reconcile_terminal_v1": {**IDENTITY, "turn_index": int, "outcome": str,
-        "winner_role": (str, type(None)), "loser_role": (str, type(None)),
-        "attribution": str, "reason_code": str},
-    "reconcile_score_v1": {**IDENTITY, "turn_index": int, "outcome": str,
-        "cop_score": int, "thief_score": int},
-    "resume_match_v1": {"protocol_version": str, "correlation_id": str,
-        "sender_role": str, "game_id": str, "session_id": str, "turn_index": int,
-        "phase": str},
-    "shutdown_match_v1": {**IDENTITY, "turn_index": int, "mode": str,
-        "reason_code": str},
-}
-STATUSES = {"security_bootstrap_v1": "security_verified",
-    "security_commit_v1": "commitment_acknowledged",
-    "security_nonce_audit_v1": "nonce_audit_verified",
-    "initialize_game_v1": "initialized", "submit_action_v1": "applied",
-    "acknowledge_action_v1": "acknowledged", "publish_scent_v1": "observed",
-    "send_language_hint_v1": "hint_accepted",
-    "submit_capture_claim_v1": "capture_confirmed",
-    "reconcile_terminal_v1": "terminal_agreed", "reconcile_score_v1": "score_agreed",
-    "resume_match_v1": "resume_allowed", "shutdown_match_v1": "shutdown_ready"}
+STATUSES = LIVE_STATUSES
 
 
 def canonical(payload: dict[str, Any]) -> str:

@@ -19,8 +19,9 @@ from salareen_thief.scent.models import ScentGrid
 
 
 class Stage4Boundary:
-    def __init__(self, shared_path: Path, board: Board,
-                 private_path: Path | None = None) -> None:
+    def __init__(
+        self, shared_path: Path, board: Board, private_path: Path | None = None
+    ) -> None:
         shared = load_language_scent_config(shared_path)
         private = load_private_language_config(private_path or Path(".private.toml"))
         self.max_words = shared.hint_max_words
@@ -28,29 +29,40 @@ class Stage4Boundary:
         self.ledger = TokenLedger(shared.token_budget_per_series)
         self.belief = uniform_prior(board)
         self.service = VerbalService(
-            TemplateProvider(), private.every_n_steps, private.timeout_seconds)
+            TemplateProvider(), private.every_n_steps, private.timeout_seconds
+        )
         self.every_n_steps = private.every_n_steps
         self.last_scent_turn = -1
         self.last_hint_turn = -1
 
-    async def outbound(self, game_id: str, turn: int, scent: ScentGrid) -> tuple[
-        dict[str, Any], dict[str, Any] | None
-    ]:
+    async def outbound(
+        self, game_id: str, turn: int, scent: ScentGrid
+    ) -> tuple[dict[str, Any], dict[str, Any] | None]:
         values = [[str(value) for value in row] for row in scent.values]
-        scent_payload = {"axis_start_index": scent.axis_start_index,
-                         "width": len(values), "height": len(values),
-                         "values": values}
+        scent_payload = {
+            "axis_start_index": scent.axis_start_index,
+            "width": len(values),
+            "height": len(values),
+            "values": values,
+        }
         request = VerbalRequest(game_id, turn, "New York", "qualitative movement")
         result = await self.service.generate(request, self.ledger, self.max_words)
         self.ledger = result.ledger
-        hint = None if result.hint is None else {
-            "text": result.hint.text, "word_count": len(result.hint.text.split())}
+        hint = (
+            None
+            if result.hint is None
+            else {"text": result.hint.text, "word_count": len(result.hint.text.split())}
+        )
         return scent_payload, hint
 
     def receive_scent(self, turn: int, payload: dict[str, Any]) -> bool:
         try:
-            grid = ScentGrid(payload["axis_start_index"], tuple(
-                tuple(Decimal(value) for value in row) for row in payload["values"]))
+            grid = ScentGrid(
+                payload["axis_start_index"],
+                tuple(
+                    tuple(Decimal(value) for value in row) for row in payload["values"]
+                ),
+            )
         except (KeyError, TypeError, ValueError):
             return False
         result = update_from_scent(self.belief, grid)
@@ -66,7 +78,8 @@ class Stage4Boundary:
         if turn != self.last_scent_turn:
             return False
         checked = validate_hint(
-            FreeLanguageHint(HINT_VERSION, "live-match", text), self.max_words)
+            FreeLanguageHint(HINT_VERSION, "live-match", text), self.max_words
+        )
         if not isinstance(checked, HintAccepted):
             return False
         result = update_from_language(self.belief, text, self.reliability)
@@ -77,12 +90,15 @@ class Stage4Boundary:
         return True
 
     def snapshot(self) -> dict[str, Any]:
-        return {"consumed": self.ledger.consumed,
-                "last_scent_turn": self.last_scent_turn,
-                "last_hint_turn": self.last_hint_turn,
-                "every_n_steps": self.every_n_steps,
-                "belief": [[str(value) for value in row]
-                           for row in self.belief.probabilities]}
+        return {
+            "consumed": self.ledger.consumed,
+            "last_scent_turn": self.last_scent_turn,
+            "last_hint_turn": self.last_hint_turn,
+            "every_n_steps": self.every_n_steps,
+            "belief": [
+                [str(value) for value in row] for row in self.belief.probabilities
+            ],
+        }
 
     def requires_hint(self, turn: int) -> bool:
         return turn % self.every_n_steps == 0
@@ -95,6 +111,5 @@ class Stage4Boundary:
         self.ledger = TokenLedger(self.ledger.budget, data["consumed"])
         self.last_scent_turn = data["last_scent_turn"]
         self.last_hint_turn = data["last_hint_turn"]
-        values = tuple(tuple(Decimal(value) for value in row)
-                       for row in data["belief"])
+        values = tuple(tuple(Decimal(value) for value in row) for row in data["belief"])
         self.belief = BeliefMap(self.belief.board, values)

@@ -71,21 +71,15 @@ def test_barrier_usage_cannot_exceed_quota(default_data) -> None:
 
 
 def test_valid_steps_must_be_nonnegative(default_data) -> None:
-    assert errors(build(default_data, valid_steps=-1)) == (
-        Error.NEGATIVE_VALID_STEPS,
-    )
+    assert errors(build(default_data, valid_steps=-1)) == (Error.NEGATIVE_VALID_STEPS,)
 
 
 def test_bool_is_not_valid_barrier_usage(default_data) -> None:
-    assert errors(build(default_data, barrier_usage=True)) == (
-        Error.INCORRECT_TYPE,
-    )
+    assert errors(build(default_data, barrier_usage=True)) == (Error.INCORRECT_TYPE,)
 
 
 def test_bool_is_not_valid_step_count(default_data) -> None:
-    assert errors(build(default_data, valid_steps=True)) == (
-        Error.INCORRECT_TYPE,
-    )
+    assert errors(build(default_data, valid_steps=True)) == (Error.INCORRECT_TYPE,)
 
 
 def test_bool_is_not_valid_coordinate_component(default_data) -> None:

@@ -40,5 +40,9 @@ class OpponentScent:
     grid: ScentGrid
 
     def __post_init__(self) -> None:
-        if isinstance(self.turn, bool) or not isinstance(self.turn, int) or self.turn < 0:
+        if (
+            isinstance(self.turn, bool)
+            or not isinstance(self.turn, int)
+            or self.turn < 0
+        ):
             raise ValueError("turn must be a nonnegative integer")

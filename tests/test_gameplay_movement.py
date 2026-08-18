@@ -59,9 +59,7 @@ def test_barrier_collision_rejects_without_mutation(accepted_config, rules) -> N
         barriers=(Coordinate(3, 2),),
     )
     assert isinstance(state, StateAccepted)
-    result = rules.apply(
-        state.value, MoveAction(Role.THIEF, MoveChoice.WEST)
-    )
+    result = rules.apply(state.value, MoveAction(Role.THIEF, MoveChoice.WEST))
     assert result == ActionRejected(state.value, ActionError.BARRIER_COLLISION)
 
 
@@ -96,14 +94,10 @@ def test_unknown_movement_choice_is_rejected(rules, initial_game) -> None:
 
 
 @pytest.mark.parametrize("target", ("north", Coordinate(True, 3)))
-def test_malformed_explicit_target_is_rejected(
-    rules, initial_game, target
-) -> None:
+def test_malformed_explicit_target_is_rejected(rules, initial_game, target) -> None:
     action = MoveAction(Role.THIEF, MoveChoice.NORTH, target)
     result = rules.apply(initial_game, action)
-    assert result == ActionRejected(
-        initial_game, ActionError.INVALID_ACTION_TYPE
-    )
+    assert result == ActionRejected(initial_game, ActionError.INVALID_ACTION_TYPE)
     assert result.state is initial_game
 
 
@@ -114,6 +108,4 @@ def test_alternative_origin_direction_is_not_invented(
     state = replace(initial_game, board=board)
     rules = BaseLogicRules(accepted_config)
     result = rules.apply(state, MoveAction(Role.THIEF, MoveChoice.NORTH))
-    assert result == ActionBlocked(
-        state, BlockedQuestion.UNDEFINED_COORDINATE_ORIGIN
-    )
+    assert result == ActionBlocked(state, BlockedQuestion.UNDEFINED_COORDINATE_ORIGIN)

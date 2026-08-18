@@ -61,7 +61,9 @@ class NgrokProvider:
         if local_url != expected or not await self._probe(local_url):
             return TunnelFailure(FailureKind.NOT_READY, "local_mcp")
         try:
-            ready = await self.detect_version() and await self.authenticated_agent_ready()
+            ready = (
+                await self.detect_version() and await self.authenticated_agent_ready()
+            )
         except (OSError, subprocess.TimeoutExpired):
             ready = False
         if not ready:
