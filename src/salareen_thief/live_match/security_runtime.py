@@ -3,8 +3,6 @@ import json
 from pathlib import Path
 from typing import Any
 
-from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
-
 from salareen_thief.security.protocol import (
     AppendOnlyAuditLog,
     CommitReveal,
@@ -16,6 +14,7 @@ from salareen_thief.security.protocol import (
 )
 
 from .security_identity import accept_bundle, build_bundle, build_step0
+from .security_keys import load_private_key
 from .security_store import (
     persist_incoming,
     persist_outgoing,
@@ -37,7 +36,7 @@ class LiveSecurity:
         self.game_id = game_id
         raw = Path(config_path).read_text(encoding="utf-8")
         self.config = canonical_bytes(json.loads(raw))
-        self.key = Ed25519PrivateKey.generate()
+        self.key = load_private_key()
         self.public = self.key.public_key()
         self.step0 = build_step0(role)
         validate_step0(self.step0)
