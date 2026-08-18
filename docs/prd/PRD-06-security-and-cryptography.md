@@ -1,7 +1,7 @@
 # PRD 06 - Security and Cryptography
-**Status:** Ready for review
+**Status:** Approved for minimum mandatory implementation
 **Repository:** salareen-thief
-**Implementation:** Not started
+**Implementation:** In progress on `feat/stage-6-7-security-series`
 **Specification:** 3.0.0
 
 ## Purpose
@@ -46,10 +46,19 @@ New strategy/tunnel behavior, Gmail, GUI and league orchestration. Crypto cannot
 - AC06-10: secrets never appear in Git/logs/errors/fixtures.
 - AC06-11: security, negative and cross-peer tests plus all gates pass.
 
-## Blocked Questions
-- **SEC-BQ-01:** signature/key algorithm, format and trust exchange are not mandated.
-- **SEC-BQ-02:** complete canonical payload schema/encoding is not normative.
-- **SEC-BQ-03:** Capture Claim evidence/handshake is unspecified.
+## Engineering Decisions and Residual Blockers
+- Canonical profile: sorted-key, compact UTF-8 JSON with no NaN, duplicate keys,
+  or alternate byte encodings.
+- Signatures: Ed25519 from `cryptography`; signatures use validated, case-sensitive
+  standard Base64. Public keys are provisioned out of band; private keys never
+  enter Git.
+- Commitments: domain-separated SHA-256 over canonical complete payload and a
+  fresh 32-byte secret nonce; acknowledgement is mandatory before reveal.
+- Claims and logs: one common capture envelope and a SHA-256 previous-entry chain;
+  first falsifying mismatch fails closed.
+- **SEC-BQ-01:** production public-key identity provisioning remains external.
+- **SEC-BQ-02:** resolved for the minimum mandatory protocol by the shared schema.
+- **SEC-BQ-03:** resolved for deterministic overlap/barrier/trapped evidence.
 - **SEC-BQ-04:** intent truth/lie vocabulary and audit method are incomplete.
 - **SEC-BQ-05:** partial audit/crash recovery is unspecified.
 - **SEC-BQ-06:** conflicting peer tamper allegations require an agreed protocol.

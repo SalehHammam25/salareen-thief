@@ -2,7 +2,7 @@
 
 **Status:** Ready for review
 **Related PRD:** `../prd/PRD-06-security-and-cryptography.md`
-**Implementation:** Not started
+**Implementation:** In progress on `feat/stage-6-7-security-series`
 **Task ID range:** SEC-001 through SEC-065
 
 All tasks are unchecked. A task may be checked only when its evidence exists. Items that depend on a PRD blocked question remain non-executable until the decision is approved.

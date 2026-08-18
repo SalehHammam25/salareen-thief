@@ -432,6 +432,11 @@ until bidirectional public-tunnel and complete-match evidence exists.
 
 ## Stage 6 - Security and Cryptography
 
+Execution decision: use canonical compact sorted UTF-8 JSON, Ed25519 from
+`cryptography`, standard case-sensitive Base64, domain-separated SHA-256
+commitments with fresh 32-byte nonces, and hash-chained append-only audit entries.
+Implement and test this minimum path symmetrically before Stage 7 work.
+
 **Authority:** Chapter 5 and 10.3.6; Appendix B; Appendix E rules 11-24 and
 46-48; Annex F. **Milestone:** every move completes Commit, Acknowledge, Reveal
 and final Nonce audit; signed Step-0 and byte-identical shared configuration
