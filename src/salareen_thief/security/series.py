@@ -54,11 +54,23 @@ def privacy_safe_view(
     role: str,
     local_position: Sequence[int],
     public_events: Sequence[Mapping[str, Any]],
+    belief_heatmap: Sequence[Sequence[float]] = (),
+    turn_status: str = "LOCKED",
 ) -> dict[str, Any]:
     if role not in {"cop", "thief"}:
         raise SecurityViolation("invalid viewer role")
+    if turn_status not in {"YOUR TURN", "LOCKED"}:
+        raise SecurityViolation("invalid turn status")
+    opponent = "thief" if role == "cop" else "cop"
     return {
         "role": role,
         "local_position": list(local_position),
-        "public_events": [dict(event) for event in public_events],
+        "belief_heatmap": [list(row) for row in belief_heatmap],
+        "turn_status": turn_status,
+        "public_events": [_safe_event(event, opponent) for event in public_events],
     }
+
+
+def _safe_event(event: Mapping[str, Any], opponent: str) -> dict[str, Any]:
+    forbidden = {"objective_opponent_position", f"{opponent}_position"}
+    return {key: value for key, value in event.items() if key not in forbidden}

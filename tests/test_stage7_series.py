@@ -32,8 +32,21 @@ def test_six_games_peer_agreement_and_privacy():
     assert "private_nonce" not in repr(artifact)
     with pytest.raises(SecurityViolation):
         series.agree({**artifact, "series_id": "tampered"})
-    view = privacy_safe_view("cop", [1, 2], [{"event": "turn", "index": 1}])
-    assert set(view) == {"role", "local_position", "public_events"}
+    view = privacy_safe_view(
+        "cop",
+        [1, 2],
+        [{"event": "turn", "index": 1, "thief_position": [4, 4]}],
+        [[0.25, 0.75]],
+        "YOUR TURN",
+    )
+    assert set(view) == {
+        "role",
+        "local_position",
+        "belief_heatmap",
+        "turn_status",
+        "public_events",
+    }
+    assert "thief_position" not in repr(view)
 
 
 def test_verified_replay_rejects_mutation():
