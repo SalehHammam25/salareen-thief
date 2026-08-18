@@ -71,3 +71,23 @@ at `live-gate-c0fbrjz1`; each recovery family passed five focused runs. Complete
 gates passed at `live-gate-b2vgdxol`, `live-gate-7ohfkm_i`, and
 `live-gate-tt9qm2dj` with identical evidence. Status is **candidate PASS pending
 Areen's manual rerun**; Areen must rerun before final PASS.
+
+## Deterministic mismatch-boundary correction
+
+Areen's preserved `live-gate-2_37ib6t` run found mismatch canonical divergence:
+repeat 1 rejected at turn 1 after `action-0`, while repeat 2 applied `action-1`
+on thief and rejected at turn 2. Both had acknowledged action-0, but test
+support stopped only thief and a fixed cop action delay expired during restart.
+The already-prepared action raced the intentional mismatched resume. This was
+harness scheduling, not a normal production state-transition defect.
+
+Mismatch now uses a cop-only two-phase verification barrier: thief completes
+the mandatory action-0 boundary, cop confirms it is blocked before action-1
+preparation, restart/rejection completes, and only then does the harness release
+cop shutdown. It is opt-in test orchestration and does not alter normal play.
+
+Focused mismatch passed 20/20 at `live-gate-rcz0hfiq`, always action-0 only,
+counts 1/1, rejection turn 1. Every recovery family passed 5/5. Three complete
+gates passed at `live-gate-erwjj7b4`, `live-gate-dfsl1dn5`, and
+`live-gate-lxuxvsa0`. Status remains **candidate PASS pending Areen's next
+independent manual rerun**.
