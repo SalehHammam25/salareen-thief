@@ -1,3 +1,5 @@
+import asyncio
+
 from .recovery import bounded_call
 from .session import LiveMatchSession
 from .test_strategy import choose
@@ -27,11 +29,7 @@ async def local_turn(url: str, session: LiveMatchSession, scenario: str) -> None
         "action_correlation_id": intent["correlation_id"],
         "digest": digest,
     }
-    committed = await bounded_call(
-        session,
-        commit_message["correlation_id"],
-        lambda: call_peer(url, "security_commit_v1", commit_message),
-    )
+    committed = await _commit_when_verified(url, session, commit_message)
     if not committed["accepted"]:
         raise RuntimeError("remote commitment rejected")
     session.security.acknowledge_outgoing(intent["correlation_id"], intent)
@@ -99,3 +97,17 @@ async def local_turn(url: str, session: LiveMatchSession, scenario: str) -> None
         intent["correlation_id"],
         {"hint_sent": hint is not None},
     )
+
+
+async def _commit_when_verified(url, session, message):
+    for attempt in range(5):
+        result = await bounded_call(
+            session,
+            message["correlation_id"],
+            lambda: call_peer(url, "security_commit_v1", message),
+        )
+        if result["accepted"] or result.get("code") != "SECURITY_REQUIRED":
+            return result
+        if attempt < 4:
+            await asyncio.sleep(0.25)
+    return result

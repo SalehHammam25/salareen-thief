@@ -14,7 +14,7 @@ from salareen_thief.security.protocol import (
 )
 
 from .security_identity import accept_bundle, build_bundle, build_step0
-from .security_keys import load_private_key
+from .security_keys import load_expected_peer_key, load_private_key
 from .security_store import (
     persist_incoming,
     persist_outgoing,
@@ -38,6 +38,7 @@ class LiveSecurity:
         self.config = canonical_bytes(json.loads(raw))
         self.key = load_private_key()
         self.public = self.key.public_key()
+        self.expected_peer_public = load_expected_peer_key()
         self.step0 = build_step0(role)
         validate_step0(self.step0)
         self.peer_verified = False

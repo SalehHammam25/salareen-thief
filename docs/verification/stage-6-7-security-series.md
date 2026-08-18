@@ -34,3 +34,18 @@ and an authorized remote-peer run remain intentionally external/deferred.
 - The nine-minute live gate was not rerun because cleanup changed no live-match
   behavior; the preceding 11/11 cop-driven live/security result remains the
   live evidence.
+
+## Persistent operator identity gate (2026-08-19)
+
+- Production loads the thief Ed25519 identity from
+  `SALAREEN_THIEF_ED25519_PRIVATE_KEY_PATH` and pins the peer supplied through
+  `SALAREEN_THIEF_EXPECTED_PEER_PUBLIC_KEY`.
+- A journal-replayed bootstrap re-verifies its signed bundle and pinned peer;
+  commitment submission tolerates only the bounded `SECURITY_REQUIRED` race
+  while a restarted peer completes that verification.
+- Actual-key restart comparison preserved the same thief public identity and
+  `SHA256:d9iHCmAbFJjhG2aQdKzYx4nzT3XlmQcPXgoRdk/gvV4` fingerprint.
+- Full suite: 453 passed, one third-party deprecation warning.
+- Cop-driven persistent-identity live/security gate: 11/11 scenarios passed
+  once in 555.3 seconds, including acknowledgement restart, lost
+  acknowledgement, mismatch, retry exhaustion, watchdog, and terminal restart.

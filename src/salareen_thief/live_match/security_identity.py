@@ -65,6 +65,8 @@ def accept_bundle(runtime: Any, bundle: dict[str, Any]) -> None:
     except (KeyError, ValueError, binascii.Error) as exc:
         raise SecurityViolation("malformed security bootstrap") from exc
     require_identical_config(runtime.config, peer_config)
+    if runtime.expected_peer_public and public_raw != runtime.expected_peer_public:
+        raise SecurityViolation("unexpected peer public key")
     validate_step0(bundle["step0"])
     if bundle["step0"]["role"] == runtime.role:
         raise SecurityViolation("peer role must differ")

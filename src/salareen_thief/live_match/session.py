@@ -53,11 +53,16 @@ class LiveMatchSession:
         request = protocol.canonical(payload)
         cached = self.journal.lookup(key)
         if cached:
-            return (
-                json.loads(cached[1])
-                if cached[0] == request
-                else self._reject(correlation, "DUPLICATE_MISMATCH", "correlation_id")
-            )
+            if cached[0] != request:
+                return self._reject(
+                    correlation, "DUPLICATE_MISMATCH", "correlation_id"
+                )
+            if tool == "security_bootstrap_v1":
+                try:
+                    self.security.accept_bundle(payload["bundle"])
+                except ValueError:
+                    return self._reject(correlation, "SECURITY_REJECTED", "verification")
+            return json.loads(cached[1])
         issue = self._validate_semantics(tool, payload)
         if issue:
             return self._reject(correlation, *issue)
