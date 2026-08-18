@@ -10,6 +10,7 @@ from .endpoints import validate_endpoint
 from .event_log import EventLog
 from .gameplay import GameplayAdapter
 from .journal import Journal
+from .security_runtime import LiveSecurity
 from .server import build_live_server
 from .session import LiveMatchSession
 
@@ -22,21 +23,32 @@ def main() -> None:
     parser.add_argument("--session-id", default="local-session")
     parser.add_argument("--config", default="config/game.json")
     parser.add_argument("--opponent")
-    parser.add_argument("--scenario", choices=("capture", "barrier_capture", "trapped",
-                        "capture_priority", "survival"),
-                        default="capture")
+    parser.add_argument(
+        "--scenario",
+        choices=(
+            "capture",
+            "barrier_capture",
+            "trapped",
+            "capture_priority",
+            "survival",
+        ),
+        default="capture",
+    )
     args = parser.parse_args()
     if args.opponent:
-        validate_endpoint(args.opponent, mode="local", host="127.0.0.1",
-                          permitted_port=8802)
+        validate_endpoint(
+            args.opponent, mode="local", host="127.0.0.1", permitted_port=8802
+        )
     path = os.environ.get("SALAREEN_THIEF_JOURNAL", ".runtime/thief-match.sqlite3")
     log_path = os.environ.get("SALAREEN_THIEF_EVENT_LOG", ".runtime/thief-match.jsonl")
     journal = Journal(path)
     events = EventLog(log_path, "thief", args.game_id, args.session_id)
     saved = journal.get_state(args.game_id, args.session_id, "game_state")
-    gameplay = GameplayAdapter(args.config, saved)
-    session = LiveMatchSession("thief", args.game_id, args.session_id, 1,
-                               journal, gameplay)
+    security = LiveSecurity("thief", args.config, args.game_id, journal, args.session_id)
+    gameplay = GameplayAdapter(args.config, saved, defer=True)
+    session = LiveMatchSession(
+        "thief", args.game_id, args.session_id, 1, journal, gameplay, security
+    )
     session.events = events
     session.action_delay = float(os.environ.get("SALAREEN_ACTION_DELAY", "0"))
     session.crash_after_send = int(os.environ.get("SALAREEN_CRASH_AFTER_SEND", "-1"))
@@ -60,8 +72,11 @@ def main() -> None:
         return
 
     async def play() -> None:
-        task = asyncio.create_task(server.run_async(
-            transport="http", host=args.host, port=args.port, show_banner=False))
+        task = asyncio.create_task(
+            server.run_async(
+                transport="http", host=args.host, port=args.port, show_banner=False
+            )
+        )
         try:
             await run_autoplay(args.opponent, session, args.scenario)
         finally:

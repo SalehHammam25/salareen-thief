@@ -1,9 +1,7 @@
 """Narrow adapters from live messages to existing deterministic stages."""
-
 import json
 from pathlib import Path
 from typing import Any
-
 from salareen_thief.base_logic.action_results import ActionAccepted
 from salareen_thief.base_logic.actions import (
     BarrierAction,
@@ -30,27 +28,30 @@ from salareen_thief.scent.field import empty_field, evolve
 from salareen_thief.strategy.blind import BlindShortestPath
 from salareen_thief.strategy.gateway import StrategyGateway
 from salareen_thief.strategy.results import ValidatedDecision
-
+from .capture_security import verify_live_capture
 from .persistence import point, restore_runtime, runtime_snapshot
 from .stage4 import Stage4Boundary
-
-
 class GameplayAdapter:
-    def __init__(self, config_path: str | Path, saved: str | None = None) -> None:
-        source = Path(config_path)
+    def __init__(self, config_path: str | Path, saved: str | None = None,
+                 *, defer: bool = False) -> None:
+        self.config_path, self.saved = Path(config_path), saved
+        if not defer: self.initialize()
+    def initialize(self) -> None:
+        if hasattr(self, "state"): return
+        source = self.config_path
         loaded = load_config(source)
         if not isinstance(loaded, ConfigAccepted):
             raise ValueError("invalid shared configuration")
         self.config = loaded.value
         self.rules = BaseLogicRules(self.config)
-        created = initial_state(self.config) if saved is None else self._restore(saved)
+        created = initial_state(self.config) if self.saved is None else self._restore(self.saved)
         if not isinstance(created, StateAccepted):
             raise ValueError("invalid game state")
         self.state = created.value
         self.scent = empty_field(self.state.board)
         self.stage4 = Stage4Boundary(source, self.state.board)
-        if saved:
-            self.scent = restore_runtime(saved, self.scent, self.stage4)
+        if self.saved:
+            self.scent = restore_runtime(self.saved, self.scent, self.stage4)
         self.gateway = StrategyGateway(self.rules, BlindShortestPath())
     def propose(self, target: Coordinate):
         return self.gateway.decide(self.state, target)
@@ -83,6 +84,8 @@ class GameplayAdapter:
         claimed = tuple(payload[key] for key in ("cop_x", "cop_y", "thief_x", "thief_y"))
         if claimed != expected:
             return "CAPTURE_REJECTED", "coordinates"
+        if not verify_live_capture(payload, self.state):
+            return "CAPTURE_REJECTED", "security_evidence"
         if self.state.status is EpisodeStatus.TERMINAL:
             return None if self.state.outcome and self.state.outcome.capture_cause else (
                 "CAPTURE_REJECTED", "local_consistency")
@@ -92,7 +95,6 @@ class GameplayAdapter:
         if apply:
             self.state = result.state
         return None
-
     def intent_for(self, decision: ValidatedDecision) -> dict[str, Any]:
         action = decision.action
         if isinstance(action, BarrierAction):
@@ -101,7 +103,6 @@ class GameplayAdapter:
         kind = "stay" if action.choice is MoveChoice.STAY else "move"
         return {"action_kind": kind, "direction": action.choice.value,
                 "x": None, "y": None}
-
     def snapshot(self) -> str:
         outcome = self.state.outcome
         data = {"thief": point(self.state.positions.thief),
@@ -115,13 +116,11 @@ class GameplayAdapter:
                 else outcome.capture_cause.value}
         data.update(runtime_snapshot(self.scent, self.stage4))
         return json.dumps(data, sort_keys=True, separators=(",", ":"))
-
     def score(self) -> tuple[int, int]:
         result = score_episode(self.state, self.config.scoring)
         if not isinstance(result, ScoreAccepted):
             raise ValueError("episode is not scoreable")
         return result.score.cop, result.score.thief
-
     def _restore(self, saved: str):
         data = json.loads(saved)
         outcome = None
@@ -134,7 +133,6 @@ class GameplayAdapter:
             barriers=(Coordinate(*item) for item in data["barriers"]),
             barrier_usage=data["barrier_usage"], valid_steps=data["valid_steps"],
             status=EpisodeStatus(data["status"]), outcome=outcome)
-
     def _action(self, payload: dict[str, Any]):
         role = Role(payload["sender_role"])
         if payload["action_kind"] == "barrier":

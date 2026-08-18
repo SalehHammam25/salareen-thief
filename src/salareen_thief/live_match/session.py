@@ -1,14 +1,13 @@
 import json
 from typing import Any
-
 from . import protocol
 from .journal import Journal
 from .outbound import prepare
-
-
+from .session_validation import validate_semantics
 class LiveMatchSession:
     def __init__(self, local_role: str, game_id: str, session_id: str,
-                 game_number: int, journal: Journal, gameplay: Any = None) -> None:
+                 game_number: int, journal: Journal, gameplay: Any = None,
+                 security: Any = None) -> None:
         if local_role not in protocol.ROLES:
             raise ValueError("invalid local role")
         self.local_role = local_role
@@ -16,6 +15,7 @@ class LiveMatchSession:
         self.game_id, self.session_id = game_id, session_id
         self.game_number, self.journal = game_number, journal
         self.gameplay = gameplay
+        self.security = security
         self.phase = journal.get_state(game_id, session_id, "phase") or "configured"
         self.turn_index = int(journal.get_state(game_id, session_id, "turn") or 0)
         self.applied_actions = int(journal.get_state(game_id, session_id, "applied") or 0)
@@ -45,7 +45,9 @@ class LiveMatchSession:
             return self._reject(correlation, *issue)
         response = {"accepted": True, "correlation_id": correlation,
                     "status": protocol.STATUSES[tool]}
-        self._mutate(tool, payload)
+        try: self._mutate(tool, payload)
+        except ValueError: return self._reject(correlation, "SECURITY_REJECTED", "verification")
+        if tool == "security_bootstrap_v1": response["bundle"] = self.security.bundle()
         self.journal.record(key, self._boundary(tool), request,
                             protocol.canonical(response))
         return response
@@ -65,40 +67,13 @@ class LiveMatchSession:
             return "INVALID_GAME_NUMBER", "game_number"
         return None
     def _validate_semantics(self, tool: str, payload: dict[str, Any]):
-        if tool == "initialize_game_v1":
-            if self.phase not in {"configured", "game_initialized"}:
-                return "ILLEGAL_PHASE", "phase"
-            if payload["starting_role"] != "thief":
-                return "INVALID_ROLE", "starting_role"
-            return None
-        if tool == "resume_match_v1":
-            received = self.journal.get_state(self.game_id, self.session_id,
-                                              "last_received_turn")
-            pending_ack = received is not None and payload["turn_index"] == int(received)
-            exact = payload["turn_index"] == self.turn_index
-            if (not exact and not pending_ack) or payload["phase"] != self.phase:
-                self._save("phase", "aborted")
-                self.phase = "aborted"
-                return "IDENTITY_MISMATCH", "recovery_identity"
-            return None
-        if payload["turn_index"] != self.turn_index:
-            return "INVALID_TURN", "turn_index"
-        allowed = {"reconcile_terminal_v1", "reconcile_score_v1", "shutdown_match_v1"}
-        if self.phase in {"terminal", "shutdown"} and tool not in allowed:
-            return "EPISODE_TERMINAL", "phase"
-        if tool == "submit_action_v1":
-            issue = protocol.validate_action(payload, self.turn_index)
-            return issue or (self.gameplay and self.gameplay.validate_payload(payload))
-        if tool == "submit_capture_claim_v1" and self.gameplay:
-            return self.gameplay.capture(payload, apply=False)
-        if tool == "reconcile_score_v1":
-            scores = {"cop_capture": (20, 5), "thief_survival": (5, 10),
-                      "tie": (2, 2), "technical_loss": (0, 0)}
-            if scores.get(payload["outcome"]) != (payload["cop_score"], payload["thief_score"]):
-                return "SCORE_MISMATCH", "scores"
-        return None
+        return validate_semantics(self, tool, payload)
     def _mutate(self, tool: str, payload: dict[str, Any]) -> None:
-        if tool == "initialize_game_v1":
+        if tool == "security_bootstrap_v1":
+            self.security.accept_bundle(payload["bundle"]); self.gameplay.initialize()
+        elif tool == "security_commit_v1": self.security.accept_commit(payload["action_correlation_id"], payload["digest"])
+        elif tool == "security_nonce_audit_v1": self.security.accept_nonce_audit(payload["nonces"])
+        elif tool == "initialize_game_v1":
             self.phase = "game_initialized"
             self._save("phase", self.phase)
         elif tool == "submit_action_v1":

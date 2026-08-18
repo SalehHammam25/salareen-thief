@@ -9,37 +9,58 @@ from .protocol import SCHEMAS
 from .session import LiveMatchSession
 
 
-def build_live_server(session: LiveMatchSession, events: EventLog | None = None) -> FastMCP:
+def build_live_server(
+    session: LiveMatchSession, events: EventLog | None = None
+) -> FastMCP:
     server = FastMCP(f"salareen-{session.local_role}-live-match")
 
     def dispatch(tool: str, payload: dict[str, Any]) -> dict[str, Any]:
         correlation = payload.get("correlation_id") if type(payload) is dict else None
         cached = False
-        if type(payload) is dict and all(key in payload for key in (
-                "game_id", "session_id", "correlation_id")):
-            key = (payload["game_id"], payload["session_id"], tool,
-                   payload["correlation_id"])
+        if type(payload) is dict and all(
+            key in payload for key in ("game_id", "session_id", "correlation_id")
+        ):
+            key = (
+                payload["game_id"],
+                payload["session_id"],
+                tool,
+                payload["correlation_id"],
+            )
             cached = session.journal.lookup(key) is not None
         if events:
-            events.emit("message_received", turn=session.turn_index,
-                        phase=session.phase, correlation_id=correlation,
-                        data={"tool": tool})
+            events.emit(
+                "message_received",
+                turn=session.turn_index,
+                phase=session.phase,
+                correlation_id=correlation,
+                data={"tool": tool},
+            )
         result = session.handle(tool, payload)
         if result["accepted"] and session.gameplay and not cached:
             if tool == "publish_scent_v1":
                 assert session.gameplay.stage4.receive_scent(
-                    payload["turn_index"], payload)
+                    payload["turn_index"], payload
+                )
             elif tool == "send_language_hint_v1":
                 assert session.gameplay.stage4.receive_hint(
-                    payload["turn_index"], payload["text"])
+                    payload["turn_index"], payload["text"]
+                )
             if tool in {"publish_scent_v1", "send_language_hint_v1"}:
                 session._save("game_state", session.gameplay.snapshot())
         if events:
             kind = "message_accepted" if result["accepted"] else "message_rejected"
-            events.emit(kind, turn=session.turn_index, phase=session.phase,
-                        correlation_id=correlation,
-                        result_code=result.get("code") or result.get("status"))
-            accepted_events = {"initialize_game_v1": "game_initialized",
+            events.emit(
+                kind,
+                turn=session.turn_index,
+                phase=session.phase,
+                correlation_id=correlation,
+                result_code=result.get("code") or result.get("status"),
+            )
+            accepted_events = {
+                "initialize_game_v1": "game_initialized",
+                "security_bootstrap_v1": "security_verified",
+                "security_commit_v1": "commitment_acknowledged",
+                "security_nonce_audit_v1": "nonce_audit_verified",
                 "submit_action_v1": "action_applied",
                 "acknowledge_action_v1": "ack_received",
                 "publish_scent_v1": "scent_updated",
@@ -48,15 +69,21 @@ def build_live_server(session: LiveMatchSession, events: EventLog | None = None)
                 "resume_match_v1": "resume_accepted",
                 "reconcile_terminal_v1": "terminal_agreed",
                 "reconcile_score_v1": "score_agreed",
-                "shutdown_match_v1": "shutdown"}
+                "shutdown_match_v1": "shutdown",
+            }
             if result["accepted"]:
                 event_name = "duplicate_replayed" if cached else accepted_events[tool]
-                events.emit(event_name, turn=session.turn_index,
-                            phase=session.phase, correlation_id=correlation,
-                            result_code=result["status"])
+                events.emit(
+                    event_name,
+                    turn=session.turn_index,
+                    phase=session.phase,
+                    correlation_id=correlation,
+                    result_code=result["status"],
+                )
         return result
 
     for tool_name in SCHEMAS:
+
         def handler(payload: dict[str, Any], name: str = tool_name) -> dict[str, Any]:
             return dispatch(name, payload)
 

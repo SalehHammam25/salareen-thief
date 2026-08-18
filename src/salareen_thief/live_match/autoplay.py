@@ -1,18 +1,13 @@
 """Peer-owned deterministic match loop used for local production verification."""
-
 import asyncio
 from typing import Any
-
 from fastmcp import Client
-
 from .lifecycle import wait_peer_closed
 from .reconciliation import capture, finish
 from .recovery import bounded_call
 from .session import LiveMatchSession
 from .stage4_wait import wait_boundary
 from .test_strategy import choose
-
-
 def _event(session: LiveMatchSession, kind: str, correlation: str | None = None,
            data: dict[str, Any] | None = None, turn: int | None = None) -> None:
     events = getattr(session, "events", None)
@@ -30,6 +25,14 @@ async def _call(url: str, tool: str, payload: dict[str, Any]) -> dict[str, Any]:
         raise RuntimeError("invalid peer response")
     return result.structured_content
 async def _connect(url: str, session: LiveMatchSession) -> None:
+    bundle = session.security.bundle(); security_id = f"security-{session.local_role}-{bundle['public_key'].encode().hex()[:12]}"
+    secured = await bounded_call(session, security_id,
+        lambda: _call(url, "security_bootstrap_v1", {**_base(session,
+        session.local_role, security_id), "bundle": bundle}), pause=False)
+    if not secured["accepted"]: raise RuntimeError("peer security bootstrap rejected")
+    session.security.accept_bundle(secured["bundle"])
+    session.gameplay.initialize()
+    _event(session, "security_verified", security_id)
     recovering = session.phase == "paused_recovering"
     tool = "resume_match_v1" if recovering else "initialize_game_v1"
     fields = ({"turn_index": session.turn_index, "phase": session.phase}
@@ -66,6 +69,14 @@ async def _local_turn(url: str, session: LiveMatchSession, scenario: str) -> Non
         raise RuntimeError(f"local proposal rejected: {prepared['code']}")
     _event(session, "local_validation", intent["correlation_id"])
     _event(session, "action_prepared", intent["correlation_id"])
+    digest = session.security.prepare(intent["correlation_id"], intent)
+    commit_message = {**_base(session, session.local_role,
+        f"commit-{intent['correlation_id']}"), "turn_index": session.turn_index,
+        "action_correlation_id": intent["correlation_id"], "digest": digest}
+    committed = await bounded_call(session, commit_message["correlation_id"],
+        lambda: _call(url, "security_commit_v1", commit_message))
+    if not committed["accepted"]: raise RuntimeError("remote commitment rejected")
+    session.security.acknowledge_outgoing(intent["correlation_id"], intent)
     result = await bounded_call(session, intent["correlation_id"],
         lambda: _call(url, "submit_action_v1", intent))
     if not result["accepted"]:

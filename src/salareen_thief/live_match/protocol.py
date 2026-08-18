@@ -16,6 +16,10 @@ IDENTITY = {
     "game_number": int,
 }
 SCHEMAS: dict[str, dict[str, type]] = {
+    "security_bootstrap_v1": {**IDENTITY, "bundle": dict},
+    "security_commit_v1": {**IDENTITY, "turn_index": int,
+        "action_correlation_id": str, "digest": str},
+    "security_nonce_audit_v1": {**IDENTITY, "turn_index": int, "nonces": dict},
     "initialize_game_v1": {**IDENTITY, "config_schema_version": str, "starting_role": str},
     "submit_action_v1": {**IDENTITY, "turn_index": int, "action_kind": str,
         "direction": (str, type(None)), "x": (int, type(None)), "y": (int, type(None))},
@@ -40,7 +44,10 @@ SCHEMAS: dict[str, dict[str, type]] = {
     "shutdown_match_v1": {**IDENTITY, "turn_index": int, "mode": str,
         "reason_code": str},
 }
-STATUSES = {"initialize_game_v1": "initialized", "submit_action_v1": "applied",
+STATUSES = {"security_bootstrap_v1": "security_verified",
+    "security_commit_v1": "commitment_acknowledged",
+    "security_nonce_audit_v1": "nonce_audit_verified",
+    "initialize_game_v1": "initialized", "submit_action_v1": "applied",
     "acknowledge_action_v1": "acknowledged", "publish_scent_v1": "observed",
     "send_language_hint_v1": "hint_accepted",
     "submit_capture_claim_v1": "capture_confirmed",
