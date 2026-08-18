@@ -40,6 +40,12 @@ SCHEMAS: dict[str, dict[str, type]] = {
     "shutdown_match_v1": {**IDENTITY, "turn_index": int, "mode": str,
         "reason_code": str},
 }
+STATUSES = {"initialize_game_v1": "initialized", "submit_action_v1": "applied",
+    "acknowledge_action_v1": "acknowledged", "publish_scent_v1": "observed",
+    "send_language_hint_v1": "hint_accepted",
+    "submit_capture_claim_v1": "capture_confirmed",
+    "reconcile_terminal_v1": "terminal_agreed", "reconcile_score_v1": "score_agreed",
+    "resume_match_v1": "resume_allowed", "shutdown_match_v1": "shutdown_ready"}
 
 
 def canonical(payload: dict[str, Any]) -> str:

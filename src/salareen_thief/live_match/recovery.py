@@ -26,6 +26,8 @@ async def bounded_call(session: LiveMatchSession, correlation: str,
                        operation: Callable[[], Awaitable[dict[str, Any]]],
                        *, pause: bool = True) -> dict[str, Any]:
     started = time.monotonic()
+    epoch = getattr(session, "recovery_epoch", 0)
+    paused_here = False
     for attempt in range(session.max_retries + 1):
         try:
             response = await asyncio.wait_for(
@@ -33,14 +35,21 @@ async def bounded_call(session: LiveMatchSession, correlation: str,
             if not response["accepted"]:
                 abort(session, "recovery_rejected", correlation)
                 return response
+            if paused_here and session.phase == "paused_recovering" and (
+                    getattr(session, "recovery_epoch", 0) == epoch):
+                session.phase = "game_initialized"
+                session._save("phase", session.phase)
+                event(session, "recovery_succeeded", correlation)
             return response
         except Exception as error:
             if session.phase == "aborted":
                 raise RuntimeError("match aborted during recovery") from error
-            if pause and session.phase != "paused_recovering":
+            if (pause and session.phase == "game_initialized" and
+                    getattr(session, "recovery_epoch", 0) == epoch):
                 session.phase = "paused_recovering"
                 session._save("phase", session.phase)
                 event(session, "paused", correlation)
+                paused_here = True
             elapsed = time.monotonic() - started
             if elapsed >= session.watchdog_timeout:
                 abort(session, "watchdog_expired", correlation)

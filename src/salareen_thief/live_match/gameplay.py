@@ -31,6 +31,7 @@ from salareen_thief.strategy.blind import BlindShortestPath
 from salareen_thief.strategy.gateway import StrategyGateway
 from salareen_thief.strategy.results import ValidatedDecision
 
+from .persistence import point, restore_runtime, runtime_snapshot
 from .stage4 import Stage4Boundary
 
 
@@ -48,6 +49,8 @@ class GameplayAdapter:
         self.state = created.value
         self.scent = empty_field(self.state.board)
         self.stage4 = Stage4Boundary(source, self.state.board)
+        if saved:
+            self.scent = restore_runtime(saved, self.scent, self.stage4)
         self.gateway = StrategyGateway(self.rules, BlindShortestPath())
     def propose(self, target: Coordinate):
         return self.gateway.decide(self.state, target)
@@ -101,15 +104,16 @@ class GameplayAdapter:
 
     def snapshot(self) -> str:
         outcome = self.state.outcome
-        data = {"thief": self._point(self.state.positions.thief),
-                "cop": self._point(self.state.positions.cop),
-                "barriers": [self._point(item) for item in sorted(self.state.barriers)],
+        data = {"thief": point(self.state.positions.thief),
+                "cop": point(self.state.positions.cop),
+                "barriers": [point(item) for item in sorted(self.state.barriers)],
                 "barrier_usage": self.state.barrier_usage,
                 "valid_steps": self.state.valid_steps,
                 "status": self.state.status.value,
                 "outcome": None if outcome is None else outcome.kind.value,
                 "capture_cause": None if outcome is None or outcome.capture_cause is None
                 else outcome.capture_cause.value}
+        data.update(runtime_snapshot(self.scent, self.stage4))
         return json.dumps(data, sort_keys=True, separators=(",", ":"))
 
     def score(self) -> tuple[int, int]:
@@ -130,10 +134,6 @@ class GameplayAdapter:
             barriers=(Coordinate(*item) for item in data["barriers"]),
             barrier_usage=data["barrier_usage"], valid_steps=data["valid_steps"],
             status=EpisodeStatus(data["status"]), outcome=outcome)
-
-    @staticmethod
-    def _point(value: Coordinate) -> list[int]:
-        return [value.row, value.col]
 
     def _action(self, payload: dict[str, Any]):
         role = Role(payload["sender_role"])

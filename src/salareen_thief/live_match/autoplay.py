@@ -1,7 +1,6 @@
 """Peer-owned deterministic match loop used for local production verification."""
 
 import asyncio
-import time
 from typing import Any
 
 from fastmcp import Client
@@ -10,6 +9,7 @@ from .lifecycle import wait_peer_closed
 from .reconciliation import capture, finish
 from .recovery import bounded_call
 from .session import LiveMatchSession
+from .stage4_wait import wait_boundary
 from .test_strategy import choose
 
 
@@ -88,7 +88,9 @@ async def _local_turn(url: str, session: LiveMatchSession, scenario: str) -> Non
     scent_message = {**_base(session, session.local_role,
                      f"scent-{session.turn_index}"),
                      "turn_index": session.turn_index, **scent}
-    assert (await _call(url, "publish_scent_v1", scent_message))["accepted"]
+    result = await bounded_call(session, scent_message["correlation_id"],
+        lambda: _call(url, "publish_scent_v1", scent_message))
+    assert result["accepted"]
     _event(session, "scent_updated", scent_message["correlation_id"])
     _event(session, "token_budget_updated", data={
         "consumed": session.gameplay.stage4.ledger.consumed})
@@ -96,8 +98,13 @@ async def _local_turn(url: str, session: LiveMatchSession, scenario: str) -> Non
         hint_message = {**_base(session, session.local_role,
                         f"hint-{session.turn_index}"),
                         "turn_index": session.turn_index, **hint}
-        assert (await _call(url, "send_language_hint_v1", hint_message))["accepted"]
+        result = await bounded_call(session, hint_message["correlation_id"],
+            lambda: _call(url, "send_language_hint_v1", hint_message))
+        assert result["accepted"]
         _event(session, "hint_sent", hint_message["correlation_id"])
+    session._save("game_state", session.gameplay.snapshot())
+    _event(session, "stage4_boundary_complete", intent["correlation_id"],
+           {"hint_sent": hint is not None})
 async def run_autoplay(url: str, session: LiveMatchSession, scenario: str) -> None:
     await _connect(url, session)
     while (session.gameplay.state.status.value == "active" and
@@ -107,18 +114,7 @@ async def run_autoplay(url: str, session: LiveMatchSession, scenario: str) -> No
             break
         active = "thief" if session.turn_index % 2 == 0 else "cop"
         if active == session.local_role:
-            if (session.turn_index and
-                    (session.gameplay.stage4.last_scent_turn != session.turn_index or
-                     session.gameplay.stage4.last_hint_turn != session.turn_index)):
-                started = getattr(session, "stage4_wait_started", time.monotonic())
-                session.stage4_wait_started = started
-                if time.monotonic() - started >= 1 and session.phase != "paused_recovering":
-                    session.phase = "paused_recovering"
-                    session._save("phase", session.phase)
-                    _event(session, "paused")
-                await asyncio.sleep(0.02)
-                continue
-            session.stage4_wait_started = time.monotonic()
+            await wait_boundary(session)
             await asyncio.sleep(getattr(session, "action_delay", 0.0))
             if session.phase == "aborted":
                 break
@@ -129,9 +125,7 @@ async def run_autoplay(url: str, session: LiveMatchSession, scenario: str) -> No
         return
     if session.local_role == "cop":
         if scenario == "survival":
-            while (session.gameplay.stage4.last_scent_turn != session.turn_index or
-                   session.gameplay.stage4.last_hint_turn != session.turn_index):
-                await asyncio.sleep(0.02)
+            await wait_boundary(session)
         if scenario in {"capture", "barrier_capture", "trapped", "capture_priority"}:
             await capture(url, session)
         outcome = "cop_capture" if scenario != "survival" else "thief_survival"

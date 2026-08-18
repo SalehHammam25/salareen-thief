@@ -5,13 +5,7 @@ from . import protocol
 from .journal import Journal
 from .outbound import prepare
 
-STATUSES = {
-    "initialize_game_v1": "initialized", "submit_action_v1": "applied",
-    "acknowledge_action_v1": "acknowledged", "publish_scent_v1": "observed",
-    "send_language_hint_v1": "hint_accepted", "submit_capture_claim_v1": "capture_confirmed",
-    "reconcile_terminal_v1": "terminal_agreed", "shutdown_match_v1": "shutdown_ready",
-    "reconcile_score_v1": "score_agreed", "resume_match_v1": "resume_allowed",
-}
+
 class LiveMatchSession:
     def __init__(self, local_role: str, game_id: str, session_id: str,
                  game_number: int, journal: Journal, gameplay: Any = None) -> None:
@@ -25,6 +19,7 @@ class LiveMatchSession:
         self.phase = journal.get_state(game_id, session_id, "phase") or "configured"
         self.turn_index = int(journal.get_state(game_id, session_id, "turn") or 0)
         self.applied_actions = int(journal.get_state(game_id, session_id, "applied") or 0)
+        self.recovery_epoch = 0
     def prepare_local(self, payload: dict[str, Any]) -> dict[str, Any]:
         return prepare(self, payload)
     def handle(self, tool: str, payload: Any) -> dict[str, Any]:
@@ -49,7 +44,7 @@ class LiveMatchSession:
         if issue:
             return self._reject(correlation, *issue)
         response = {"accepted": True, "correlation_id": correlation,
-                    "status": STATUSES[tool]}
+                    "status": protocol.STATUSES[tool]}
         self._mutate(tool, payload)
         self.journal.record(key, self._boundary(tool), request,
                             protocol.canonical(response))
@@ -131,6 +126,7 @@ class LiveMatchSession:
             self.phase = "terminal"
             self._save("phase", self.phase)
         elif tool == "resume_match_v1":
+            self.recovery_epoch += 1
             self.phase = "game_initialized"
             self._save("phase", self.phase)
         elif tool == "submit_capture_claim_v1" and self.gameplay:

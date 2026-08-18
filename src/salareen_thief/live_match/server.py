@@ -32,6 +32,8 @@ def build_live_server(session: LiveMatchSession, events: EventLog | None = None)
             elif tool == "send_language_hint_v1":
                 assert session.gameplay.stage4.receive_hint(
                     payload["turn_index"], payload["text"])
+            if tool in {"publish_scent_v1", "send_language_hint_v1"}:
+                session._save("game_state", session.gameplay.snapshot())
         if events:
             kind = "message_accepted" if result["accepted"] else "message_rejected"
             events.emit(kind, turn=session.turn_index, phase=session.phase,

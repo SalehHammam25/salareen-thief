@@ -52,3 +52,22 @@ other recovery scenarios passed twice. Two complete fresh-root gates passed at
 `live-gate-yswgq_ns` (790.6 s) and `live-gate-37n6x7n3` (789.6 s). Ports
 8801/8802 and exact peer-runner process counts were zero afterward. The local
 Windows gate is PASS again.
+
+## Second independent Windows failure and candidate correction
+
+Areen's retained `live-gate-95gu2_ka/terminal-0` failure occurred before
+restart: both peers agreed at turn 10, thief held pending `action-10`, and cop
+received turn-10 scent/language. The harness timed out waiting for optional
+`hint-11`; no resume had been sent. Slow Stage 4 traffic also exposed an old
+production defect that wrote `paused_recovering` after one second.
+
+Both peers now persist/restore Stage 4 scent, belief, cadence, tokens, and last
+message state; use bounded calls; guard recovery phase changes by epoch; and
+resume from mandatory action boundaries. Harness recovery/terminal paths use
+`stage4_boundary_complete`, not hints, and flush detailed progress/diagnostics.
+
+All failure directories remain preserved. Final terminal restart passed 20/20
+at `live-gate-c0fbrjz1`; each recovery family passed five focused runs. Complete
+gates passed at `live-gate-b2vgdxol`, `live-gate-7ohfkm_i`, and
+`live-gate-tt9qm2dj` with identical evidence. Status is **candidate PASS pending
+Areen's manual rerun**; Areen must rerun before final PASS.
