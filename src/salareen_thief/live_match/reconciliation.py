@@ -4,6 +4,7 @@ from typing import Any
 
 from fastmcp import Client
 
+from .recovery import bounded_call
 from .session import LiveMatchSession
 
 
@@ -38,7 +39,9 @@ async def capture(url: str, session: LiveMatchSession) -> None:
               "cop_y": state.positions.cop.col, "thief_x": state.positions.thief.row,
               "thief_y": state.positions.thief.col}
     remote = {**_base(session, "cop", "capture-cop"), **values}
-    if not (await _call(url, "submit_capture_claim_v1", remote))["accepted"]:
+    response = await bounded_call(session, remote["correlation_id"],
+        lambda: _call(url, "submit_capture_claim_v1", remote), pause=False)
+    if not response["accepted"]:
         raise RuntimeError("remote capture disagreement")
     local = {**_base(session, "thief", "capture-thief"), **values}
     if not session.handle("submit_capture_claim_v1", local)["accepted"]:
@@ -62,7 +65,10 @@ async def finish(url: str, session: LiveMatchSession, outcome: str,
     for tool, correlation, fields in messages:
         remote = {**_base(session, "cop", f"{correlation}-cop"),
                   "turn_index": session.turn_index, **fields}
-        assert (await _call(url, tool, remote))["accepted"]
+        response = await bounded_call(session, remote["correlation_id"],
+            lambda selected=tool, payload=remote: _call(url, selected, payload),
+            pause=False)
+        assert response["accepted"]
         local = {**_base(session, "thief", f"{correlation}-thief"),
                  "turn_index": session.turn_index, **fields}
         assert session.handle(tool, local)["accepted"]

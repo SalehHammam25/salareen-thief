@@ -6,6 +6,7 @@ from typing import Any
 
 from fastmcp import Client
 
+from .lifecycle import wait_peer_closed
 from .reconciliation import capture, finish
 from .recovery import bounded_call
 from .session import LiveMatchSession
@@ -13,11 +14,11 @@ from .test_strategy import choose
 
 
 def _event(session: LiveMatchSession, kind: str, correlation: str | None = None,
-           data: dict[str, Any] | None = None) -> None:
+           data: dict[str, Any] | None = None, turn: int | None = None) -> None:
     events = getattr(session, "events", None)
     if events:
-        events.emit(kind, turn=session.turn_index, phase=session.phase,
-                    correlation_id=correlation, data=data)
+        events.emit(kind, turn=session.turn_index if turn is None else turn,
+                    phase=session.phase, correlation_id=correlation, data=data)
 def _base(session: LiveMatchSession, sender: str, correlation: str) -> dict[str, Any]:
     return {"protocol_version": "1.0-provisional", "correlation_id": correlation,
             "sender_role": sender, "game_id": session.game_id,
@@ -51,8 +52,10 @@ async def _connect(url: str, session: LiveMatchSession) -> None:
         raise RuntimeError(f"peer initialization rejected: {response['code']}")
     session.phase = "game_initialized"
     session._save("phase", session.phase)
-    _event(session, "peer_connected")
-    _event(session, "resume_accepted" if recovering else "game_initialized")
+    boundary = payload.get("turn_index", 0)
+    _event(session, "peer_connected", turn=boundary)
+    _event(session, "resume_accepted" if recovering else "game_initialized",
+           turn=boundary)
 async def _local_turn(url: str, session: LiveMatchSession, scenario: str) -> None:
     _event(session, "strategy_snapshot_created")
     intent = choose(session, scenario)
@@ -97,7 +100,8 @@ async def _local_turn(url: str, session: LiveMatchSession, scenario: str) -> Non
         _event(session, "hint_sent", hint_message["correlation_id"])
 async def run_autoplay(url: str, session: LiveMatchSession, scenario: str) -> None:
     await _connect(url, session)
-    while session.gameplay.state.status.value == "active":
+    while (session.gameplay.state.status.value == "active" and
+           session.phase != "aborted"):
         positions = session.gameplay.state.positions
         if positions.cop == positions.thief:
             break
@@ -116,9 +120,13 @@ async def run_autoplay(url: str, session: LiveMatchSession, scenario: str) -> No
                 continue
             session.stage4_wait_started = time.monotonic()
             await asyncio.sleep(getattr(session, "action_delay", 0.0))
+            if session.phase == "aborted":
+                break
             await _local_turn(url, session, scenario)
         else:
             await asyncio.sleep(0.02)
+    if session.phase == "aborted":
+        return
     if session.local_role == "cop":
         if scenario == "survival":
             while (session.gameplay.stage4.last_scent_turn != session.turn_index or
@@ -131,4 +139,4 @@ async def run_autoplay(url: str, session: LiveMatchSession, scenario: str) -> No
     else:
         while session.phase != "shutdown":
             await asyncio.sleep(0.02)
-        await asyncio.sleep(0.5)
+        await wait_peer_closed(url)

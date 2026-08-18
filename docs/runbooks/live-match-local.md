@@ -44,6 +44,9 @@ The harness starts both production runners with separate journals and JSONL
 logs, requires event-plus-port readiness, performs controlled interruption and
 restart cases, and terminates/kills/reaps peers in `finally`. Every run has a
 fresh runtime directory and canonical evidence comparison.
+On failure, preserve the printed runtime directory. The harness reports each
+peer's PID, exit/timeout state, last event, stdout/stderr tail, bound port, and
+targeted cleanup action; do not delete that directory before diagnosis.
 
 Tomorrow with Saleh: privately exchange stable HTTPS endpoints; start one peer
 on each computer; verify symmetric MCP calls; complete and reconcile one remote

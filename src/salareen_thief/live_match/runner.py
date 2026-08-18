@@ -43,6 +43,7 @@ def main() -> None:
     session.max_retries = int(os.environ.get("SALAREEN_MAX_RETRIES", "3"))
     session.retry_backoff = float(os.environ.get("SALAREEN_RETRY_BACKOFF", "5"))
     session.watchdog_timeout = float(os.environ.get("SALAREEN_WATCHDOG_TIMEOUT", "60"))
+    session.response_timeout = float(os.environ.get("SALAREEN_RESPONSE_TIMEOUT", "30"))
     session.recovery_mismatch = os.environ.get("SALAREEN_RECOVERY_MISMATCH", "")
     events.emit("configured", turn=session.turn_index, phase=session.phase)
     pending = journal.get_state(args.game_id, args.session_id, "pending_action")

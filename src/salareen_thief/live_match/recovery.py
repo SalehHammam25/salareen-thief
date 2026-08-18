@@ -28,12 +28,15 @@ async def bounded_call(session: LiveMatchSession, correlation: str,
     started = time.monotonic()
     for attempt in range(session.max_retries + 1):
         try:
-            response = await operation()
+            response = await asyncio.wait_for(
+                operation(), getattr(session, "response_timeout", 30))
             if not response["accepted"]:
                 abort(session, "recovery_rejected", correlation)
                 return response
             return response
         except Exception as error:
+            if session.phase == "aborted":
+                raise RuntimeError("match aborted during recovery") from error
             if pause and session.phase != "paused_recovering":
                 session.phase = "paused_recovering"
                 session._save("phase", session.phase)
