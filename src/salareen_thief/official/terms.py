@@ -68,9 +68,25 @@ def derive_game_ids(
     return "-vs-".join(pair), str(uuid.UUID(bytes=digest[:16]))
 
 
-def greeting(role: str, sub_game: int, git_commit: str, opponent: str) -> dict:
+def greeting(
+    role: str,
+    sub_game: int,
+    git_commit: str,
+    opponent: str,
+    identity: dict | None = None,
+) -> dict:
     nonce = secrets.token_hex(16)
     _, game_uid = derive_game_ids(GROUP_ID, opponent)
+    declared = dict(identity or {})
+    declared.update(
+        {
+            "group_id": GROUP_ID,
+            "group_name": GROUP_NAME,
+            "members": list(MEMBERS),
+            "github_commit": git_commit,
+            "git_commit_hash": git_commit,
+        }
+    )
     return {
         "terms": dict(TERMS),
         "nonce": nonce,
@@ -78,11 +94,6 @@ def greeting(role: str, sub_game: int, git_commit: str, opponent: str) -> dict:
         "group_id": GROUP_ID,
         "role": role,
         "sub_game_number": sub_game,
-        "identity": {
-            "group_id": GROUP_ID,
-            "group_name": GROUP_NAME,
-            "members": list(MEMBERS),
-            "github_commit": git_commit,
-        },
+        "identity": declared,
         "game_uid": game_uid,
     }
