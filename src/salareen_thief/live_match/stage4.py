@@ -45,7 +45,7 @@ class Stage4Boundary:
             "height": len(values),
             "values": values,
         }
-        request = VerbalRequest(game_id, turn, "New York", "qualitative movement")
+        request = VerbalRequest(game_id, turn, "Haifa", "qualitative movement")
         result = await self.service.generate(request, self.ledger, self.max_words)
         self.ledger = result.ledger
         hint = (

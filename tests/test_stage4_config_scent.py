@@ -32,7 +32,7 @@ def test_committed_shared_config_loads_stage4_subset() -> None:
     assert config.center_intensity == Decimal("0.9")
     assert config.decay_rate == Decimal("0.10")
     assert config.field_size == 5
-    assert (config.map_area, config.hint_max_words) == ("New York", 15)
+    assert (config.map_area, config.hint_max_words) == ("Haifa", 15)
     assert config.token_budget_per_series == 200000
 
 
