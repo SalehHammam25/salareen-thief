@@ -62,3 +62,18 @@ and an authorized remote-peer run remain intentionally external/deferred.
 - OAuth client material and tokens remained outside the repository and outside
   OneDrive. No email address, authorization URL, client identifier, credential,
   token, or private filesystem path is recorded here.
+
+## Final endpoint and subgame live gate (redacted, 2026-08-19)
+
+- Result: PASS.
+- The production validator accepted a valid public HTTPS `/mcp` endpoint.
+- Unsafe public HTTP, localhost, loopback/private-address, query-bearing,
+  fragment-bearing, and invalid-path endpoints were rejected symmetrically.
+- Non-counted production launches verified official subgame numbers 1 through 6
+  propagate into cop and thief event evidence; the live runner and event logger
+  contain no hardcoded game-number fallback in that path.
+- The cop-driven persistent-identity live/security gate passed all 11 scenarios
+  once in 619.2 seconds, including normal outcomes, acknowledgement restart,
+  lost acknowledgement, mismatch, retry exhaustion, watchdog, and terminal
+  restart.
+- No real opponent endpoint or credential is recorded here.
