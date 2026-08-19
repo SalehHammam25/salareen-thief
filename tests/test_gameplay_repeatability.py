@@ -28,9 +28,7 @@ def test_identical_movement_replay_is_equal(rules, initial_game) -> None:
         MoveAction(Role.THIEF, MoveChoice.EAST),
         MoveAction(Role.THIEF, MoveChoice.STAY),
     )
-    assert replay(rules, initial_game, actions) == replay(
-        rules, initial_game, actions
-    )
+    assert replay(rules, initial_game, actions) == replay(rules, initial_game, actions)
 
 
 def test_identical_barrier_replay_is_equal(rules, initial_game) -> None:
@@ -38,14 +36,10 @@ def test_identical_barrier_replay_is_equal(rules, initial_game) -> None:
         BarrierAction(Role.COP, Coordinate(0, 1)),
         BarrierAction(Role.COP, Coordinate(1, 0)),
     )
-    assert replay(rules, initial_game, actions) == replay(
-        rules, initial_game, actions
-    )
+    assert replay(rules, initial_game, actions) == replay(rules, initial_game, actions)
 
 
-def test_identical_terminal_replay_is_equal(
-    rules, accepted_config
-) -> None:
+def test_identical_terminal_replay_is_equal(rules, accepted_config) -> None:
     from salareen_thief.base_logic.state_factory import build_state
     from salareen_thief.base_logic.state_results import StateAccepted
 

@@ -28,13 +28,17 @@ class Journal:
     def lookup(self, key: tuple[str, str, str, str]) -> tuple[str, str] | None:
         row = self.connection.execute(
             "SELECT request,response FROM messages WHERE game_id=? AND session_id=? "
-            "AND tool_name=? AND correlation_id=?", key
+            "AND tool_name=? AND correlation_id=?",
+            key,
         ).fetchone()
         return None if row is None else (str(row[0]), str(row[1]))
 
     def record(
-        self, key: tuple[str, str, str, str], boundary: str,
-        request: str, response: str,
+        self,
+        key: tuple[str, str, str, str],
+        boundary: str,
+        request: str,
+        response: str,
     ) -> None:
         with self.connection:
             self.connection.execute(
@@ -47,7 +51,8 @@ class Journal:
         with self.connection:
             self.connection.execute(
                 "INSERT INTO state VALUES(?,?,?,?) ON CONFLICT(game_id,session_id,name) "
-                "DO UPDATE SET value=excluded.value", (game_id, session_id, name, value)
+                "DO UPDATE SET value=excluded.value",
+                (game_id, session_id, name, value),
             )
 
     def get_state(self, game_id: str, session_id: str, name: str) -> str | None:

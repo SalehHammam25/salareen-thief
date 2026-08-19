@@ -30,8 +30,7 @@ def emit(board: Board, center: Coordinate) -> ScentGrid:
 def decay(field: ScentGrid) -> ScentGrid:
     factor = Decimal("1") - DECAY
     values = tuple(
-        tuple(max(ZERO, value * factor) for value in row)
-        for row in field.values
+        tuple(max(ZERO, value * factor) for value in row) for row in field.values
     )
     return ScentGrid(field.axis_start_index, values)
 

@@ -49,16 +49,12 @@ def imported_modules(path: Path, package: str | None = None) -> set[str]:
         elif isinstance(node, ast.ImportFrom):
             relative = "." * node.level + (node.module or "")
             base = (
-                resolve_name(relative, current_package)
-                if node.level
-                else node.module
+                resolve_name(relative, current_package) if node.level else node.module
             )
             if base:
                 modules.add(base)
                 modules.update(
-                    f"{base}.{alias.name}"
-                    for alias in node.names
-                    if alias.name != "*"
+                    f"{base}.{alias.name}" for alias in node.names if alias.name != "*"
                 )
     return modules
 
@@ -77,9 +73,7 @@ def is_forbidden(module: str) -> bool:
 def forbidden_imports(path: Path, package: str | None = None) -> set[str]:
     """Return forbidden imports found in a Python source file."""
     return {
-        module
-        for module in imported_modules(path, package)
-        if is_forbidden(module)
+        module for module in imported_modules(path, package) if is_forbidden(module)
     }
 
 
@@ -109,17 +103,11 @@ def test_scanner_detects_internal_import(
 ) -> None:
     fixture = tmp_path / "fixture.py"
     fixture.write_text(statement, encoding="utf-8")
-    assert expected in forbidden_imports(
-        fixture, package="salareen_thief.base_logic"
-    )
+    assert expected in forbidden_imports(fixture, package="salareen_thief.base_logic")
 
 
 @pytest.mark.parametrize("dependency", sorted(EXTERNAL_FORBIDDEN))
-def test_scanner_detects_external_import(
-    tmp_path: Path, dependency: str
-) -> None:
+def test_scanner_detects_external_import(tmp_path: Path, dependency: str) -> None:
     fixture = tmp_path / "fixture.py"
     fixture.write_text(f"import {dependency}\n", encoding="utf-8")
-    assert dependency in forbidden_imports(
-        fixture, package="salareen_thief.base_logic"
-    )
+    assert dependency in forbidden_imports(fixture, package="salareen_thief.base_logic")

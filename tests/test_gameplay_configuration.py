@@ -28,9 +28,7 @@ def test_rules_use_increased_barrier_quota(accepted_config) -> None:
 
 
 def test_rules_use_increased_equal_survival_values(accepted_config) -> None:
-    movement = replace(
-        accepted_config.movement, max_moves=36, survival_threshold=36
-    )
+    movement = replace(accepted_config.movement, max_moves=36, survival_threshold=36)
     config = replace(accepted_config, movement=movement)
     initial = initial_state(config)
     assert isinstance(initial, StateAccepted)

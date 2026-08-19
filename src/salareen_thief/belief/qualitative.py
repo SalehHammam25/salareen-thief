@@ -24,8 +24,10 @@ def qualitative_predicate(text: str, board: Board) -> Predicate | None:
         predicates.append(lambda cell: 2 * cell.col > doubled_midpoint)
     if "center" in words or "centre" in words:
         predicates.append(
-            lambda cell: abs(2 * cell.row - doubled_midpoint) <= 1
-            and abs(2 * cell.col - doubled_midpoint) <= 1
+            lambda cell: (
+                abs(2 * cell.row - doubled_midpoint) <= 1
+                and abs(2 * cell.col - doubled_midpoint) <= 1
+            )
         )
     if not predicates:
         return None

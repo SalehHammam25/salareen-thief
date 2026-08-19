@@ -66,9 +66,13 @@ def test_retry_exhaustion_produces_one_deterministic_failure() -> None:
         second = await bounded_remote_call(
             operation, timeout=1, backoff=1, max_retries=2, sleep=no_wait
         )
-        assert first == second == TunnelFailure(
-            FailureKind.RETRIES_EXHAUSTED,
-            "attempts=3; last=disconnected",
+        assert (
+            first
+            == second
+            == TunnelFailure(
+                FailureKind.RETRIES_EXHAUSTED,
+                "attempts=3; last=disconnected",
+            )
         )
 
     asyncio.run(scenario())
@@ -97,8 +101,6 @@ def test_caller_cancellation_propagates() -> None:
             raise asyncio.CancelledError
 
         with pytest.raises(asyncio.CancelledError):
-            await bounded_remote_call(
-                cancelled, timeout=1, backoff=1, max_retries=0
-            )
+            await bounded_remote_call(cancelled, timeout=1, backoff=1, max_retries=0)
 
     asyncio.run(scenario())

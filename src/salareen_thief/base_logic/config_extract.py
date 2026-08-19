@@ -46,9 +46,7 @@ def extract_values(data: Any) -> tuple[dict[Path, Any], list[ConfigIssue]]:
     values: dict[Path, Any] = {}
     issues: list[ConfigIssue] = []
     if type(data) is not dict:
-        return values, [
-            _issue(Category.INCORRECT_TYPE, (), "expected JSON object")
-        ]
+        return values, [_issue(Category.INCORRECT_TYPE, (), "expected JSON object")]
     for section_name, fields in REQUIRED_SECTIONS:
         if section_name not in data:
             issues.append(
@@ -70,9 +68,7 @@ def extract_values(data: Any) -> tuple[dict[Path, Any], list[ConfigIssue]]:
             if field not in section:
                 issues.append(_issue(Category.MISSING_KEY, path, "missing key"))
                 continue
-            normalized, error = _normalize(
-                section[field], FIELD_KINDS[path], path
-            )
+            normalized, error = _normalize(section[field], FIELD_KINDS[path], path)
             if error:
                 issues.append(error)
             else:

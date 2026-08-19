@@ -16,10 +16,15 @@ from .models import (
 from .qualitative import qualitative_predicate
 
 
-def _normalize(prior: BeliefMap, weights: tuple[tuple[Decimal, ...], ...]) -> BeliefResult:
+def _normalize(
+    prior: BeliefMap, weights: tuple[tuple[Decimal, ...], ...]
+) -> BeliefResult:
     try:
         weighted = tuple(
-            tuple(probability * weight for probability, weight in zip(row, factors, strict=True))
+            tuple(
+                probability * weight
+                for probability, weight in zip(row, factors, strict=True)
+            )
             for row, factors in zip(prior.probabilities, weights, strict=True)
         )
         normalized = normalize_rows(weighted)
@@ -36,8 +41,7 @@ def update_from_scent(prior: BeliefMap, scent: ScentGrid) -> BeliefResult:
     if scent.axis_start_index != prior.board.axis_start_index:
         return BeliefFallback(prior, BeliefFallbackReason.INVALID_EVIDENCE)
     weights = tuple(
-        tuple(Decimal("1") + strength for strength in row)
-        for row in scent.values
+        tuple(Decimal("1") + strength for strength in row) for row in scent.values
     )
     return _normalize(prior, weights)
 
@@ -55,7 +59,9 @@ def update_from_language(
     start, end = prior.board.axis_start_index, prior.board.maximum_index
     weights = tuple(
         tuple(
-            reliability if predicate(Coordinate(row, col)) else Decimal("1") - reliability
+            reliability
+            if predicate(Coordinate(row, col))
+            else Decimal("1") - reliability
             for col in range(start, end + 1)
         )
         for row in range(start, end + 1)

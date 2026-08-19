@@ -44,9 +44,11 @@ def shortest_first_choices(
     candidates: list[tuple[MoveChoice, int]] = []
     for choice in ORTHOGONAL:
         target = target_for(snapshot.thief, choice)
-        if validate_target(
-            snapshot.board, snapshot.thief, target, snapshot.barriers
-        ) is None and target in distances:
+        if (
+            validate_target(snapshot.board, snapshot.thief, target, snapshot.barriers)
+            is None
+            and target in distances
+        ):
             candidates.append((choice, distances[target]))
     if not candidates:
         return ()

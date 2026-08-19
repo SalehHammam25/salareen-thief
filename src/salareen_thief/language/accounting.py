@@ -12,7 +12,10 @@ class TokenLedger:
 
     def record(self, reply: ProviderReply) -> "TokenLedger":
         values = (reply.request_tokens, reply.response_tokens)
-        if any(isinstance(value, bool) or not isinstance(value, int) or value < 0 for value in values):
+        if any(
+            isinstance(value, bool) or not isinstance(value, int) or value < 0
+            for value in values
+        ):
             raise ValueError("provider token counts must be nonnegative integers")
         updated = self.consumed + sum(values)
         return TokenLedger(self.budget, updated)

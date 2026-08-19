@@ -41,7 +41,9 @@ def test_cloud_package_has_no_base_strategy_language_or_crypto_imports() -> None
             else:
                 continue
             for name in names:
-                if any(name == item or name.startswith(f"{item}.") for item in forbidden):
+                if any(
+                    name == item or name.startswith(f"{item}.") for item in forbidden
+                ):
                     violations.append((str(path), name))
     assert violations == []
 

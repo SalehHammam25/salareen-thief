@@ -26,9 +26,7 @@ def test_root_must_be_object(root) -> None:
     ("board_and_agents", "movement_and_barriers", "scoring"),
 )
 @pytest.mark.parametrize("bad", (None, [], "object", 3, True))
-def test_required_section_must_be_object(
-    default_data, section: str, bad
-) -> None:
+def test_required_section_must_be_object(default_data, section: str, bad) -> None:
     default_data[section] = bad
     assert first_error(default_data) is Error.INCORRECT_TYPE
 

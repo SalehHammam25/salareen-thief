@@ -16,5 +16,8 @@ def prepare(session: Any, payload: dict[str, Any]) -> dict[str, Any]:
     if issue:
         return session._reject(payload.get("correlation_id"), *issue)
     session._save("pending_action", canonical(payload))
-    return {"accepted": True, "correlation_id": payload["correlation_id"],
-            "status": "prepared"}
+    return {
+        "accepted": True,
+        "correlation_id": payload["correlation_id"],
+        "status": "prepared",
+    }

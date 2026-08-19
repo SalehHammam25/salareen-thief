@@ -81,7 +81,9 @@ def test_non_object_payload_rejected(value: object) -> None:
 
 def test_non_string_key_rejected_deterministically() -> None:
     result = decode_geometry(valid_payload() | {1: "unsafe"})
-    assert result == ContractRejected(ContractError.INVALID_SHAPE, "keys must be strings")
+    assert result == ContractRejected(
+        ContractError.INVALID_SHAPE, "keys must be strings"
+    )
 
 
 def test_decode_is_repeatable_in_fresh_processes() -> None:

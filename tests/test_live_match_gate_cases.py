@@ -12,25 +12,52 @@ CONFIG = Path(__file__).parents[1] / "config" / "game.json"
 
 
 def action(turn, role, kind="stay", direction="STAY", x=None, y=None):
-    return {"protocol_version": "1.0-provisional", "correlation_id": f"action-{turn}",
-            "sender_role": role, "game_id": "game", "session_id": "session",
-            "game_number": 1, "turn_index": turn, "action_kind": kind,
-            "direction": direction, "x": x, "y": y}
+    return {
+        "protocol_version": "1.0-provisional",
+        "correlation_id": f"action-{turn}",
+        "sender_role": role,
+        "game_id": "game",
+        "session_id": "session",
+        "game_number": 1,
+        "turn_index": turn,
+        "action_kind": kind,
+        "direction": direction,
+        "x": x,
+        "y": y,
+    }
 
 
 def test_trapped_thief_is_established_by_accepted_actions(tmp_path):
     game = GameplayAdapter(CONFIG)
-    cop_steps = (("move", "S", None), ("move", "S", None),
-        ("move", "E", None), ("move", "E", None), ("barrier", None, (2, 3)),
-        ("barrier", None, (3, 2)), ("move", "W", None), ("move", "S", None),
-        ("move", "S", None), ("move", "E", None), ("barrier", None, (4, 3)),
-        ("move", "S", None), ("move", "E", None), ("move", "E", None),
-        ("move", "N", None), ("barrier", None, (3, 4)))
+    cop_steps = (
+        ("move", "S", None),
+        ("move", "S", None),
+        ("move", "E", None),
+        ("move", "E", None),
+        ("barrier", None, (2, 3)),
+        ("barrier", None, (3, 2)),
+        ("move", "W", None),
+        ("move", "S", None),
+        ("move", "S", None),
+        ("move", "E", None),
+        ("barrier", None, (4, 3)),
+        ("move", "S", None),
+        ("move", "E", None),
+        ("move", "E", None),
+        ("move", "N", None),
+        ("barrier", None, (3, 4)),
+    )
     for turn in range(32):
-        kind, direction, target = cop_steps[turn // 2] if turn % 2 else (
-            "stay", "STAY", None)
-        payload = action(turn, "thief" if turn % 2 == 0 else "cop", kind,
-                         direction, *(target or (None, None)))
+        kind, direction, target = (
+            cop_steps[turn // 2] if turn % 2 else ("stay", "STAY", None)
+        )
+        payload = action(
+            turn,
+            "thief" if turn % 2 == 0 else "cop",
+            kind,
+            direction,
+            *(target or (None, None)),
+        )
         assert game.validate_payload(payload) is None
         assert game.apply_payload(payload)[0]
     assert game.state.outcome.kind is OutcomeKind.CAPTURE
@@ -59,16 +86,23 @@ def test_capture_has_priority_on_survival_boundary(tmp_path):
     assert game.state.valid_steps == 36
 
 
-@pytest.mark.parametrize("field", [
-    "game_id", "session_id", "protocol_version", "turn_index", "phase"])
+@pytest.mark.parametrize(
+    "field", ["game_id", "session_id", "protocol_version", "turn_index", "phase"]
+)
 def test_recovery_identity_component_mismatch_aborts(tmp_path, field):
     journal = Journal(tmp_path / f"{field}.sqlite3")
     session = LiveMatchSession("cop", "game", "session", 1, journal)
     session.phase = "paused_recovering"
     session._save("phase", session.phase)
-    payload = {"protocol_version": "1.0-provisional", "correlation_id": "resume",
-               "sender_role": "thief", "game_id": "game", "session_id": "session",
-               "turn_index": 0, "phase": "paused_recovering"}
+    payload = {
+        "protocol_version": "1.0-provisional",
+        "correlation_id": "resume",
+        "sender_role": "thief",
+        "game_id": "game",
+        "session_id": "session",
+        "turn_index": 0,
+        "phase": "paused_recovering",
+    }
     payload[field] = 1 if field == "turn_index" else f"wrong-{field}"
     result = session.handle("resume_match_v1", payload)
     assert not result["accepted"] and session.phase == "aborted"

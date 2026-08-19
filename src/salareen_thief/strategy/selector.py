@@ -11,9 +11,7 @@ from .fallback import FallbackPolicy
 from .results import FallbackReason, PluginError
 
 DEFAULT_CLASS_PATH = "salareen_thief.strategy.blind:BlindShortestPath"
-_REFERENCE = re.compile(
-    r"^[A-Za-z_]\w*(?:\.[A-Za-z_]\w*)*:[A-Za-z_]\w*$"
-)
+_REFERENCE = re.compile(r"^[A-Za-z_]\w*(?:\.[A-Za-z_]\w*)*:[A-Za-z_]\w*$")
 
 
 @dataclass(frozen=True, slots=True)
@@ -53,7 +51,9 @@ def _load_reference(reference: object):
     try:
         instance = candidate()
     except Exception as error:
-        return None, FallbackReason(PluginError.CONSTRUCTOR_FAILED, type(error).__name__)
+        return None, FallbackReason(
+            PluginError.CONSTRUCTOR_FAILED, type(error).__name__
+        )
     if not callable(getattr(instance, "propose", None)):
         return None, FallbackReason(PluginError.INVALID_INTERFACE)
     return instance, None
@@ -80,6 +80,4 @@ def select_strategy(private_path: Path) -> StrategySelection:
     plugin, reason = _load_reference(reference)
     if reason is not None:
         return _fallback(reason, None)
-    return StrategySelection(
-        FallbackPolicy(plugin, default), reference, None
-    )
+    return StrategySelection(FallbackPolicy(plugin, default), reference, None)

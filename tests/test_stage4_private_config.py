@@ -28,11 +28,12 @@ def test_annex_f_provider_modes_are_private(mode: ProviderMode, tmp_path: Path) 
 
 
 @pytest.mark.parametrize(
-    "body", [
+    "body",
+    [
         '[trash_talk]\nprovider = "remote_value"\n',
         "[trash_talk]\nevery_n_steps = true\n",
         "[trash_talk]\ntimeout_seconds = 0\n",
-    ]
+    ],
 )
 def test_invalid_private_provider_configuration_is_rejected(
     body: str, tmp_path: Path
@@ -51,14 +52,18 @@ def test_shared_json_provider_value_has_no_effect(tmp_path: Path) -> None:
 
 
 @pytest.mark.parametrize("value", (0.5, 0.75, 1.0))
-def test_private_reliability_accepts_approved_range(value: float, tmp_path: Path) -> None:
+def test_private_reliability_accepts_approved_range(
+    value: float, tmp_path: Path
+) -> None:
     path = tmp_path / "game.toml"
     path.write_text(f"[trash_talk]\nreliability = {value}\n", encoding="utf-8")
     assert load_private_language_config(path).reliability == Decimal(str(value))
 
 
 @pytest.mark.parametrize("value", (0.49, 1.01, True))
-def test_private_reliability_rejects_out_of_range_and_bool(value, tmp_path: Path) -> None:
+def test_private_reliability_rejects_out_of_range_and_bool(
+    value, tmp_path: Path
+) -> None:
     literal = str(value).lower()
     path = tmp_path / "game.toml"
     path.write_text(f"[trash_talk]\nreliability = {literal}\n", encoding="utf-8")

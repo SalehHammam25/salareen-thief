@@ -21,7 +21,9 @@ def test_uniform_prior_excludes_only_publicly_impossible_cells() -> None:
         if Coordinate(row, col) not in impossible
     ]
     assert len(set(possible)) == 1
-    assert sum((value for row in belief.probabilities for value in row), Decimal("0")) == 1
+    assert (
+        sum((value for row in belief.probabilities for value in row), Decimal("0")) == 1
+    )
 
 
 def test_prior_is_frozen_and_does_not_accept_objective_position() -> None:

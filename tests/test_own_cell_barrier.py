@@ -65,9 +65,7 @@ def test_thief_cannot_enter_own_cell_barrier(accepted_config, rules) -> None:
     assert isinstance(built, StateAccepted)
     placed = place_own(rules, built.value)
     assert isinstance(placed, ActionAccepted)
-    result = rules.apply(
-        placed.state, MoveAction(Role.THIEF, MoveChoice.WEST)
-    )
+    result = rules.apply(placed.state, MoveAction(Role.THIEF, MoveChoice.WEST))
     assert result == ActionRejected(placed.state, ActionError.BARRIER_COLLISION)
 
 
@@ -79,9 +77,7 @@ def test_duplicate_own_cell_placement_is_unchanged(rules, initial_game) -> None:
     assert duplicate.state is placed.state
 
 
-def test_overlap_claim_has_priority_over_own_placement(
-    accepted_config, rules
-) -> None:
+def test_overlap_claim_has_priority_over_own_placement(accepted_config, rules) -> None:
     built = build_state(
         accepted_config,
         thief=Coordinate(2, 2),
@@ -109,12 +105,8 @@ def test_overlap_cannot_be_bypassed_without_claim(accepted_config, rules) -> Non
         cop=Coordinate(2, 2),
     )
     assert isinstance(built, StateAccepted)
-    result = rules.apply(
-        built.value, BarrierAction(Role.COP, Coordinate(2, 2))
-    )
-    assert result == ActionRejected(
-        built.value, ActionError.CAPTURE_CLAIM_REQUIRED
-    )
+    result = rules.apply(built.value, BarrierAction(Role.COP, Coordinate(2, 2)))
+    assert result == ActionRejected(built.value, ActionError.CAPTURE_CLAIM_REQUIRED)
     assert result.state is built.value
 
 

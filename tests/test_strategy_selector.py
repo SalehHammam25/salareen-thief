@@ -32,7 +32,9 @@ def decision(selection, rules, initial_game, target=None):
     return StrategyGateway(rules, selection.policy).decide(initial_game, target)
 
 
-def test_missing_strategy_section_selects_builtin(tmp_path, rules, initial_game) -> None:
+def test_missing_strategy_section_selects_builtin(
+    tmp_path, rules, initial_game
+) -> None:
     selection = select_strategy(private_config(tmp_path, None))
     result = decision(selection, rules, initial_game)
     assert selection.configured_reference is None

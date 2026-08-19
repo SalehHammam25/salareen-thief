@@ -22,9 +22,7 @@ from salareen_thief.base_logic.state_types import (
 
 
 def capture_state(config):
-    result = build_state(
-        config, thief=Coordinate(0, 1), cop=Coordinate(0, 0)
-    )
+    result = build_state(config, thief=Coordinate(0, 1), cop=Coordinate(0, 0))
     assert isinstance(result, StateAccepted)
     return result.value
 
@@ -33,9 +31,7 @@ def claim(role=Role.COP, cause=CaptureCause.BARRIER_ON_THIEF):
     return CaptureClaim(role, cause)
 
 
-def test_barrier_on_thief_with_valid_claim_captures(
-    accepted_config, rules
-) -> None:
+def test_barrier_on_thief_with_valid_claim_captures(accepted_config, rules) -> None:
     state = capture_state(accepted_config)
     action = BarrierAction(Role.COP, state.positions.thief, claim())
     result = rules.apply(state, action)
@@ -82,9 +78,7 @@ def test_invalid_claims_preserve_identity(
 def test_false_barrier_claim_is_rejected(rules, initial_game) -> None:
     action = BarrierAction(Role.COP, Coordinate(0, 1), claim())
     result = rules.apply(initial_game, action)
-    assert result == ActionRejected(
-        initial_game, ActionError.INVALID_CAPTURE_CLAIM
-    )
+    assert result == ActionRejected(initial_game, ActionError.INVALID_CAPTURE_CLAIM)
 
 
 def test_barrier_capture_replay_is_repeatable(accepted_config, rules) -> None:

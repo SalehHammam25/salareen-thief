@@ -19,14 +19,10 @@ def _issue(category: Category, path: Path, message: str) -> ConfigIssue:
     return ConfigIssue(category, path, message)
 
 
-def _constraints(
-    values: dict[Path, Any], issues: list[ConfigIssue]
-) -> None:
+def _constraints(values: dict[Path, Any], issues: list[ConfigIssue]) -> None:
     for path, minimum in MINIMUM_VALUES:
         if path in values and values[path] < minimum:
-            issues.append(
-                _issue(Category.BELOW_MINIMUM, path, f"minimum is {minimum}")
-            )
+            issues.append(_issue(Category.BELOW_MINIMUM, path, f"minimum is {minimum}"))
     for path, expected in FIXED_VALUES:
         if path in values and values[path] != expected:
             issues.append(

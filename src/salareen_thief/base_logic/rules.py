@@ -65,9 +65,7 @@ class BaseLogicRules:
         if type(action.choice) is not MoveChoice:
             return ActionRejected(state, ActionError.INVALID_ACTION_TYPE)
         if state.board.axis_origin_corner != "top-left":
-            return ActionBlocked(
-                state, BlockedQuestion.UNDEFINED_COORDINATE_ORIGIN
-            )
+            return ActionBlocked(state, BlockedQuestion.UNDEFINED_COORDINATE_ORIGIN)
         origin = state.positions.for_role(action.role)
         expected = target_for(origin, action.choice)
         target = action.target if action.target is not None else expected

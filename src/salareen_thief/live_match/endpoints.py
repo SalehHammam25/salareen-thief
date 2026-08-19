@@ -4,11 +4,12 @@ import ipaddress
 from urllib.parse import urlsplit
 
 
-def validate_endpoint(value: str, *, mode: str, host: str,
-                      permitted_port: int | None = None) -> str:
+def validate_endpoint(
+    value: str, *, mode: str, host: str, permitted_port: int | None = None
+) -> str:
     try:
         parsed = urlsplit(value)
-        port = parsed.port
+        port = parsed.port or {"https": 443, "http": 80}.get(parsed.scheme)
     except (TypeError, ValueError) as error:
         raise ValueError("invalid endpoint") from error
     if parsed.username or parsed.password or parsed.query or parsed.fragment:
@@ -32,3 +33,20 @@ def _local(host: str | None) -> bool:
         return not ipaddress.ip_address(host or "").is_global
     except ValueError:
         return bool(host and host.endswith(".localhost"))
+
+
+def validate_runtime_endpoint(value: str, local_peer_port: int) -> str:
+    parsed = urlsplit(value)
+    if parsed.scheme == "https":
+        return validate_endpoint(
+            value,
+            mode="remote",
+            host=parsed.hostname or "",
+            permitted_port=443,
+        )
+    return validate_endpoint(
+        value,
+        mode="local",
+        host="127.0.0.1",
+        permitted_port=local_peer_port,
+    )

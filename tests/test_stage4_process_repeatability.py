@@ -25,11 +25,15 @@ def run_probe() -> dict[str, object]:
 
 
 def test_template_output_is_identical_in_fresh_processes() -> None:
-    assert run_probe() == run_probe() == {
-        "request": 0,
-        "response": 0,
-        "text": "I kept moving near New York.",
-    }
+    assert (
+        run_probe()
+        == run_probe()
+        == {
+            "request": 0,
+            "response": 0,
+            "text": "I kept moving near New York.",
+        }
+    )
 
 
 def run_scent_probe() -> str:

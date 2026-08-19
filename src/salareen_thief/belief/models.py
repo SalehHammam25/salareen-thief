@@ -53,7 +53,7 @@ BeliefResult = BeliefUpdated | BeliefFallback
 
 
 def normalize_rows(
-    values: tuple[tuple[Decimal, ...], ...]
+    values: tuple[tuple[Decimal, ...], ...],
 ) -> tuple[tuple[Decimal, ...], ...] | None:
     flat = [value for row in values for value in row]
     total = sum(flat, ZERO)

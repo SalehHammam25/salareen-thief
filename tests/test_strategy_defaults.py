@@ -45,7 +45,9 @@ def test_default_order_matches_fixed_shared_move_set(accepted_config) -> None:
 
 def test_default_tie_is_repeatable(initial_game) -> None:
     snapshot = snapshot_for(initial_game, Coordinate(4, 4))
-    assert BlindShortestPath().propose(snapshot) == BlindShortestPath().propose(snapshot)
+    assert BlindShortestPath().propose(snapshot) == BlindShortestPath().propose(
+        snapshot
+    )
 
 
 def test_default_tie_is_repeatable_in_fresh_processes() -> None:

@@ -38,9 +38,7 @@ def test_invalid_tie_choice_is_typed_failure(initial_game) -> None:
 
 def test_terminal_state_is_typed_failure(rules, initial_game) -> None:
     terminal = rules.technical_loss(initial_game).state
-    result = BlindShortestPath(first).propose(
-        snapshot_for(terminal, Coordinate(6, 6))
-    )
+    result = BlindShortestPath(first).propose(snapshot_for(terminal, Coordinate(6, 6)))
     assert result == DecisionFailure(DecisionError.TERMINAL_STATE)
 
 

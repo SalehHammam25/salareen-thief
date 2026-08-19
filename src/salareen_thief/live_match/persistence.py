@@ -22,6 +22,8 @@ def restore_runtime(saved: str, current: ScentGrid, stage4: Any) -> ScentGrid:
 
 
 def runtime_snapshot(scent: ScentGrid, stage4: Any) -> dict[str, Any]:
-    return {"scent_axis": scent.axis_start_index,
-            "scent": [[str(value) for value in row] for row in scent.values],
-            "stage4": stage4.snapshot()}
+    return {
+        "scent_axis": scent.axis_start_index,
+        "scent": [[str(value) for value in row] for row in scent.values],
+        "stage4": stage4.snapshot(),
+    }

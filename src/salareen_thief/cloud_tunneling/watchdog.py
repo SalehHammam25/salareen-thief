@@ -9,7 +9,9 @@ class WatchdogStatus:
     elapsed: float
 
 
-def evaluate_watchdog(last_heartbeat: float, now: float, timeout: float) -> WatchdogStatus:
+def evaluate_watchdog(
+    last_heartbeat: float, now: float, timeout: float
+) -> WatchdogStatus:
     values = (last_heartbeat, now, timeout)
     if any(type(value) not in {int, float} for value in values):
         raise TypeError("watchdog values must be exact numbers")
