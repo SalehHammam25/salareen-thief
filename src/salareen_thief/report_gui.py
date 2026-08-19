@@ -1,29 +1,19 @@
 """Read-only privacy-safe live status dashboard."""
 
 import json
-from pathlib import Path
 
-from .security.series import privacy_safe_view
-
-
-def load_view(role: str, artifact_path: str | Path):
-    artifact = json.loads(Path(artifact_path).read_text(encoding="utf-8"))
-    return privacy_safe_view(
-        role,
-        artifact.get("local_position", [0, 0]),
-        artifact.get("public_events", []),
-        artifact.get("belief_heatmap", []),
-        artifact.get("turn_status", "LOCKED"),
-    )
+from .gui_view import load_view
 
 
-def run_gui(role: str, artifact_path: str | Path) -> None:
+def run_gui(
+    role: str, artifact_path: str, config_path: str = "config/game.json"
+) -> None:
     import tkinter as tk
 
-    view = load_view(role, artifact_path)
+    view = load_view(role, artifact_path, config_path)
     root = tk.Tk()
     root.title(f"Salareen {role.title()} — Local View")
-    root.geometry("720x620")
+    root.geometry("720x740")
     root.configure(bg="#101820")
 
     header = tk.Frame(root, bg="#101820")
@@ -62,9 +52,9 @@ def run_gui(role: str, artifact_path: str | Path) -> None:
         font=("Segoe UI", 13, "bold"),
     ).pack(anchor="w", padx=20)
 
-    canvas = tk.Canvas(root, width=480, height=320, bg="#182630", highlightthickness=0)
+    canvas = tk.Canvas(root, width=420, height=420, bg="#182630", highlightthickness=0)
     canvas.pack(padx=20, pady=8)
-    _draw_heatmap(canvas, view["belief_heatmap"], 480, 320)
+    _draw_heatmap(canvas, view["belief_heatmap"], view["board_size"], 420)
 
     tk.Label(
         root,
@@ -80,31 +70,22 @@ def run_gui(role: str, artifact_path: str | Path) -> None:
     root.mainloop()
 
 
-def _draw_heatmap(canvas, values, width, height):
-    if not values or not values[0]:
-        canvas.create_text(
-            width / 2,
-            height / 2,
-            text="No belief data",
-            fill="#b9c7d0",
-            font=("Segoe UI", 12),
-        )
-        return
-    rows, columns = len(values), len(values[0])
-    cell_width, cell_height = width / columns, height / rows
+def _draw_heatmap(canvas, values, board_size, extent):
+    cell_size = extent / board_size
     maximum = max(max(float(value) for value in row) for row in values) or 1.0
-    for row_index, row in enumerate(values):
-        for column_index, value in enumerate(row):
+    for row_index in range(board_size):
+        for column_index in range(board_size):
+            value = values[row_index][column_index]
             intensity = max(0.0, min(1.0, float(value) / maximum))
             red = int(35 + 220 * intensity)
             blue = int(175 - 120 * intensity)
             color = f"#{red:02x}4b{blue:02x}"
-            x0, y0 = column_index * cell_width, row_index * cell_height
+            x0, y0 = column_index * cell_size, row_index * cell_size
             canvas.create_rectangle(
                 x0,
                 y0,
-                x0 + cell_width,
-                y0 + cell_height,
+                x0 + cell_size,
+                y0 + cell_size,
                 fill=color,
                 outline="#101820",
             )
@@ -116,8 +97,9 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("role", choices=("cop", "thief"))
     parser.add_argument("artifact")
+    parser.add_argument("--config", default="config/game.json")
     arguments = parser.parse_args()
-    run_gui(arguments.role, arguments.artifact)
+    run_gui(arguments.role, arguments.artifact, arguments.config)
 
 
 if __name__ == "__main__":
