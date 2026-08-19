@@ -8,11 +8,17 @@ from typing import Any
 
 class EventLog:
     def __init__(
-        self, path: str | Path, role: str, game_id: str, session_id: str
+        self,
+        path: str | Path,
+        role: str,
+        game_id: str,
+        session_id: str,
+        game_number: int = 1,
     ) -> None:
         self.path = Path(path)
         self.path.parent.mkdir(parents=True, exist_ok=True)
         self.role, self.game_id, self.session_id = role, game_id, session_id
+        self.game_number = game_number
         self.index = (
             sum(1 for _ in self.path.open(encoding="utf-8"))
             if self.path.exists()
@@ -35,7 +41,7 @@ class EventLog:
             "timestamp_monotonic": time.monotonic_ns(),
             "game_id": self.game_id,
             "session_id": self.session_id,
-            "game_number": 1,
+            "game_number": self.game_number,
             "turn_index": turn,
             "phase": phase,
             "local_role": self.role,

@@ -1,4 +1,7 @@
-from salareen_thief.live_match.endpoints import validate_endpoint
+from salareen_thief.live_match.endpoints import (
+    validate_endpoint,
+    validate_runtime_endpoint,
+)
 from salareen_thief.live_match.journal import Journal
 from salareen_thief.live_match.session import LiveMatchSession
 
@@ -64,3 +67,7 @@ def test_endpoint_policy_rejects_query():
         pass
     else:
         raise AssertionError("query string accepted")
+def test_runtime_endpoint_accepts_public_https_default_port():
+    endpoint = "https://peer.example.test/mcp"
+    assert validate_runtime_endpoint(endpoint, 8802) == endpoint
+
