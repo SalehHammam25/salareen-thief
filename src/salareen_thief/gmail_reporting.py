@@ -45,7 +45,8 @@ def build_json_message(
 ) -> dict[str, str]:
     """Create the base64url MIME payload expected by Gmail messages.send."""
     message = EmailMessage()
-    message["Subject"] = "Salareen verified series report"
+    prefix = "TEST — " if artifact.get("report_type") == "TEST" else ""
+    message["Subject"] = prefix + "Salareen verified series report"
     message["From"] = sender
     message["To"] = recipient
     message.set_content("Attached is the verified Salareen series report.")

@@ -67,6 +67,17 @@ def test_report_is_a_json_attachment():
     }
 
 
+def test_test_report_is_clearly_labeled():
+    body = build_json_message(
+        "sender@example.test",
+        "sender@example.test",
+        {"report_type": "TEST"},
+    )
+    raw = base64.urlsafe_b64decode(body["raw"])
+    message = BytesParser(policy=policy.default).parsebytes(raw)
+    assert message["Subject"].startswith("TEST")
+
+
 def test_duplicate_send_is_rejected():
     service = FakeService()
     sender = GmailReportSender(service, clock=lambda: 10.0)

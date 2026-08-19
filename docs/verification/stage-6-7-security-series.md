@@ -49,3 +49,16 @@ and an authorized remote-peer run remain intentionally external/deferred.
 - Cop-driven persistent-identity live/security gate: 11/11 scenarios passed
   once in 555.3 seconds, including acknowledgement restart, lost
   acknowledgement, mismatch, retry exhaustion, watchdog, and terminal restart.
+
+## Gmail OAuth smoke test (redacted, 2026-08-19)
+
+- Result: PASS.
+- Authorization requested only the Gmail `gmail.send` scope.
+- Exactly one clearly labeled TEST report was sent to the operator's own
+  account; no lecturer or opponent address was used.
+- The JSON attachment was generated and verified successfully.
+- Duplicate-send protection and rate limiting were both verified successfully
+  without additional delivery.
+- OAuth client material and tokens remained outside the repository and outside
+  OneDrive. No email address, authorization URL, client identifier, credential,
+  token, or private filesystem path is recorded here.
