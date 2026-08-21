@@ -65,7 +65,9 @@ def _row(summary: dict, ours: str, theirs: str, game_id: str) -> dict:
 def build_counted_result(series, opponent_url: str) -> dict:
     """Build rich reporting metadata without feeding it into the consensus digest."""
     ours = GROUP_ID
-    theirs = series.peer_identity.get("group_id", "amireman")
+    theirs = series.peer_identity.get("group_id")
+    if not isinstance(theirs, str) or not theirs or theirs == ours:
+        raise ValueError("counted result requires a distinct peer group_id")
     own = dict(series.own_identity)
     peer = opponent_identity(series.peer_identity, theirs, opponent_url)
     rows = [_row(summary, ours, theirs, series.game_id) for summary in series.summaries]
