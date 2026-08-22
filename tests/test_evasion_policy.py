@@ -1,10 +1,14 @@
 """Focused tests for the deterministic lightweight thief evasion policy."""
 
+import inspect
+from pathlib import Path
+
 from salareen_thief.base_logic.actions import MoveChoice
 from salareen_thief.base_logic.movement import target_for, validate_target
 from salareen_thief.base_logic.state_types import Board, Coordinate
 from salareen_thief.evasion.observer import manhattan
 from salareen_thief.evasion.policy import EvasionPolicy, destinations
+from salareen_thief.official.engine import ThiefEngine
 
 BOARD = Board(7, 0, "top-left")
 EMPTY: frozenset[Coordinate] = frozenset()
@@ -99,3 +103,33 @@ def test_recent_cells_are_penalised_in_the_score() -> None:
 def test_a_missing_estimate_still_yields_a_legal_move() -> None:
     name = POLICY.choose(Coordinate(3, 3), EMPTY, None, [])
     assert name in {"N", "S", "E", "W", "STAY"}
+
+
+def test_policy_is_total_and_legal_over_a_wide_state_sweep() -> None:
+    cells = [Coordinate(row, col) for row in range(7) for col in range(7)]
+    barrier_sets = (
+        EMPTY,
+        frozenset({Coordinate(3, col) for col in range(7)}),
+        frozenset(
+            cell
+            for cell in cells
+            if (cell.row + cell.col) % 2 == 0 and cell != Coordinate(3, 3)
+        ),
+    )
+    seen = 0
+    for barriers in barrier_sets:
+        free = [cell for cell in cells if cell not in barriers]
+        for thief in free:
+            for police in (*free[::5], None):
+                name = POLICY.choose(thief, barriers, police, [thief, thief])
+                assert name in {"N", "S", "E", "W", "STAY"}
+                target = cell_for(thief, name)
+                assert validate_target(BOARD, thief, target, barriers) is None
+                seen += 1
+    assert seen > 500
+
+
+def test_production_engine_keeps_no_broad_strategy_fallback() -> None:
+    source = Path(inspect.getfile(ThiefEngine)).read_text(encoding="utf-8")
+    assert "except" not in source
+    assert "fallback" not in source

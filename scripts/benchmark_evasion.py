@@ -1,4 +1,4 @@
-"""Small deterministic thief benchmark: legacy corner-seeking versus evasion."""
+"""Local thief benchmark: legacy corner-seeking versus deterministic evasion."""
 
 from __future__ import annotations
 
@@ -7,14 +7,19 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+
+from bench_police import POLICE  # noqa: E402
 
 from salareen_thief.evasion.fallback import corner_choice  # noqa: E402
 from salareen_thief.official.engine import ThiefEngine  # noqa: E402
 from salareen_thief.official.terms import TERMS  # noqa: E402
 from salareen_thief.official.wire import clean_turn  # noqa: E402
 
-DELTAS = ((-1, 0), (1, 0), (0, 1), (0, -1))
 STEPS = TERMS["max_steps"]
+VARIANTS = (0, 1, 2, 3)
+SEEDS = tuple(range(20))
+MODES = ((True, "claim+scent"), (False, "scent only"))
 
 
 class LegacyThief(ThiefEngine):
@@ -26,44 +31,8 @@ class LegacyThief(ThiefEngine):
         )
 
 
-def legal(cell):
-    return [
-        (cell[0] + dr, cell[1] + dc)
-        for dr, dc in DELTAS
-        if 0 <= cell[0] + dr < 7 and 0 <= cell[1] + dc < 7
-    ]
-
-
-def distance(left, right):
-    return abs(left[0] - right[0]) + abs(left[1] - right[1])
-
-
-def stationary(pos, foe, rng):
-    return pos
-
-
-def chase(pos, foe, rng):
-    return min([pos, *legal(pos)], key=lambda c: (distance(c, foe), c[0], c[1]))
-
-
-def random_legal(pos, foe, rng):
-    return rng.choice([pos, *legal(pos)])
-
-
-def mobility(pos, foe, rng):
-    options = [pos, *legal(pos)]
-    return min(options, key=lambda c: (distance(c, foe), -len(legal(c)), c[0], c[1]))
-
-
-POLICE = {
-    "stationary": stationary,
-    "direct_chase": chase,
-    "random_legal": random_legal,
-    "mobility_max": mobility,
-}
-
-
 def rings(pos):
+    """Build the agreed 5x5 ring emission centred on one cell."""
     grid = {}
     for row in range(7):
         for col in range(7):
@@ -73,7 +42,8 @@ def rings(pos):
     return grid
 
 
-def message(step, police, claim=True):
+def message(step, police, claim):
+    """Build one cleaned police turn message in the requested information mode."""
     return clean_turn(
         {
             "step": step,
@@ -90,46 +60,72 @@ def message(step, police, claim=True):
     )
 
 
-def play(factory, police_move, seed, claim=True):
-    """Run one deterministic episode; return the capture step or None."""
+def play(factory, police_move, seed, variant, claim):
+    """Run one episode; return (capture step or None, transcript)."""
     engine = factory(1, "1" * 40)
     rng = random.Random(seed)
     police = tuple(TERMS["cop_start"])
-    incoming = None
+    incoming, trail = None, []
     for step in range(1, STEPS + 1):
         engine.take_turn(incoming)
         thief = (engine.position.row, engine.position.col)
+        trail.append((thief, police))
         if thief == police:
-            return step
-        police = police_move(police, thief, rng)
+            return step, tuple(trail)
+        police = police_move(police, thief, rng, variant)
+        trail.append((thief, police))
         if police == thief:
-            return step
+            return step, tuple(trail)
         incoming = message(step, police, claim)
         if engine.receive(incoming).caught:
-            return step
-    return None
+            return step, tuple(trail)
+    return None, tuple(trail)
+
+
+def scenarios(name):
+    """Return the (seed, variant) grid appropriate for one police profile."""
+    if name == "random_legal":
+        return [(seed, 0) for seed in SEEDS]
+    return [(0, variant) for variant in VARIANTS]
+
+
+def summarise(factory, move, grid, claim):
+    """Return survival rate, mean capture step, and distinct-game count."""
+    runs = [play(factory, move, s, v, claim) for s, v in grid]
+    distinct = {trail for _, trail in runs}
+    caught = [step for step, _ in runs if step is not None]
+    rate = 100 * (len(runs) - len(caught)) / len(runs)
+    mean = f"{sum(caught) / len(caught):.0f}" if caught else "-"
+    return rate, mean, len(distinct)
 
 
 def main() -> int:
-    seeds = tuple(range(20))
-    print(f"{'police / peer info':<30}{'legacy':>20}{'evasion':>20}")
-    modes = ((True, "claim+scent"), (False, "scent only"))
+    header = f"{'police / peer info':<38}{'distinct':>9}{'legacy':>17}{'evasion':>17}"
+    print(header)
+    totals = {label: [0.0, 0.0, 0] for _, label in MODES}
     for name, move in POLICE.items():
-        for claim, label in modes:
-            print("".join(_row(name, label, move, claim, seeds)))
+        grid = scenarios(name)
+        for claim, label in MODES:
+            legacy = summarise(LegacyThief, move, grid, claim)
+            new = summarise(ThiefEngine, move, grid, claim)
+            distinct = max(legacy[2], new[2])
+            cells = [
+                f"{legacy[0]:5.0f}% surv cap={legacy[1]}".rjust(17),
+                f"{new[0]:5.0f}% surv cap={new[1]}".rjust(17),
+            ]
+            print(f"{name + ' / ' + label:<38}{distinct:>9}" + "".join(cells))
+            bucket = totals[label]
+            bucket[0] += legacy[0]
+            bucket[1] += new[0]
+            bucket[2] += distinct
+    count = len(POLICE)
+    for _, label in MODES:
+        bucket = totals[label]
+        print(
+            f"{'AGGREGATE / ' + label:<38}{bucket[2]:>9}"
+            f"{bucket[0] / count:16.0f}%{bucket[1] / count:16.0f}%"
+        )
     return 0
-
-
-def _row(name, label, move, claim, seeds):
-    row = [f"{name} / {label}".ljust(30)]
-    for factory in (LegacyThief, ThiefEngine):
-        results = [play(factory, move, seed, claim) for seed in seeds]
-        caught = [value for value in results if value is not None]
-        rate = 100 * (len(results) - len(caught)) / len(results)
-        mean = sum(caught) / len(caught) if caught else None
-        shown = "-" if mean is None else f"{mean:.1f}"
-        row.append(f"{rate:5.0f}% surv  cap={shown}".rjust(20))
-    return row
 
 
 if __name__ == "__main__":

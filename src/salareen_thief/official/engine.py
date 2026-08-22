@@ -5,7 +5,6 @@ from dataclasses import dataclass
 from datetime import UTC, datetime
 
 from salareen_thief.base_logic.state_types import Board, Coordinate
-from salareen_thief.evasion.fallback import corner_choice
 from salareen_thief.evasion.observer import PoliceObserver
 from salareen_thief.evasion.policy import EvasionPolicy
 
@@ -41,15 +40,12 @@ class ThiefEngine:
         self._record("STAY", "initial", None)
 
     def _choice(self) -> str:
-        barriers = frozenset(self.barriers)
-        try:
-            return self.evasion.choose(
-                self.position, barriers, self.observer.estimate, self.history
-            )
-        except Exception:
-            return corner_choice(
-                self.board, self.position, barriers, self.last_threat
-            )
+        return self.evasion.choose(
+            self.position,
+            frozenset(self.barriers),
+            self.observer.estimate,
+            self.history,
+        )
 
     def _apply_move(self, choice: str) -> None:
         row, col = DELTAS.get(choice, (0, 0))
