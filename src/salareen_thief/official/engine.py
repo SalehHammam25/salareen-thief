@@ -4,11 +4,10 @@ import secrets
 from dataclasses import dataclass
 from datetime import UTC, datetime
 
-from salareen_thief.base_logic.actions import MoveAction
-from salareen_thief.base_logic.state_types import Board, Coordinate, EpisodeStatus
-from salareen_thief.strategy.blind import BlindShortestPath
-from salareen_thief.strategy.models import StrategySnapshot
-from salareen_thief.strategy.results import ProposedAction
+from salareen_thief.base_logic.state_types import Board, Coordinate
+from salareen_thief.evasion.fallback import corner_choice
+from salareen_thief.evasion.observer import PoliceObserver
+from salareen_thief.evasion.policy import EvasionPolicy
 
 from .terms import TERMS, commit_of
 
@@ -31,40 +30,26 @@ class ThiefEngine:
         self.board = Board(7, 0, "top-left")
         self.position = Coordinate(*TERMS["thief_start"])
         self.barriers: set[Coordinate] = set()
-        self.policy = BlindShortestPath()
         self.step = 0
         self.records: list[dict] = []
         self.pending_response: dict | None = None
         self.caught = False
         self.last_threat = Coordinate(*TERMS["cop_start"])
+        self.observer = PoliceObserver(self.board, self.last_threat)
+        self.evasion = EvasionPolicy(self.board)
+        self.history: list[Coordinate] = [self.position]
         self._record("STAY", "initial", None)
 
-    def _target(self) -> Coordinate:
-        corners = (Coordinate(0, 0), Coordinate(0, 6), Coordinate(6, 0), Coordinate(6, 6))
-        legal = [corner for corner in corners if corner not in self.barriers]
-        return max(
-            legal or [self.position],
-            key=lambda cell: (
-                abs(cell.row - self.last_threat.row) + abs(cell.col - self.last_threat.col),
-                cell.row,
-                cell.col,
-            ),
-        )
-
     def _choice(self) -> str:
-        snapshot = StrategySnapshot(
-            self.board,
-            self.position,
-            frozenset(self.barriers),
-            EpisodeStatus.ACTIVE,
-            self._target(),
-        )
-        proposal = self.policy.propose(snapshot)
-        if not isinstance(proposal, ProposedAction) or not isinstance(
-            proposal.action, MoveAction
-        ):
-            return "STAY"
-        return proposal.action.choice.value
+        barriers = frozenset(self.barriers)
+        try:
+            return self.evasion.choose(
+                self.position, barriers, self.observer.estimate, self.history
+            )
+        except Exception:
+            return corner_choice(
+                self.board, self.position, barriers, self.last_threat
+            )
 
     def _apply_move(self, choice: str) -> None:
         row, col = DELTAS.get(choice, (0, 0))
@@ -109,6 +94,7 @@ class ThiefEngine:
         return record
 
     def receive(self, message: dict) -> IncomingOutcome:
+        self.observer.update(message)
         barrier = message.get("barrier_placed")
         if barrier is not None:
             self.barriers.add(Coordinate(*barrier))
@@ -126,6 +112,7 @@ class ThiefEngine:
         self.step += 1
         choice = "STAY" if hold or self.caught else self._choice()
         self._apply_move(choice)
+        self.history.append(self.position)
         response = self.pending_response
         record = self._record(
             "STAY" if choice == "STAY" else f"MOVE:{choice}",
