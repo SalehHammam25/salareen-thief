@@ -115,6 +115,7 @@ def clean_audit(value: Any, max_records: int = 72) -> dict | None:
     result = {"sender": sender, "records": [r for r in records if isinstance(r, dict)], "result_claim": claim}
     if digest is not None:
         result["consensus_sha"] = digest
-    if type(value.get("sub_game_number")) is int:
-        result["sub_game_number"] = value["sub_game_number"]
+    for key in ("sub_game", "sub_game_number"):
+        if type(value.get(key)) is int:
+            result[key] = value[key]
     return result
